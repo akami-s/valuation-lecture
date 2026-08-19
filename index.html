@@ -267,6 +267,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--sage-tint)}
 .f-body{white-space:nowrap}
 .frac .grow{color:var(--sage)}
 .frac .keep{color:var(--akami)}
+.frac .gen{color:var(--muted); font-size:.82em}
 .derive-arrow{
   width:142px; flex:none;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -1283,8 +1284,9 @@ ul.pts li::before{
           </div>
         </div>
       </div>
-      <div class="formula" style="font-size:19px;padding:10px 14px;margin-top:10px">
-        PBR ＝ <span class="frac"><span><b id="fROE">0.07</b> − <b id="fG">0.00</b></span><span class="den">0.09 − <b id="fG2">0.00</b></span></span>
+      <div class="formula" style="font-size:18px;padding:10px 12px;margin-top:10px">
+        <span class="f-body">PBR ＝ <span class="frac"><span class="gen">ROE − g</span><span class="den gen">r − g</span></span>
+        ＝ <span class="frac"><span><b id="fROE">0.07</b> − <b id="fG">0.00</b></span><span class="den">0.09 − <b id="fG2">0.00</b></span></span></span>
       </div>
       <div class="readout" style="margin-top:10px">
         <div class="num-label">理論PBR</div>
@@ -1293,9 +1295,9 @@ ul.pts li::before{
     </div>
     <div>
       <div class="opsteps" style="margin-bottom:14px">
-        <div class="opstep"><span class="op-n">1</span><p>内部留保率を <b>0% → 100%</b> に動かす<span style="color:var(--muted)">(利益を社内に残す)</span></p></div>
-        <div class="opstep"><span class="op-n">2</span><p>成長率 g は <b>0% → 7.0%</b> に上がる</p></div>
-        <div class="opstep"><span class="op-n res">3</span><p>それなのに PBR は <b class="down">0.78 → 0.00</b> に<em>下がる</em><br><span id="verdictText" class="verdict-line">成長するほど、価値が減っていきます。</span></p></div>
+        <div class="opstep"><span class="op-n">1</span><p>内部留保率を <b id="st1">0% → 100%</b> に動かす<span style="color:var(--muted)">(利益を社内に残す)</span></p></div>
+        <div class="opstep"><span class="op-n">2</span><p>成長率 g は <b id="st2">0% → 7.0%</b> に上がる</p></div>
+        <div class="opstep"><span class="op-n res">3</span><p><span id="st3lead">それなのに</span> PBR は <b class="down" id="st3">0.78 → 0.00</b> に<em id="st3verb">下がる</em><br><span id="verdictText" class="verdict-line">成長するほど、価値が減っていきます。</span></p></div>
       </div>
       <div class="recall-box" style="margin-top:0;padding:9px 14px">
         <b id="recallMain">年9%を求められている資本を、7%でしか回せない。</b><span id="recallSub">社内に留めるほど株主の価値は削られます。</span><br>
@@ -1528,7 +1530,18 @@ function updPBR(){
   document.getElementById('lb20').textContent = 'PBR '+pbrAt(0.2).toFixed(2);
   document.getElementById('lb0' ).textContent = 'PBR '+pbrAt(0).toFixed(2);
 
+  /* 式が壊れない最大の内部留保率(10%刻み)*/
+  var bMax = 100;
+  for(var k=0; k<=100; k+=10){ if(curROE*k/100 >= r-1e-9){ bMax = k-10; break; } }
+  var gMax = curROE*bMax/100;
+
   var pct = (curROE*100).toFixed(0);
+  document.getElementById('st1').textContent = '0% → '+bMax+'%';
+  document.getElementById('st2').textContent = '0% → '+(gMax*100).toFixed(1)+'%';
+  document.getElementById('st3').textContent = pbrAt(0).toFixed(2)+' → '+pbrAt(bMax/100).toFixed(2);
+
+  var lead = document.getElementById('st3lead');
+  var verb = document.getElementById('st3verb');
   var head = document.getElementById('lbHead');
   var concl= document.getElementById('lbConcl');
   var note = document.getElementById('lbNote');
@@ -1536,23 +1549,29 @@ function updPBR(){
   var rSub = document.getElementById('recallSub');
 
   if(curROE < r - 1e-9){
+    lead.textContent  = 'それなのに';
+    verb.textContent  = '下がる';
     rMain.textContent = '年9%を求められている資本を、'+pct+'%でしか回せない。';
     rSub.textContent  = '社内に留めるほど株主の価値は削られます。';
     head.textContent  = 'では逆に、留保率を下げれば(配当を増やせば)よいのか';
     concl.innerHTML   = '<strong>何も残さなくても '+pbrAt(0).toFixed(2)+' が上限。</strong>還元は目減りを止めるだけで、<em>価値を生み出す手段ではない</em>のです。';
     note.innerHTML    = '全額留保なら <strong>PBR 0.00</strong> ── 一円も受け取らないなら価値はゼロ。本質的な解は <strong>ROE を r より上へ</strong>(S18のBの道)。';
   } else if(Math.abs(curROE - r) < 1e-9){
+    lead.textContent  = 'それでも';
+    verb.textContent  = '動かない';
     rMain.textContent = '年9%を求められている資本を、ちょうど9%で回している。';
     rSub.textContent  = '過不足がないので、留保しても配っても価値は動きません。';
     head.textContent  = '留保率を変えても、PBR は動かない';
     concl.innerHTML   = '<strong>どこを取っても 1.00。</strong>ROE と r が等しいとき、<em>還元方針は価値に影響しない</em>のです。';
     note.innerHTML    = '留保率100%だけは <strong>g = r</strong> となり計算不能(S12)。ここが価値創造と破壊の<strong>分水嶺</strong>です。';
   } else {
+    lead.textContent  = 'すると';
+    verb.textContent  = '上がる';
     rMain.textContent = '年9%を求められている資本を、'+pct+'%で回せる。';
     rSub.textContent  = '社内に留めるほど株主の価値は増えていきます。';
     head.textContent  = 'では逆に、留保率を下げれば(配当を増やせば)どうなるか';
     concl.innerHTML   = '<strong>何も残さないと '+pbrAt(0).toFixed(2)+' まで下がる。</strong>稼ぐ力があるなら、<em>配るより社内で回すほうが価値は大きい</em>のです。';
-    note.innerHTML    = 'ただし留保率80%以上は <strong>g が r を超えて</strong>計算不能に(S12)。<strong>高成長を永久に続ける前提は置けません。</strong>';
+    note.innerHTML    = '留保率80%以上は <strong>g が r を超えて</strong>計算不能に(S12)。<strong>高成長を永久に続ける前提は置けません。</strong>';
   }
 }
 
