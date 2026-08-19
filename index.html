@@ -429,7 +429,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--sage-tint)}
 .lb-row.last{border-bottom:0}
 .lb-row i{font-style:normal; color:var(--muted); font-size:11.5px; margin-left:4px}
 .lb-row b{font-family:var(--mono); font-size:14.5px; color:var(--akami-deep); font-weight:700}
-.limitbox p{font-size:13.5px; line-height:1.6; color:var(--ink-2); margin-top:8px}
+.limitbox p{font-size:13.5px; line-height:1.55; color:var(--ink-2); margin-top:7px}
 
 /* 操作手順 */
 .opsteps{display:flex; flex-direction:column; gap:7px}
@@ -1283,32 +1283,34 @@ ul.pts li::before{
           </div>
         </div>
       </div>
-      <div class="readout" style="margin-top:14px">
+      <div class="formula" style="font-size:19px;padding:10px 14px;margin-top:10px">
+        PBR ＝ <span class="frac"><span><b id="fROE">0.07</b> − <b id="fG">0.00</b></span><span class="den">0.09 − <b id="fG2">0.00</b></span></span>
+      </div>
+      <div class="readout" style="margin-top:10px">
         <div class="num-label">理論PBR</div>
         <div class="big-num" id="pbrOut">0.78<span class="u">倍</span></div>
       </div>
-
     </div>
     <div>
       <div class="opsteps" style="margin-bottom:14px">
-        <div class="opstep"><span class="op-n">1</span><p>内部留保率を <b>0% → 100%</b> に動かす ─ <span style="color:var(--muted)">利益を社内に残していく</span></p></div>
+        <div class="opstep"><span class="op-n">1</span><p>内部留保率を <b>0% → 100%</b> に動かす<span style="color:var(--muted)">(利益を社内に残す)</span></p></div>
         <div class="opstep"><span class="op-n">2</span><p>成長率 g は <b>0% → 7.0%</b> に上がる</p></div>
         <div class="opstep"><span class="op-n res">3</span><p>それなのに PBR は <b class="down">0.78 → 0.00</b> に<em>下がる</em><br><span id="verdictText" class="verdict-line">成長するほど、価値が減っていきます。</span></p></div>
       </div>
-      <div class="recall-box" style="margin-top:0">
-        <b>年9%を求められている資本を、7%でしか回せない。</b>社内に留めるほど株主の価値は削られます。<br>
-        r ＝ 9% は<b>増やす義務を負ったお金</b> ＝ 資本コストだからです<span class="rb-ref">S14</span>
+      <div class="recall-box" style="margin-top:0;padding:9px 14px">
+        <b id="recallMain">年9%を求められている資本を、7%でしか回せない。</b><span id="recallSub">社内に留めるほど株主の価値は削られます。</span><br>
+        r ＝ 9% は<b>増やす義務を負ったお金</b>＝資本コスト<span class="rb-ref">S14</span>
       </div>
       <div class="limitbox">
-        <div class="lb-head">では逆に、留保率を下げれば(配当を増やせば)よいのか</div>
+        <div class="lb-head" id="lbHead">では逆に、留保率を下げれば(配当を増やせば)よいのか</div>
         <div class="lb-body">
-          <div class="lb-row"><span>内部留保率 50%　<i>半分を社内に残す</i></span><b>PBR 0.64</b></div>
-          <div class="lb-row"><span>内部留保率 20%　<i>少しだけ残す</i></span><b>PBR 0.74</b></div>
-          <div class="lb-row last"><span>内部留保率 0%　<i>何も残さない</i></span><b>PBR 0.78</b></div>
+          <div class="lb-row"><span>内部留保率 50%　<i>半分を社内に残す</i></span><b id="lb50">PBR 0.64</b></div>
+          <div class="lb-row"><span>内部留保率 20%　<i>少しだけ残す</i></span><b id="lb20">PBR 0.74</b></div>
+          <div class="lb-row last"><span>内部留保率 0%　<i>何も残さない</i></span><b id="lb0">PBR 0.78</b></div>
         </div>
-        <p><strong>何も残さなくても 0.78 が上限。</strong>還元は目減りを止めるだけで、<em>価値を生み出す手段ではない</em>のです。</p>
+        <p id="lbConcl"><strong>何も残さなくても 0.78 が上限。</strong>還元は目減りを止めるだけで、<em>価値を生み出す手段ではない</em>のです。</p>
       </div>
-      <div class="note" style="margin-top:10px;border-left-color:var(--akami);font-size:13px">
+      <div class="note" id="lbNote" style="margin-top:10px;border-left-color:var(--akami);font-size:13px">
         全額留保なら <strong>PBR 0.00</strong> ── 一円も受け取らないなら価値はゼロ。本質的な解は <strong>ROE を r より上へ</strong>(S18のBの道)。
       </div>
     </div>
@@ -1488,33 +1490,69 @@ function updPBR(){
   var b = +bs.value/100;
   var g = curROE * b;
   var r = A.r;
+  var broken = (g >= r - 1e-9);
 
   document.getElementById('bOut').textContent = Math.round(b*100)+'%';
   document.getElementById('gOut').textContent = (g*100).toFixed(1)+'%';
 
-  var out = document.getElementById('pbrOut');
-  var vt = document.getElementById('verdictText');
+  /* 式のライブ表示 */
+  document.getElementById('fROE').textContent = curROE.toFixed(2);
+  document.getElementById('fG').textContent  = g.toFixed(2);
+  document.getElementById('fG2').textContent = g.toFixed(2);
 
-  /* g が r 以上になると式が壊れる(第1章 S12)*/
-  if(g >= r - 1e-9){
+  var out = document.getElementById('pbrOut');
+  var vt  = document.getElementById('verdictText');
+
+  if(broken){
     out.innerHTML = '計算不能';
     out.style.fontSize = '34px';
     vt.textContent = 'g が r 以上になり、この式は使えません(S12)。';
-    return;
-  }
-  out.style.fontSize = '';
-
-  var pbr = (curROE - g)/(r - g);
-  out.innerHTML = pbr.toFixed(2)+'<span class="u">倍</span>';
-
-  if(pbr < 1e-9){
-    vt.textContent = '株主は永久に一円も受け取れません。だから価値はゼロです。';
-  } else if(Math.abs(curROE - r) < 1e-9){
-    vt.textContent = 'ROE = r。社内に残しても、配当で出しても、株主の受け取る価値は同じ。だから選択が価値を変えません。';
-  } else if(curROE < r){
-    vt.textContent = '成長するほど、価値が減っていきます。';
   } else {
-    vt.textContent = '成長するほど、価値が増えていきます。';
+    out.style.fontSize = '';
+    var pbr = (curROE - g)/(r - g);
+    out.innerHTML = pbr.toFixed(2)+'<span class="u">倍</span>';
+    if(pbr < 1e-9){
+      vt.textContent = '株主は永久に一円も受け取れません。だから価値はゼロです。';
+    } else if(Math.abs(curROE - r) < 1e-9){
+      vt.textContent = 'ROE = r。社内に残しても、配当で出しても、株主の受け取る価値は同じ。だから選択が価値を変えません。';
+    } else if(curROE < r){
+      vt.textContent = '成長するほど、価値が減っていきます。';
+    } else {
+      vt.textContent = '成長するほど、価値が増えていきます。';
+    }
+  }
+
+  /* ── 下段カードを ROE に連動させる ── */
+  function pbrAt(bb){ var gg = curROE*bb; return (curROE-gg)/(r-gg); }
+  document.getElementById('lb50').textContent = 'PBR '+pbrAt(0.5).toFixed(2);
+  document.getElementById('lb20').textContent = 'PBR '+pbrAt(0.2).toFixed(2);
+  document.getElementById('lb0' ).textContent = 'PBR '+pbrAt(0).toFixed(2);
+
+  var pct = (curROE*100).toFixed(0);
+  var head = document.getElementById('lbHead');
+  var concl= document.getElementById('lbConcl');
+  var note = document.getElementById('lbNote');
+  var rMain= document.getElementById('recallMain');
+  var rSub = document.getElementById('recallSub');
+
+  if(curROE < r - 1e-9){
+    rMain.textContent = '年9%を求められている資本を、'+pct+'%でしか回せない。';
+    rSub.textContent  = '社内に留めるほど株主の価値は削られます。';
+    head.textContent  = 'では逆に、留保率を下げれば(配当を増やせば)よいのか';
+    concl.innerHTML   = '<strong>何も残さなくても '+pbrAt(0).toFixed(2)+' が上限。</strong>還元は目減りを止めるだけで、<em>価値を生み出す手段ではない</em>のです。';
+    note.innerHTML    = '全額留保なら <strong>PBR 0.00</strong> ── 一円も受け取らないなら価値はゼロ。本質的な解は <strong>ROE を r より上へ</strong>(S18のBの道)。';
+  } else if(Math.abs(curROE - r) < 1e-9){
+    rMain.textContent = '年9%を求められている資本を、ちょうど9%で回している。';
+    rSub.textContent  = '過不足がないので、留保しても配っても価値は動きません。';
+    head.textContent  = '留保率を変えても、PBR は動かない';
+    concl.innerHTML   = '<strong>どこを取っても 1.00。</strong>ROE と r が等しいとき、<em>還元方針は価値に影響しない</em>のです。';
+    note.innerHTML    = '留保率100%だけは <strong>g = r</strong> となり計算不能(S12)。ここが価値創造と破壊の<strong>分水嶺</strong>です。';
+  } else {
+    rMain.textContent = '年9%を求められている資本を、'+pct+'%で回せる。';
+    rSub.textContent  = '社内に留めるほど株主の価値は増えていきます。';
+    head.textContent  = 'では逆に、留保率を下げれば(配当を増やせば)どうなるか';
+    concl.innerHTML   = '<strong>何も残さないと '+pbrAt(0).toFixed(2)+' まで下がる。</strong>稼ぐ力があるなら、<em>配るより社内で回すほうが価値は大きい</em>のです。';
+    note.innerHTML    = 'ただし留保率80%以上は <strong>g が r を超えて</strong>計算不能に(S12)。<strong>高成長を永久に続ける前提は置けません。</strong>';
   }
 }
 
