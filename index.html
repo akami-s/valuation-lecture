@@ -1581,6 +1581,7 @@ roeBtns.forEach(function(btn){
     roeBtns.forEach(function(b2){ b2.classList.remove('sel'); });
     btn.classList.add('sel');
     curROE = +btn.getAttribute('data-roe')/100;
+    bs.value = 0;          /* ROE を変えたら出発点(留保率0%)へ戻す */
     updPBR();
   });
 });
