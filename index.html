@@ -982,19 +982,19 @@ ul.pts li::before{
       <table>
         <thead><tr><th>項目</th><th>値</th><th>出所</th></tr></thead>
         <tbody>
-          <tr><td>無リスク金利</td><td class="val">2.7%</td><td style="font-size:13px;color:var(--muted)">日本10年国債</td></tr>
-          <tr><td>β(ベータ)</td><td class="val">1.21</td><td style="font-size:13px;color:var(--muted)">A社の想定値</td></tr>
+          <tr><td>無リスク金利</td><td class="val">3.0%</td><td style="font-size:13px;color:var(--muted)">日本10年国債</td></tr>
+          <tr><td>β(ベータ)</td><td class="val">1.15</td><td style="font-size:13px;color:var(--muted)">A社の想定値</td></tr>
           <tr><td>リスクプレミアム</td><td class="val">5.2%</td><td style="font-size:13px;color:var(--muted)">日本・2026年7月推計</td></tr>
-          <tr class="hi"><td>r</td><td class="val">9.0%</td><td style="font-size:13px">2.7 + 1.21 × 5.2</td></tr>
+          <tr class="hi"><td>r</td><td class="val">9.0%</td><td style="font-size:13px">3.0 + 1.15 × 5.2</td></tr>
         </tbody>
       </table>
       <div class="note" style="margin-top:12px;font-size:13px">
-        β × リスクプレミアム = <strong>6.3%</strong>(危険を引き受ける対価)。以降はこの <strong>r = 9%</strong> を使い続けます。
+        β × リスクプレミアム = <strong>6.0%</strong>(危険を引き受ける対価)。以降はこの <strong>r = 9%</strong> を使い続けます。
       </div>
     </div>
     <div>
       <ul class="pts" style="margin-bottom:12px;font-size:15.5px">
-        <li style="font-size:15.5px;margin-bottom:10px"><strong>β = 1.0</strong> は市場と同じ動き。<strong>1.21</strong> は市場が10%下げると12%下げる銘柄。</li>
+        <li style="font-size:15.5px;margin-bottom:10px"><strong>β = 1.0</strong> は市場と同じ動き。<strong>1.15</strong> は市場が10%下げると11.5%下げる銘柄。</li>
         <li style="font-size:15.5px;margin-bottom:10px">リスクプレミアムは<em>観測できない</em>。推定するしかない数字です。</li>
         <li style="font-size:15.5px;margin-bottom:0"><strong>10年物</strong>を使うのは、株式が長期のキャッシュフローを生むから。<em>年限を揃えます。</em></li>
       </ul>
@@ -1017,25 +1017,25 @@ ul.pts li::before{
 <section class="slide" data-ch="2">
   <div class="eyebrow">いま起きていること</div>
   <h2>金利が上がると、何が起きたか</h2>
-  <p class="sub" style="margin-bottom:20px">10年国債利回りは 0.5%前後 → 2.7%前後 へ。<strong>式のどこが動いたか</strong>を見てください。</p>
+  <p class="sub" style="margin-bottom:20px">10年国債利回りは 0.5%前後 → <strong>3.0%前後</strong>(約30年ぶりの3%台)へ。<strong>式のどこが動いたか</strong>を見てください。</p>
   <div class="cols" style="gap:30px; align-items:stretch">
     <div class="rate-card">
       <div class="rc-head">2023年頃 ─ 無リスク金利 0.5%</div>
       <div class="rc-formula">
         <span class="frac">
           <span>50円</span>
-          <span class="den">(<b class="chg">0.5%</b> ＋ 6.3%)− 5%</span>
+          <span class="den">(<b class="chg">0.5%</b> ＋ 6.0%)− 5%</span>
         </span>
       </div>
-      <div class="rc-den">↓　分母 ＝ <b>1.8%</b></div>
-      <div class="rc-result" style="color:var(--sage)">2,778<span class="u">円</span></div>
+      <div class="rc-den">↓　分母 ＝ <b>1.5%</b></div>
+      <div class="rc-result" style="color:var(--sage)">3,333<span class="u">円</span></div>
     </div>
     <div class="rate-card now">
-      <div class="rc-head">現在 ─ 無リスク金利 2.7%</div>
+      <div class="rc-head">現在 ─ 無リスク金利 3.0%</div>
       <div class="rc-formula">
         <span class="frac">
           <span>50円</span>
-          <span class="den">(<b class="chg">2.7%</b> ＋ 6.3%)− 5%</span>
+          <span class="den">(<b class="chg">3.0%</b> ＋ 6.0%)− 5%</span>
         </span>
       </div>
       <div class="rc-den">↓　分母 ＝ <b>4.0%</b></div>
@@ -1043,10 +1043,10 @@ ul.pts li::before{
     </div>
   </div>
   <div class="cmp-legend" style="margin-top:16px;border-top:0;padding-top:0">
-    配当 <b>50円</b>、β×リスクプレミアム <b>6.3%</b>、成長率 <b>5%</b> はすべて同じ。<strong>動いたのは無リスク金利だけ</strong>です。
+    配当 <b>50円</b>、β×リスクプレミアム <b>6.0%</b>、成長率 <b>5%</b> はすべて同じ。<strong>動いたのは無リスク金利だけ</strong>です。
   </div>
   <div class="callout" style="margin-top:16px;padding:18px 26px">
-    <p>2.2ポイントの金利上昇が、分母を <em>1.8% → 4.0% へ2倍以上</em>に。理論株価は 55%下落しました。</p>
+    <p>2.5ポイントの金利上昇が、分母を <em>1.5% → 4.0% へ2.7倍</em>に。理論株価は 62%下落しました。</p>
   </div>
 </section>
 
