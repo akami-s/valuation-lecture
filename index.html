@@ -722,7 +722,7 @@ ul.pts li::before{
     </div>
   </div>
   <div class="callout sage" style="margin-top:28px">
-    <p>割引率 r ＝ <em>時間の分</em> ＋ <em>危険の分</em></p>
+    <p>要求リターン ＝ <em>時間の分</em> ＋ <em>危険の分</em> ＝ <strong>割引率 r</strong></p>
   </div>
 </section>
 
@@ -737,7 +737,7 @@ ul.pts li::before{
         <div class="step-tag">すでに知っている ─ 複利</div>
         <div class="formula" style="font-size:24px;padding:28px 18px">
           <div class="f-body">将来のお金 ＝ 現在価値 ×(1 + r)<sup>n</sup></div>
-          <div class="formula-note" style="margin-top:12px">この向きで読むとき、r は<strong>「増える率」＝ 期待リターン</strong></div>
+          <div class="formula-note" style="margin-top:12px">この向きで読むとき、r は<strong>「増える率」＝ 要求リターン</strong></div>
         </div>
       </div>
       <div class="derive-arrow">
@@ -757,7 +757,7 @@ ul.pts li::before{
   <div class="rt-block">
     <div class="roundtrip">
       <div class="rt-node"><div class="v" style="color:var(--akami)">100万円</div><div class="l">いま</div></div>
-      <div class="rt-arrow"><div class="op">× 1.09<sup>10</sup></div><div class="line"></div><div class="cap">増やす</div><div class="rname">r = 期待リターン 9%</div></div>
+      <div class="rt-arrow"><div class="op">× 1.09<sup>10</sup></div><div class="line"></div><div class="cap">増やす</div><div class="rname">r = 要求リターン 9%</div></div>
       <div class="rt-node"><div class="v" style="color:var(--sage)">236.7万円</div><div class="l">10年後</div></div>
       <div class="rt-arrow"><div class="op">÷ 1.09<sup>10</sup></div><div class="line"></div><div class="cap">割り引く</div><div class="rname">r = 割引率 9%</div></div>
       <div class="rt-node"><div class="v" style="color:var(--akami)">100万円</div><div class="l">いま</div></div>
@@ -827,7 +827,7 @@ ul.pts li::before{
     <span class="sb-tag">この先で使う例</span>
     <span>1株あたりの配当 <b>D = 50円</b></span>
     <span class="sb-sep">／</span>
-    <span>割引率 <b>r = 9%</b> ── 前ページで置いた「この株への自分の要求」<span class="sb-note">根拠は第2章で</span></span>
+    <span>要求リターン <b>r = 9%</b> ── 前ページで置いた「この株への自分の要求」<span class="sb-note">根拠は第2章で</span></span>
   </div>
   <div class="cols" style="margin-top:16px;gap:30px;align-items:stretch">
     <div class="card sage" style="padding:18px 22px">
@@ -948,8 +948,8 @@ ul.pts li::before{
   <div class="cols-3" style="margin-top:20px">
     <div class="card sage">
       <div class="kicker">株主から見ると</div>
-      <h3>期待収益率</h3>
-      <p>この会社の株を持つなら、これくらいのリターンはほしい、という要求水準。</p>
+      <h3>要求リターン</h3>
+      <p>これくらいは<strong>ないと投資しない</strong>という最低ライン。</p>
     </div>
     <div class="card sage">
       <div class="kicker">会社から見ると</div>
@@ -962,8 +962,11 @@ ul.pts li::before{
       <p>将来のお金を現在に引き戻すときの、目減りの度合い。</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:32px">
+  <div class="callout" style="margin-top:28px">
     <p>株主が要求するリターンは、会社にとってはコスト。<em>同じ数字の裏表</em>です。</p>
+  </div>
+  <div class="note" style="margin-top:16px;font-size:13px">
+    <strong>要求リターン</strong>は、教科書では「期待収益率」「期待リターン」とも呼ばれます。この講座では<strong>要求リターン</strong>で統一します。
   </div>
 </section>
 
@@ -1070,7 +1073,7 @@ ul.pts li::before{
           <tr><td>ROE</td><td class="val">10%</td><td style="font-size:12.5px;color:var(--muted)">EPS 100 ÷ BPS 1,000</td></tr>
           <tr><td>配当性向</td><td class="val">50%</td><td style="font-size:12.5px;color:var(--muted)">DPS 50 ÷ EPS 100</td></tr>
           <tr class="hi"><td>成長率 g</td><td class="val">5%</td><td style="font-size:12.5px">ROE 10% ×(1 − 配当性向 50%)</td></tr>
-          <tr><td>期待収益率 r</td><td class="val">9%</td><td style="font-size:12.5px;color:var(--muted)">CAPM(前章)</td></tr>
+          <tr><td>要求リターン r</td><td class="val">9%</td><td style="font-size:12.5px;color:var(--muted)">CAPM(前章)</td></tr>
         </tbody>
       </table>
       <div class="note" style="margin-top:14px;font-size:13px">
@@ -1254,7 +1257,7 @@ ul.pts li::before{
   <div class="closing">
     <p>分子と分母から<strong>同じ g(＝0.05)を引いている</strong>だけ。だから結論は <strong>ROE と r の大小</strong>だけで決まります。</p>
     <p style="margin-top:9px">東証が「PBR1倍割れ企業」に改善を求めるのも同じ理由。株価が安いことではなく、<em>資本コストを稼げていない</em>ことが問題なのです。</p>
-    <div class="closing-recall">思い出してください ── <b>資本コスト ＝ 期待収益率 ＝ 割引率 ＝ r</b>　立場が違うだけで、同じ 9% です(S14)</div>
+    <div class="closing-recall">思い出してください ── <b>資本コスト ＝ 要求リターン ＝ 割引率 ＝ r</b>　立場が違うだけで、同じ 9% です(S14)</div>
   </div>
 </section>
 
@@ -1279,7 +1282,7 @@ ul.pts li::before{
             <b id="gOut">0.0%</b>
           </div>
           <div class="live-item fix">
-            <span>期待収益率 r</span>
+            <span>要求リターン r</span>
             <b>9.0%</b>
           </div>
         </div>
