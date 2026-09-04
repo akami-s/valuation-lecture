@@ -722,7 +722,7 @@ ul.pts li::before{
     </div>
   </div>
   <div class="callout sage" style="margin-top:28px">
-    <p>要求リターン ＝ <em>時間の分</em> ＋ <em>危険の分</em> ＝ <strong>割引率 r</strong></p>
+    <p>割引率 r ＝ <em>時間の分</em> ＋ <em>危険の分</em></p>
   </div>
 </section>
 
@@ -737,7 +737,7 @@ ul.pts li::before{
         <div class="step-tag">すでに知っている ─ 複利</div>
         <div class="formula" style="font-size:24px;padding:28px 18px">
           <div class="f-body">将来のお金 ＝ 現在価値 ×(1 + r)<sup>n</sup></div>
-          <div class="formula-note" style="margin-top:12px">この向きで読むとき、r は<strong>「増える率」＝ 要求リターン</strong></div>
+          <div class="formula-note" style="margin-top:12px">この向きで読むとき、r は<strong>「増える率」＝ 期待リターン</strong></div>
         </div>
       </div>
       <div class="derive-arrow">
@@ -757,7 +757,7 @@ ul.pts li::before{
   <div class="rt-block">
     <div class="roundtrip">
       <div class="rt-node"><div class="v" style="color:var(--akami)">100万円</div><div class="l">いま</div></div>
-      <div class="rt-arrow"><div class="op">× 1.09<sup>10</sup></div><div class="line"></div><div class="cap">増やす</div><div class="rname">r = 要求リターン 9%</div></div>
+      <div class="rt-arrow"><div class="op">× 1.09<sup>10</sup></div><div class="line"></div><div class="cap">増やす</div><div class="rname">r = 期待リターン 9%</div></div>
       <div class="rt-node"><div class="v" style="color:var(--sage)">236.7万円</div><div class="l">10年後</div></div>
       <div class="rt-arrow"><div class="op">÷ 1.09<sup>10</sup></div><div class="line"></div><div class="cap">割り引く</div><div class="rname">r = 割引率 9%</div></div>
       <div class="rt-node"><div class="v" style="color:var(--akami)">100万円</div><div class="l">いま</div></div>
@@ -827,7 +827,7 @@ ul.pts li::before{
     <span class="sb-tag">この先で使う例</span>
     <span>1株あたりの配当 <b>D = 50円</b></span>
     <span class="sb-sep">／</span>
-    <span>要求リターン <b>r = 9%</b> ── 前ページで置いた「この株への自分の要求」<span class="sb-note">根拠は第2章で</span></span>
+    <span>割引率 <b>r = 9%</b> ── 前ページで置いた「この株への自分の要求」<span class="sb-note">根拠は第2章で</span></span>
   </div>
   <div class="cols" style="margin-top:16px;gap:30px;align-items:stretch">
     <div class="card sage" style="padding:18px 22px">
@@ -947,9 +947,9 @@ ul.pts li::before{
   <p class="sub">同じ数字を、誰の側から見るかで呼び方が変わるだけです。混乱しやすいので最初に揃えておきます。</p>
   <div class="cols-3" style="margin-top:20px">
     <div class="card sage">
-      <div class="kicker">投資家から見ると</div>
-      <h3>要求リターン</h3>
-      <p>これくらいは<strong>ないと投資しない</strong>という最低ライン。</p>
+      <div class="kicker">株主から見ると</div>
+      <h3>期待収益率</h3>
+      <p>この会社の株を持つなら、これくらいのリターンはほしい、という要求水準。</p>
     </div>
     <div class="card sage">
       <div class="kicker">会社から見ると</div>
@@ -962,11 +962,8 @@ ul.pts li::before{
       <p>将来のお金を現在に引き戻すときの、目減りの度合い。</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:28px">
-    <p>投資家が要求するリターンは、会社にとってはコスト。<em>同じ数字の裏表</em>です。</p>
-  </div>
-  <div class="note" style="margin-top:16px;font-size:13px">
-    <strong>要求リターン</strong>は、教科書では「期待収益率」「期待リターン」とも呼ばれます。この講座では<strong>要求リターン</strong>で統一します。
+  <div class="callout" style="margin-top:32px">
+    <p>株主が要求するリターンは、会社にとってはコスト。<em>同じ数字の裏表</em>です。</p>
   </div>
 </section>
 
@@ -982,19 +979,19 @@ ul.pts li::before{
       <table>
         <thead><tr><th>項目</th><th>値</th><th>出所</th></tr></thead>
         <tbody>
-          <tr><td>無リスク金利</td><td class="val">3.0%</td><td style="font-size:13px;color:var(--muted)">日本10年国債</td></tr>
-          <tr><td>β(ベータ)</td><td class="val">1.15</td><td style="font-size:13px;color:var(--muted)">A社の想定値</td></tr>
+          <tr><td>無リスク金利</td><td class="val">2.7%</td><td style="font-size:13px;color:var(--muted)">日本10年国債</td></tr>
+          <tr><td>β(ベータ)</td><td class="val">1.21</td><td style="font-size:13px;color:var(--muted)">A社の想定値</td></tr>
           <tr><td>リスクプレミアム</td><td class="val">5.2%</td><td style="font-size:13px;color:var(--muted)">日本・2026年7月推計</td></tr>
-          <tr class="hi"><td>r</td><td class="val">9.0%</td><td style="font-size:13px">3.0 + 1.15 × 5.2</td></tr>
+          <tr class="hi"><td>r</td><td class="val">9.0%</td><td style="font-size:13px">2.7 + 1.21 × 5.2</td></tr>
         </tbody>
       </table>
       <div class="note" style="margin-top:12px;font-size:13px">
-        β × リスクプレミアム = <strong>6.0%</strong>(危険を引き受ける対価)。以降はこの <strong>r = 9%</strong> を使い続けます。
+        β × リスクプレミアム = <strong>6.3%</strong>(危険を引き受ける対価)。以降はこの <strong>r = 9%</strong> を使い続けます。
       </div>
     </div>
     <div>
       <ul class="pts" style="margin-bottom:12px;font-size:15.5px">
-        <li style="font-size:15.5px;margin-bottom:10px"><strong>β = 1.0</strong> は市場と同じ動き。<strong>1.15</strong> は市場が10%下げると11.5%下げる銘柄。</li>
+        <li style="font-size:15.5px;margin-bottom:10px"><strong>β = 1.0</strong> は市場と同じ動き。<strong>1.21</strong> は市場が10%下げると12%下げる銘柄。</li>
         <li style="font-size:15.5px;margin-bottom:10px">リスクプレミアムは<em>観測できない</em>。推定するしかない数字です。</li>
         <li style="font-size:15.5px;margin-bottom:0"><strong>10年物</strong>を使うのは、株式が長期のキャッシュフローを生むから。<em>年限を揃えます。</em></li>
       </ul>
@@ -1017,25 +1014,25 @@ ul.pts li::before{
 <section class="slide" data-ch="2">
   <div class="eyebrow">いま起きていること</div>
   <h2>金利が上がると、何が起きたか</h2>
-  <p class="sub" style="margin-bottom:20px">10年国債利回りは 0.5%前後 → <strong>3.0%前後</strong>(約30年ぶりの3%台)へ。<strong>式のどこが動いたか</strong>を見てください。</p>
+  <p class="sub" style="margin-bottom:20px">10年国債利回りは 0.5%前後 → 2.7%前後 へ。<strong>式のどこが動いたか</strong>を見てください。</p>
   <div class="cols" style="gap:30px; align-items:stretch">
     <div class="rate-card">
       <div class="rc-head">2023年頃 ─ 無リスク金利 0.5%</div>
       <div class="rc-formula">
         <span class="frac">
           <span>50円</span>
-          <span class="den">(<b class="chg">0.5%</b> ＋ 6.0%)− 5%</span>
+          <span class="den">(<b class="chg">0.5%</b> ＋ 6.3%)− 5%</span>
         </span>
       </div>
-      <div class="rc-den">↓　分母 ＝ <b>1.5%</b></div>
-      <div class="rc-result" style="color:var(--sage)">3,333<span class="u">円</span></div>
+      <div class="rc-den">↓　分母 ＝ <b>1.8%</b></div>
+      <div class="rc-result" style="color:var(--sage)">2,778<span class="u">円</span></div>
     </div>
     <div class="rate-card now">
-      <div class="rc-head">現在 ─ 無リスク金利 3.0%</div>
+      <div class="rc-head">現在 ─ 無リスク金利 2.7%</div>
       <div class="rc-formula">
         <span class="frac">
           <span>50円</span>
-          <span class="den">(<b class="chg">3.0%</b> ＋ 6.0%)− 5%</span>
+          <span class="den">(<b class="chg">2.7%</b> ＋ 6.3%)− 5%</span>
         </span>
       </div>
       <div class="rc-den">↓　分母 ＝ <b>4.0%</b></div>
@@ -1043,10 +1040,10 @@ ul.pts li::before{
     </div>
   </div>
   <div class="cmp-legend" style="margin-top:16px;border-top:0;padding-top:0">
-    配当 <b>50円</b>、β×リスクプレミアム <b>6.0%</b>、成長率 <b>5%</b> はすべて同じ。<strong>動いたのは無リスク金利だけ</strong>です。
+    配当 <b>50円</b>、β×リスクプレミアム <b>6.3%</b>、成長率 <b>5%</b> はすべて同じ。<strong>動いたのは無リスク金利だけ</strong>です。
   </div>
   <div class="callout" style="margin-top:16px;padding:18px 26px">
-    <p>2.5ポイントの金利上昇が、分母を <em>1.5% → 4.0% へ2.7倍</em>に。理論株価は 62%下落しました。</p>
+    <p>2.2ポイントの金利上昇が、分母を <em>1.8% → 4.0% へ2倍以上</em>に。理論株価は 55%下落しました。</p>
   </div>
 </section>
 
@@ -1073,7 +1070,7 @@ ul.pts li::before{
           <tr><td>ROE</td><td class="val">10%</td><td style="font-size:12.5px;color:var(--muted)">EPS 100 ÷ BPS 1,000</td></tr>
           <tr><td>配当性向</td><td class="val">50%</td><td style="font-size:12.5px;color:var(--muted)">DPS 50 ÷ EPS 100</td></tr>
           <tr class="hi"><td>成長率 g</td><td class="val">5%</td><td style="font-size:12.5px">ROE 10% ×(1 − 配当性向 50%)</td></tr>
-          <tr><td>要求リターン r</td><td class="val">9%</td><td style="font-size:12.5px;color:var(--muted)">CAPM(前章)</td></tr>
+          <tr><td>期待収益率 r</td><td class="val">9%</td><td style="font-size:12.5px;color:var(--muted)">CAPM(前章)</td></tr>
         </tbody>
       </table>
       <div class="note" style="margin-top:14px;font-size:13px">
@@ -1257,7 +1254,7 @@ ul.pts li::before{
   <div class="closing">
     <p>分子と分母から<strong>同じ g(＝0.05)を引いている</strong>だけ。だから結論は <strong>ROE と r の大小</strong>だけで決まります。</p>
     <p style="margin-top:9px">東証が「PBR1倍割れ企業」に改善を求めるのも同じ理由。株価が安いことではなく、<em>資本コストを稼げていない</em>ことが問題なのです。</p>
-    <div class="closing-recall">思い出してください ── <b>資本コスト ＝ 要求リターン ＝ 割引率 ＝ r</b>　立場が違うだけで、同じ 9% です(S14)</div>
+    <div class="closing-recall">思い出してください ── <b>資本コスト ＝ 期待収益率 ＝ 割引率 ＝ r</b>　立場が違うだけで、同じ 9% です(S14)</div>
   </div>
 </section>
 
@@ -1282,7 +1279,7 @@ ul.pts li::before{
             <b id="gOut">0.0%</b>
           </div>
           <div class="live-item fix">
-            <span>要求リターン r</span>
+            <span>期待収益率 r</span>
             <b>9.0%</b>
           </div>
         </div>
