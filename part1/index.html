@@ -1517,12 +1517,9 @@ function placeNav(s){
   var mx = (vw-dw)/2, my = (vh-dh)/2;        /* 左右・上下の余白 */
   var coarse = window.matchMedia('(pointer:coarse)').matches;
   var b, y, edge;
-  if(!coarse){                                /* PC ── 従来どおりデッキ内の左下 */
-    b = 32*s;
-    y = my + dh - 22*s - b;
-    navPut(p, mx + 34*s, y, b);
-    navPut(n, mx + 34*s + b + 8*s, y, b);
-  } else if(mx >= 56){                        /* 左右の余白へ ── 横持ちの親指の位置 */
+  p.style.display = n.style.display = coarse ? 'flex' : 'none';
+  if(!coarse) return;                         /* PC ── キーボードで動かすのでボタンは出さない */
+  if(mx >= 56){                        /* 左右の余白へ ── 横持ちの親指の位置 */
     b = 46; y = (vh - b)/2; edge = Math.max(6, (mx - b)/2);
     navPut(p, edge, y, b);
     navPut(n, vw - b - edge, y, b);
