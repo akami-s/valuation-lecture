@@ -665,10 +665,14 @@ ul.pts li::before{
 }
 #hud .ch{color:var(--sage); letter-spacing:.06em; font-family:var(--gothic); font-size:12px}
 
-#nav{position:absolute; left:34px; bottom:22px; display:flex; gap:8px; z-index:6}
+/* ボタンはデッキの外に出し、位置と大きさは JS が決める（placeNav） */
+#nav{display:contents}
 #nav button{
-  width:32px; height:32px; border:1px solid var(--rule); background:#fff;
-  color:var(--ink-2); cursor:pointer; border-radius:3px; font-size:14px; line-height:1;
+  position:fixed; z-index:30;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--rule); background:#fff; color:var(--ink-2);
+  cursor:pointer; border-radius:4px; line-height:1; padding:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
 }
 #nav button:hover{border-color:var(--akami); color:var(--akami)}
 #nav button:focus-visible{outline:2px solid var(--sage); outline-offset:2px}
@@ -818,15 +822,6 @@ table th, table td{ line-height:1.35; }
 /* ---------- スマホ対応 ---------- */
 /* 指で押せる大きさを保つ（縮小率 --inv を掛けて実寸を一定にする） */
 @media (pointer:coarse){
-  #nav{
-    left:calc(22px * var(--inv,1)); bottom:calc(16px * var(--inv,1));
-    gap:calc(9px * var(--inv,1));
-  }
-  #nav button{
-    width:calc(46px * var(--inv,1)); height:calc(46px * var(--inv,1));
-    font-size:calc(20px * var(--inv,1)); border-radius:calc(4px * var(--inv,1));
-    border-width:calc(1px * var(--inv,1));
-  }
   #help{display:none}
 }
 /* 縦画面のときだけ、横向きを促す */
@@ -1947,13 +1942,13 @@ table th, table td{ line-height:1.35; }
 </section>
 
 <div id="rail"></div>
+<div id="hud"><span class="ch" id="hudCh"></span><span id="hudNum"></span></div>
+
+</div></div>
 <div id="nav">
   <button id="prev" aria-label="前のスライド">‹</button>
   <button id="next" aria-label="次のスライド">›</button>
 </div>
-<div id="hud"><span class="ch" id="hudCh"></span><span id="hudNum"></span></div>
-
-</div></div>
 <div id="rotate">
   <div class="rot-mark"></div>
   <div class="rot-t">画面を横にしてください</div>
@@ -2151,11 +2146,48 @@ document.addEventListener('keydown', function(e){
 });
 
 /* 拡大縮小 */
+/* ── ボタンの置き場所 ───────────────────────────
+   デッキの外にできる余白（レターボックス）へ逃がし、本文に重ならないようにする。
+   余白が足りない端末では、従来どおり左下に置く。                        */
+function navPut(el, x, y, b){
+  el.style.left = Math.round(x)+'px';
+  el.style.top  = Math.round(y)+'px';
+  el.style.width = el.style.height = Math.round(b)+'px';
+  el.style.fontSize = Math.round(b*0.44)+'px';
+}
+function placeNav(s){
+  var p = document.getElementById('prev'), n = document.getElementById('next');
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var dw = 1280*s, dh = 720*s;
+  var mx = (vw-dw)/2, my = (vh-dh)/2;        /* 左右・上下の余白 */
+  var coarse = window.matchMedia('(pointer:coarse)').matches;
+  var b, y, edge;
+  if(!coarse){                                /* PC ── 従来どおりデッキ内の左下 */
+    b = 32*s;
+    y = my + dh - 22*s - b;
+    navPut(p, mx + 34*s, y, b);
+    navPut(n, mx + 34*s + b + 8*s, y, b);
+  } else if(mx >= 56){                        /* 左右の余白へ ── 横持ちの親指の位置 */
+    b = 46; y = (vh - b)/2; edge = Math.max(6, (mx - b)/2);
+    navPut(p, edge, y, b);
+    navPut(n, vw - b - edge, y, b);
+  } else if(my >= 56){                        /* 下の余白へ */
+    b = 46; y = vh - my/2 - b/2;
+    navPut(p, vw/2 - b - 9, y, b);
+    navPut(n, vw/2 + 9, y, b);
+  } else {                                    /* 余白がない ── 従来位置 */
+    b = 46; y = vh - b - 12;
+    navPut(p, 12, y, b);
+    navPut(n, 12 + b + 10, y, b);
+  }
+}
+
 function fit(){
   var d = document.getElementById('deck');
   var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.96;
   d.style.transform = 'scale('+s+')';
   d.style.setProperty('--inv', 1/s);
+  placeNav(s);
 }
 window.addEventListener('resize', fit);
 window.addEventListener('orientationchange', function(){ setTimeout(fit,120); });
