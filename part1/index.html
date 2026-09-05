@@ -46,7 +46,7 @@ body{
 }
 #deck{
   position:relative;
-  width:1280px; height:720px;
+  width:1280px; height:720px; flex:none;
   transform-origin:center center;
   background:var(--cream);
   overflow:hidden;
@@ -620,6 +620,46 @@ ul.pts li::before{
 
 @media (prefers-reduced-motion:reduce){
   *{animation:none !important; transition:none !important}
+}
+
+/* ---------- スマホ対応 ---------- */
+/* 指で押せる大きさを保つ（縮小率 --inv を掛けて実寸を一定にする） */
+@media (pointer:coarse){
+  #nav{
+    left:calc(22px * var(--inv,1)); bottom:calc(16px * var(--inv,1));
+    gap:calc(9px * var(--inv,1));
+  }
+  #nav button{
+    width:calc(46px * var(--inv,1)); height:calc(46px * var(--inv,1));
+    font-size:calc(20px * var(--inv,1)); border-radius:calc(4px * var(--inv,1));
+    border-width:calc(1px * var(--inv,1));
+  }
+  #help{display:none}
+}
+/* 縦画面のときだけ、横向きを促す */
+#rotate{display:none}
+@media (pointer:coarse) and (orientation:portrait){
+  #rotate{
+    display:flex; position:fixed; inset:0; z-index:50;
+    background:var(--cream); color:var(--ink);
+    flex-direction:column; align-items:center; justify-content:center;
+    gap:16px; padding:36px; text-align:center;
+  }
+}
+#rotate .rot-mark{
+  width:58px; height:92px; border:3px solid var(--akami); border-radius:9px;
+  position:relative; margin-bottom:6px;
+}
+#rotate .rot-mark::after{
+  content:"↻"; position:absolute; right:-34px; bottom:-6px;
+  font-size:30px; color:var(--akami); line-height:1;
+}
+#rotate .rot-t{font-family:var(--mincho); font-size:26px; font-weight:600; line-height:1.5}
+#rotate .rot-s{font-size:15px; line-height:1.85; color:var(--ink-2); max-width:22em}
+#rotate button{
+  margin-top:10px; padding:11px 22px; font-family:var(--gothic); font-size:14px;
+  color:var(--ink-2); background:#fff; border:1px solid var(--rule);
+  border-radius:4px; cursor:pointer;
 }
 </style>
 </head>
@@ -1384,6 +1424,12 @@ ul.pts li::before{
 <div id="hud"><span class="ch" id="hudCh"></span><span id="hudNum"></span></div>
 
 </div></div>
+<div id="rotate">
+  <div class="rot-mark"></div>
+  <div class="rot-t">画面を横にしてください</div>
+  <div class="rot-s">この資料は横長に作られています。横向きにすると、文字が読める大きさになります。</div>
+  <button id="rotSkip">このまま見る</button>
+</div>
 <div id="help">← → スライド移動　　F 全画面</div>
 
 <script>
@@ -1421,6 +1467,28 @@ function show(n){
   if(slides[i].querySelector('#pbrOut')) resetPBR();
 }
 
+
+/* ── 指でめくる（スワイプ）───────────────────────
+   スライダーやボタンの上から始まった操作は、ページ送りにしない */
+var swX=0, swY=0, swOn=false;
+document.addEventListener('touchstart', function(e){
+  if(e.touches.length !== 1){ swOn=false; return; }
+  var t=e.target;
+  if(t.closest && t.closest('input,button,a,.panel,.toggle')){ swOn=false; return; }
+  swX=e.touches[0].clientX; swY=e.touches[0].clientY; swOn=true;
+}, {passive:true});
+document.addEventListener('touchend', function(e){
+  if(!swOn) return;
+  swOn=false;
+  var t=e.changedTouches[0], dx=t.clientX-swX, dy=t.clientY-swY;
+  if(Math.abs(dx) < 45) return;              /* 誤タップ除け */
+  if(Math.abs(dx) < Math.abs(dy) * 1.4) return;  /* 縦方向の動きは無視 */
+  show(dx < 0 ? i+1 : i-1);
+}, {passive:true});
+
+var rotSkip = document.getElementById('rotSkip');
+if(rotSkip) rotSkip.onclick = function(){ document.getElementById('rotate').style.display='none'; };
+
 document.getElementById('next').onclick = function(){ show(i+1); };
 document.getElementById('prev').onclick = function(){ show(i-1); };
 
@@ -1440,8 +1508,10 @@ function fit(){
   var d = document.getElementById('deck');
   var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.96;
   d.style.transform = 'scale('+s+')';
+  d.style.setProperty('--inv', 1/s);
 }
 window.addEventListener('resize', fit);
+window.addEventListener('orientationchange', function(){ setTimeout(fit,120); });
 fit();
 
 /* ── 現在価値スライダー ── */
