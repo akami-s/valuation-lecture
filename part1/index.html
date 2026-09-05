@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>割引という考え方 前半｜株主が受け取るもの - Akami Studio</title>
+<style>
+/* ============================================================
+   Akami Studio ─ 講義スライド 前半
+   色を変えたい場合はここだけ触れば全体に反映されます
+   ============================================================ */
+:root{
+  --akami:#B7282E;          /* akamiRed */
+  --akami-deep:#8C1B21;
+  --akami-tint:#F5E3E2;
+  --cream:#FAF6EF;
+  --cream-2:#F2ECE0;
+  --sage:#6E8266;
+  --sage-light:#A9B8A1;
+  --sage-tint:#E6EBE2;
+  --ink:#26221F;
+  --ink-2:#5C554D;
+  --muted:#948C81;
+  --rule:#DCD4C6;
+  --chapter-bg:#DFE5D8;      /* 章扉の地色 ─ 落ち着いた淡いセージ */
+  --chapter-note:#4C5646;    /* 章扉の本文 */
+
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --gothic:"Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Noto Sans JP",sans-serif;
+  --mono:"SFMono-Regular","Menlo","Consolas",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--ink);
+  font-family:var(--gothic);
+  color:var(--ink);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- ステージ ---------- */
+#stage{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+#deck{
+  position:relative;
+  width:1280px; height:720px;
+  transform-origin:center center;
+  background:var(--cream);
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+}
+
+/* ---------- スライド ---------- */
+.slide{
+  position:absolute; inset:0;
+  padding:64px 88px 76px;
+  display:none;
+  flex-direction:column;
+  background:var(--cream);
+}
+.slide.on{display:flex; animation:fade .38s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* 章ラベル */
+.eyebrow{
+  font-size:13px; letter-spacing:.18em; color:var(--sage);
+  font-weight:700; margin-bottom:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.eyebrow::after{content:""; flex:1; height:1px; background:var(--rule)}
+
+h1{font-family:var(--mincho); font-size:52px; font-weight:600; line-height:1.3; letter-spacing:.02em}
+h2{font-family:var(--mincho); font-size:38px; font-weight:600; line-height:1.35; margin-bottom:8px; letter-spacing:.02em}
+.sub{font-size:17px; color:var(--ink-2); line-height:1.75; margin-bottom:24px; max-width:58em}
+.body-l{font-size:20px; line-height:1.9; color:var(--ink-2)}
+.lead{flex:1; display:flex; flex-direction:column; justify-content:center}
+
+strong{color:var(--akami); font-weight:700}
+em{font-style:normal; background:linear-gradient(transparent 62%, var(--sage-tint) 62%); font-weight:600}
+
+/* ---------- 表紙 ---------- */
+.cover{
+  background:var(--cream);
+  justify-content:center;
+  padding-left:110px;
+}
+.cover .rule{width:64px;height:5px;background:var(--akami);margin-bottom:32px}
+.cover h1{font-size:66px; line-height:1.24}
+.cover .tag{font-size:19px;color:var(--sage);margin-top:26px;letter-spacing:.08em}
+.cover .brand{
+  position:absolute; right:88px; bottom:64px;
+  text-align:right; font-size:13px; color:var(--muted); letter-spacing:.14em; line-height:2;
+}
+
+/* ---------- 章扉 ---------- */
+.chapter{
+  background:var(--chapter-bg);
+  justify-content:center; align-items:flex-start; padding-left:110px;
+}
+.chapter::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:14px;
+  background:var(--akami);
+}
+.chapter h1{color:var(--ink); font-size:58px}
+.chapter .num{
+  font-family:var(--mono); font-size:15px; color:var(--akami);
+  letter-spacing:.3em; margin-bottom:20px; font-weight:700;
+}
+.chapter .num::after{
+  content:""; display:block; width:52px; height:3px;
+  background:var(--akami); margin-top:14px;
+}
+.chapter .note{
+  border:0; padding:0; color:var(--chapter-note); font-size:19px;
+  margin-top:26px; max-width:34em; line-height:1.9;
+}
+
+/* ---------- レイアウト部品 ---------- */
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1; align-items:start}
+.cols-3{display:grid; grid-template-columns:repeat(3,1fr); gap:26px}
+
+.card{
+  background:#fff; border:1px solid var(--rule); border-radius:3px;
+  padding:26px 28px;
+}
+.card.accent{border-left:4px solid var(--akami)}
+.card.sage{border-left:4px solid var(--sage)}
+.card h3{font-size:19px; margin-bottom:12px; font-weight:700; color:var(--ink)}
+.card p{font-size:15.5px; line-height:1.85; color:var(--ink-2)}
+
+.kicker{
+  font-family:var(--mono); font-size:12px; letter-spacing:.2em;
+  color:var(--akami); font-weight:700; margin-bottom:10px;
+}
+
+/* 数式 */
+.formula{
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:30px 34px; text-align:center; border-radius:3px;
+  font-family:var(--mincho); font-size:34px; line-height:1.6; letter-spacing:.02em;
+}
+.formula .den{border-top:2px solid var(--ink); padding-top:4px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; margin:0 10px; text-align:center}
+.frac span{padding:2px 10px}
+.formula-note{font-family:var(--gothic); font-size:14px; color:var(--muted); margin-top:14px; letter-spacing:.02em}
+
+/* 数値ハイライト */
+.big-num{font-family:var(--mincho); font-size:60px; color:var(--akami); font-weight:600; line-height:1}
+.big-num .u{font-size:24px; margin-left:4px}
+.num-label{font-size:13.5px; color:var(--muted); letter-spacing:.1em; margin-bottom:8px}
+
+.split{
+  font-size:12.5px; color:var(--muted); margin-top:10px;
+  padding-top:9px; border-top:1px solid var(--rule); letter-spacing:.01em;
+}
+.split b{font-family:var(--mono); font-size:13.5px; color:var(--ink-2); font-weight:700}
+
+/* テーブル */
+table.tight th, table.tight td{padding:7px 10px}
+table{width:100%; border-collapse:collapse; font-size:16px}
+th,td{padding:12px 14px; text-align:right; border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{
+  font-size:13px; letter-spacing:.08em; color:var(--sage);
+  border-bottom:2px solid var(--sage-light); font-weight:700;
+}
+td.val{font-family:var(--mono); font-size:17px}
+tr.hi td{background:var(--akami-tint); font-weight:700}
+tr.hi td.val{color:var(--akami-deep)}
+
+/* ---------- インタラクティブ ---------- */
+.panel{
+  background:#fff; border:1px solid var(--rule); border-radius:3px;
+  padding:18px 22px;
+}
+.ctrl{margin-bottom:18px}
+.ctrl:last-child{margin-bottom:0}
+.ctrl label{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:14px; color:var(--ink-2); margin-bottom:8px; letter-spacing:.03em;
+}
+.ctrl label b{font-family:var(--mono); font-size:19px; color:var(--akami); font-weight:700}
+input[type=range]{
+  width:100%; height:4px; -webkit-appearance:none; appearance:none;
+  background:var(--rule); border-radius:2px; outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:19px; height:19px; border-radius:50%;
+  background:var(--akami); cursor:pointer; border:3px solid #fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.28);
+}
+input[type=range]::-moz-range-thumb{
+  width:19px; height:19px; border-radius:50%; border:3px solid #fff;
+  background:var(--akami); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.28);
+}
+input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--sage-tint)}
+
+.toggle{display:flex; gap:0; border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin-bottom:18px}
+.toggle button{
+  flex:1; padding:11px 8px; border:0; background:#fff; cursor:pointer;
+  font-family:var(--gothic); font-size:14px; color:var(--ink-2); font-weight:600;
+  border-right:1px solid var(--rule); transition:.15s;
+}
+.toggle button:last-child{border-right:0}
+.toggle button.sel{background:var(--akami); color:#fff}
+.toggle button:focus-visible{outline:2px solid var(--sage); outline-offset:-2px}
+
+.readout{
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:16px 26px; border-radius:3px; text-align:center;
+}
+.readout .num-label{margin-bottom:6px}
+
+/* 割引の階段(シグネチャー) */
+.stairs{display:flex; align-items:flex-end; gap:9px; height:250px; padding-top:10px}
+.bar-wrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%}
+.bar{
+  width:100%; background:var(--sage-light); border-radius:2px 2px 0 0;
+  transition:height .45s cubic-bezier(.2,.7,.3,1), background .3s;
+  position:relative;
+}
+.bar.now{background:var(--akami)}
+.bar-val{
+  font-family:var(--mono); font-size:11px; color:var(--ink-2);
+  margin-bottom:5px; white-space:nowrap;
+}
+.bar-x{font-size:11.5px; color:var(--muted); margin-top:7px; letter-spacing:.02em}
+
+/* 比較バー */
+.cmp{display:flex; flex-direction:column; gap:14px}
+.cmp-row{display:grid; grid-template-columns:112px 1fr 96px; align-items:center; gap:14px}
+.cmp-row2{
+  display:grid; grid-template-columns:96px 272px 1fr 96px;
+  align-items:center; gap:16px;
+}
+.cmp-eq{
+  font-family:var(--mono); font-size:14px; color:var(--ink-2);
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:7px 10px; border-radius:2px; text-align:center; white-space:nowrap;
+}
+.cmp-eq b{color:var(--akami); font-weight:700}
+.cmp-legend{
+  font-size:13.5px; color:var(--ink-2); text-align:center;
+  margin-top:4px; padding-top:12px; border-top:1px solid var(--rule);
+}
+.cmp-legend b{font-family:var(--mono); color:var(--sage); font-weight:700}
+.cmp-name{font-size:14px; color:var(--ink-2); text-align:right}
+.cmp-track{height:26px; background:var(--cream-2); border-radius:2px; overflow:hidden}
+.cmp-fill{height:100%; background:var(--sage); transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.cmp-fill.red{background:var(--akami)}
+.cmp-val{font-family:var(--mono); font-size:16px; font-weight:700}
+
+/* 導出フロー(横並び) */
+.derive{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+  padding:6px 0;
+}
+.derive-row{display:flex; align-items:stretch; gap:0; width:100%}
+.derive-cell{flex:1; display:flex; flex-direction:column}
+.derive-cell .formula{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+}
+.f-body{white-space:nowrap}
+.frac .grow{color:var(--sage)}
+.frac .keep{color:var(--akami)}
+.frac .gen{color:var(--muted); font-size:.82em}
+.derive-arrow{
+  width:142px; flex:none;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding-top:22px;
+}
+.da-label{
+  font-size:13px; color:var(--sage); font-weight:700;
+  line-height:1.6; text-align:center; letter-spacing:.03em;
+}
+.da-mark{font-size:26px; color:var(--rule); line-height:1; margin-top:8px}
+.step-tag{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+  color:var(--muted); margin-bottom:9px; text-align:center;
+}
+
+/* 収束の見せ方 */
+.converge{
+  display:flex; background:var(--cream-2); border:1px solid var(--rule);
+  border-radius:3px; overflow:hidden;
+}
+.converge > div{
+  flex:1; padding:11px 4px; text-align:center;
+  border-right:1px solid var(--rule);
+}
+.converge > div:last-child{border-right:0; background:var(--akami-tint)}
+.cv-l{display:block; font-size:11px; color:var(--muted); letter-spacing:.03em}
+.cv-v{display:block; font-family:var(--mono); font-size:17px; font-weight:700; margin-top:4px}
+
+/* 往復 */
+.rt-block{padding-top:14px}
+.rt-caption{
+  font-size:15px; color:var(--ink-2); line-height:1.75;
+  text-align:center; margin-top:15px;
+}
+.roundtrip{
+  display:flex; align-items:center; justify-content:center; gap:0;
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:22px 20px; border-radius:3px;
+}
+.rt-node{text-align:center; padding:0 6px; min-width:118px}
+.rt-node .v{font-family:var(--mincho); font-size:29px; font-weight:600}
+.rt-node .l{font-size:11.5px; color:var(--muted); margin-top:5px; letter-spacing:.04em}
+.rt-arrow{text-align:center; padding:0 4px; flex:1; max-width:190px}
+.rt-arrow .op{font-family:var(--mono); font-size:13.5px; color:var(--ink-2); margin-bottom:5px}
+.rt-arrow .line{height:1px; background:var(--rule); position:relative}
+.rt-arrow .line::after{
+  content:""; position:absolute; right:0; top:-3.5px;
+  border-left:7px solid var(--rule); border-top:4px solid transparent; border-bottom:4px solid transparent;
+}
+.rt-arrow .cap{font-size:11px; color:var(--muted); margin-top:6px; letter-spacing:.04em}
+.rt-arrow .rname{
+  font-size:11.5px; color:var(--akami); font-weight:700;
+  margin-top:3px; letter-spacing:.02em;
+}
+
+/* 設定の宣言バー */
+.setup-bar{
+  display:flex; align-items:center; flex-wrap:wrap; gap:0 10px;
+  background:#fff; border:1px solid var(--rule); border-left:3px solid var(--sage);
+  padding:9px 16px; border-radius:2px; font-size:13.5px; color:var(--ink-2);
+  margin-bottom:12px;
+}
+.sb-tag{
+  font-size:11px; letter-spacing:.12em; color:var(--sage); font-weight:700;
+  padding-right:12px; border-right:1px solid var(--rule); margin-right:4px;
+}
+.setup-bar b{font-family:var(--mono); font-size:15px; color:var(--akami); font-weight:700}
+.sb-sep{color:var(--rule)}
+.sb-note{
+  font-size:11.5px; color:var(--muted); margin-left:8px;
+  padding:2px 8px; background:var(--cream-2); border-radius:2px;
+}
+
+/* 段階的な理由づけ */
+.reason{display:flex; flex-direction:column; gap:11px}
+.rs-step{display:flex; gap:12px; align-items:flex-start}
+.rs-n{
+  flex:none; width:21px; height:21px; border-radius:50%;
+  background:var(--sage); color:#fff; font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.rs-step p{font-size:15px; line-height:1.72; color:var(--ink-2)}
+
+/* 金利比較カード */
+.rate-card{
+  background:#fff; border:1px solid var(--rule); border-top:3px solid var(--sage);
+  border-radius:3px; padding:16px 22px 22px; text-align:center;
+  display:flex; flex-direction:column;
+}
+.rate-card.now{border-top-color:var(--akami); background:var(--akami-tint)}
+.rc-head{
+  font-size:12.5px; letter-spacing:.1em; color:var(--muted);
+  font-weight:700; padding-bottom:6px;
+}
+.rc-formula{
+  font-family:var(--mincho); font-size:21px; padding:16px 0 10px;
+  white-space:nowrap;
+}
+/* 分数の横線 ─ このカード内で唯一の水平線にする */
+.rc-formula .den{border-top:2px solid var(--ink); padding-top:6px}
+.rc-formula .frac{margin:0}
+.rc-formula .frac span{padding:3px 12px}
+.rc-formula .chg{color:var(--akami); font-weight:700; font-size:24px}
+.rc-den{
+  font-size:13px; color:var(--muted); padding-bottom:14px; letter-spacing:.04em;
+}
+.rc-den b{font-family:var(--mono); font-size:16px; color:var(--ink-2); font-weight:700}
+.rc-result{
+  font-family:var(--mincho); font-size:46px; font-weight:600; line-height:1;
+}
+.rc-result .u{font-size:20px; margin-left:2px}
+
+.jcalc{
+  font-family:var(--mono); font-size:12.5px; color:var(--ink-2);
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:6px 8px; border-radius:2px; text-align:center; white-space:nowrap;
+}
+.jcalc b{font-size:15px; color:var(--akami-deep); font-weight:700}
+.jcalc b.g{font-size:12.5px; color:var(--sage); font-weight:700}
+
+/* ライブ表示 */
+.live{margin-top:12px; padding-top:11px; border-top:1px solid var(--rule)}
+.live-item{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  margin-bottom:10px;
+}
+.live-item:last-child{margin-bottom:0}
+.live-item span{font-size:12px; color:var(--muted); line-height:1.4}
+.live-item b{
+  font-family:var(--mono); font-size:28px; color:var(--akami);
+  font-weight:700; line-height:1; white-space:nowrap;
+}
+.live-item.fix b{font-size:18px; color:var(--muted)}
+
+/* 用語の想起 */
+.recall-box{
+  background:var(--sage-tint); border-left:3px solid var(--sage);
+  border-radius:0 2px 2px 0; padding:11px 16px; margin-top:14px;
+  font-size:14px; line-height:1.7; color:#3F5238;
+}
+.recall-box b{font-weight:700; color:#2F4028}
+.rb-ref{
+  font-family:var(--mono); font-size:10.5px; color:var(--sage);
+  border:1px solid var(--sage-light); border-radius:2px;
+  padding:1px 5px; margin-left:8px; vertical-align:1px;
+}
+
+/* 還元の限界 */
+.limitbox{
+  border:1px solid var(--rule); border-left:3px solid var(--akami);
+  border-radius:0 3px 3px 0; padding:10px 16px; margin-top:10px; background:#fff;
+}
+.lb-head{font-size:13.5px; font-weight:700; color:var(--ink); margin-bottom:7px}
+.lb-body{background:var(--cream-2); border-radius:2px; padding:7px 11px}
+.lb-row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:13px; color:var(--ink-2); padding:3px 0;
+  border-bottom:1px solid var(--rule);
+}
+.lb-row.last{border-bottom:0}
+.lb-row i{font-style:normal; color:var(--muted); font-size:11.5px; margin-left:4px}
+.lb-row b{font-family:var(--mono); font-size:14.5px; color:var(--akami-deep); font-weight:700}
+.limitbox p{font-size:13.5px; line-height:1.55; color:var(--ink-2); margin-top:7px}
+
+/* 操作手順 */
+.opsteps{display:flex; flex-direction:column; gap:7px}
+.opstep{display:flex; gap:11px; align-items:flex-start}
+.op-n{
+  flex:none; width:21px; height:21px; border-radius:50%;
+  background:var(--sage); color:#fff; font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.op-n.res{background:var(--akami)}
+.opstep p{font-size:15.5px; line-height:1.6; color:var(--ink-2)}
+.opstep b{font-family:var(--mono); font-size:16px; color:var(--ink); font-weight:700}
+.opstep b.down{color:var(--akami)}
+.verdict-line{display:inline-block; margin-top:5px; font-size:14px; line-height:1.55; color:var(--akami-deep); font-weight:700}
+
+.conclusion-line{
+  margin-top:auto; padding:14px 0 0;
+  border-top:1px solid var(--rule);
+  font-size:19px; text-align:center; color:var(--ink); letter-spacing:.01em;
+}
+.conclusion-line strong{color:var(--akami)}
+
+
+/* QRスライド */
+.qr-wrap{display:flex; align-items:center; justify-content:center; gap:48px; flex:1}
+.qr-box{
+  width:250px; height:250px; padding:14px; background:#fff;
+  border:1px solid var(--rule); border-radius:4px; flex:none;
+}
+.qr-box svg{width:100%; height:100%; fill:var(--ink)}
+.qr-side{max-width:400px}
+.qr-label{
+  font-family:var(--mono); font-size:11px; letter-spacing:.2em;
+  color:var(--sage); font-weight:700; margin-bottom:8px;
+}
+.qr-url{
+  font-family:var(--mono); font-size:22px; color:var(--akami);
+  font-weight:700; line-height:1.5; letter-spacing:-.01em;
+}
+.qr-note{
+  margin-top:22px; padding-top:16px; border-top:1px solid var(--rule);
+  font-size:14px; line-height:1.9; color:var(--ink-2);
+}
+.qr-note b{color:var(--ink); font-weight:700}
+
+/* 締めのメッセージ */
+.closing{
+  background:var(--cream-2); border-left:4px solid var(--akami);
+  border-radius:0 3px 3px 0; padding:16px 24px 14px;
+}
+.closing p{font-size:16.5px; line-height:1.7; color:var(--ink)}
+.closing-recall{
+  margin-top:12px; padding-top:11px; border-top:1px solid var(--rule);
+  font-size:13.5px; color:var(--ink-2);
+}
+.closing-recall b{
+  font-family:var(--mono); font-size:14px; color:var(--sage);
+  font-weight:700; letter-spacing:.02em;
+}
+
+/* 2段の導出 */
+.drow{display:flex; align-items:stretch; gap:0}
+.dcell{
+  flex:1; background:var(--cream-2); border:1px solid var(--rule);
+  border-radius:3px; padding:12px 16px 14px; text-align:center;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.dcell.last{border-color:var(--akami); background:var(--akami-tint)}
+.ds-tag{
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  color:var(--muted); margin-bottom:8px;
+}
+.dcell.last .ds-tag{color:var(--akami); font-weight:700}
+.ds-body{
+  font-family:var(--mincho); font-size:22px; white-space:nowrap;
+  display:flex; align-items:center; justify-content:center; padding:2px 0;
+}
+.ds-body .den{border-top:2px solid var(--ink); padding-top:5px}
+.ds-body .frac span{padding:3px 10px}
+.ds-sub{
+  font-size:12px; color:var(--muted); line-height:1.6;
+  margin-top:9px; padding-top:8px; border-top:1px solid var(--rule);
+}
+.ds-sub b{font-family:var(--mono); color:var(--akami-deep); font-weight:700; font-size:12.5px}
+.dop{
+  flex:none; width:170px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:0 8px;
+}
+.dop-act{
+  font-size:12.5px; color:var(--sage); font-weight:700;
+  text-align:center; line-height:1.5;
+}
+.dop-mark{font-size:20px; color:var(--rule); line-height:1; margin-top:4px}
+
+/* 指標名つきの恒等式 */
+.idmap{display:flex; align-items:center; justify-content:center; gap:16px}
+.idm{display:flex; flex-direction:column; align-items:center; min-width:150px}
+.idm-name{
+  font-family:var(--gothic); font-size:15px; font-weight:700;
+  color:#fff; background:var(--sage); letter-spacing:.08em;
+  padding:3px 16px; border-radius:2px; margin-bottom:10px;
+}
+.idm:first-child .idm-name{background:var(--akami)}
+.idm-frac{padding:2px 0 8px}
+.idm-val{
+  font-family:var(--gothic); font-size:12.5px; color:var(--muted);
+  border-top:1px solid var(--rule); padding-top:8px; width:100%; text-align:center;
+}
+.idm-val b{font-family:var(--mono); font-size:14.5px; color:var(--ink-2); font-weight:700}
+.idm-op{font-family:var(--mincho); font-size:24px; color:var(--ink-2); padding-bottom:22px}
+
+/* 式の意味の言語化 */
+.mech{margin-top:11px}
+.mech-flow{
+  font-size:13px; line-height:1.75; color:var(--ink-2);
+  background:var(--cream); border-radius:2px; padding:9px 12px;
+}
+.mech-flow b{font-family:var(--mono); font-size:13.5px; color:var(--akami-deep); font-weight:700}
+.mech-end{
+  font-size:13.5px; color:var(--ink-2); margin-top:8px; padding-left:2px;
+}
+.mech-end b{color:var(--akami); font-weight:700; font-size:15px}
+
+/* g を上げる2つの道 */
+.ways{display:flex; flex-direction:column; gap:9px; margin-top:10px}
+.way{display:flex; gap:11px; align-items:flex-start}
+.way-n{
+  flex:none; width:20px; height:20px; border-radius:3px;
+  background:var(--akami); color:#fff; font-size:11.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.way-n.sage{background:var(--sage)}
+.way b{display:block; font-size:14.5px; color:var(--ink); line-height:1.5}
+.way span{display:block; font-size:13px; color:var(--muted); line-height:1.55}
+
+/* 注記 */
+.note{
+  font-size:13.5px; color:var(--muted); line-height:1.8;
+  border-left:2px solid var(--rule); padding-left:14px; margin-top:auto;
+}
+.callout{
+  background:var(--akami-tint); border-left:4px solid var(--akami);
+  padding:22px 26px; border-radius:0 3px 3px 0;
+}
+.callout p{font-size:19px; line-height:1.8; color:var(--akami-deep); font-weight:600}
+.callout.sage{background:var(--sage-tint); border-left-color:var(--sage)}
+.callout.sage p{color:#3F5238}
+
+ul.pts{list-style:none}
+ul.pts li{
+  font-size:17px; line-height:1.8; color:var(--ink-2);
+  padding-left:26px; position:relative; margin-bottom:16px;
+}
+ul.pts li::before{
+  content:""; position:absolute; left:0; top:11px;
+  width:8px; height:8px; background:var(--sage); border-radius:50%;
+}
+
+/* ---------- ナビゲーション ---------- */
+#rail{
+  position:absolute; left:0; top:0; bottom:0; width:5px;
+  display:flex; flex-direction:column; z-index:5;
+}
+.rail-seg{background:var(--rule); transition:background .3s}
+.rail-seg.act{background:var(--akami)}
+.slide.chapter ~ #rail{}
+
+#hud{
+  position:absolute; right:34px; bottom:26px; z-index:6;
+  font-family:var(--mono); font-size:12px; color:var(--muted);
+  letter-spacing:.12em; display:flex; align-items:center; gap:14px;
+}
+#hud .ch{color:var(--sage); letter-spacing:.06em; font-family:var(--gothic); font-size:12px}
+
+#nav{position:absolute; left:34px; bottom:22px; display:flex; gap:8px; z-index:6}
+#nav button{
+  width:32px; height:32px; border:1px solid var(--rule); background:#fff;
+  color:var(--ink-2); cursor:pointer; border-radius:3px; font-size:14px; line-height:1;
+}
+#nav button:hover{border-color:var(--akami); color:var(--akami)}
+#nav button:focus-visible{outline:2px solid var(--sage); outline-offset:2px}
+
+#help{
+  position:fixed; left:50%; bottom:14px; transform:translateX(-50%);
+  color:rgba(255,255,255,.4); font-size:12px; letter-spacing:.1em; z-index:20;
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<div id="stage"><div id="deck">
+
+<!-- ══════════ 表紙 ══════════ -->
+<section class="slide cover on" data-ch="">
+  <div class="rule"></div>
+  <h1>割引という考え方<br>― 理論株価はどう決まるか</h1>
+  <div class="tag">前半｜株主が受け取るもの</div>
+  <div class="brand">AKAMI STUDIO<br>投資家のための意思決定講座</div>
+</section>
+
+<!-- ══════════ 0章 ══════════ -->
+<section class="slide chapter" data-ch="0">
+  <div class="num">CHAPTER 00</div>
+  <h1>価格と価値</h1>
+  <p class="note">
+    計算に入る前に、この講座が何をする時間なのかを決めておきます。
+  </p>
+</section>
+
+<section class="slide" data-ch="0">
+  <div class="eyebrow">はじめに</div>
+  <h2>この時間にやること、やらないこと</h2>
+  <div class="cols" style="margin-top:26px">
+    <div class="card sage">
+      <div class="kicker">DO</div>
+      <h3>自分の前提を、数字に翻訳する</h3>
+      <p>「この会社は成長する」という感覚を、年何%という数字に置き換える。置き換えた瞬間に、その前提は検証できるものに変わります。</p>
+    </div>
+    <div class="card accent">
+      <div class="kicker">DON'T</div>
+      <h3>正解の株価を当てにいく</h3>
+      <p>理論株価は当たりません。前提が少し違うだけで答えは倍以上動きます。それは<strong>後半で、実際に数字を動かして</strong>確かめていただきます。</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:30px">
+    <p>計算式は、答えを出す装置ではなく、<em>自分が何を信じているかを可視化する装置</em>です。</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="0">
+  <div class="eyebrow">出発点</div>
+  <h2>価格と価値は、別のもの</h2>
+  <p class="sub">この2つを同じものだと思っている限り、「割安」という言葉に意味は生まれません。別物だと考えるからこそ、比べることができます。</p>
+  <div class="cols" style="gap:40px">
+    <div class="card">
+      <div class="kicker">PRICE ─ 価格</div>
+      <h3>市場がつけている値段</h3>
+      <p>誰でも見られる。今この瞬間に確定している。参加者の期待・恐怖・資金事情がすべて混ざった結果の一点です。</p>
+    </div>
+    <div class="card">
+      <div class="kicker">VALUE ─ 価値</div>
+      <h3>その株を持ち続けて、将来受け取れるお金</h3>
+      <p>見えない。計算するしかない。計算する人の前提によって答えが変わる。だから人によって違う数字が出ます。</p>
+    </div>
+  </div>
+  <div class="callout sage" style="margin-top:28px">
+    <p>価格は「一つ」、価値は「人の数だけ」。この非対称が、投資という行為が成立する理由です。</p>
+  </div>
+</section>
+
+<!-- ══════════ 1章 ══════════ -->
+
+
+<section class="slide chapter" data-ch="1">
+  <div class="num">CHAPTER 01</div>
+  <h1>割引</h1>
+  <p class="note">
+    理論株価の計算は、突き詰めればこの一語です。ここだけは数式より先に、体で理解してください。
+  </p>
+</section>
+
+<section class="slide" data-ch="1">
+  <div class="eyebrow">問い</div>
+  <div class="lead">
+    <h2 style="font-size:44px;line-height:1.45">1年後に確実にもらえる100万円と、<br>いま手元にある100万円。<br><span style="color:var(--akami)">どちらが価値が高いですか。</span></h2>
+    <p class="body-l" style="margin-top:32px">― そして、それはなぜですか。</p>
+  </div>
+  <div class="note">結論を急がず、理由を2つ挙げてもらってください。次のスライドでその2つを確認します。</div>
+</section>
+
+<section class="slide" data-ch="1">
+  <div class="eyebrow">割引が起きる理由</div>
+  <h2>将来のお金が目減りする、2つの理由</h2>
+  <p class="sub">この2つ以外に理由はありません。逆に言えば、割引率とはこの2つの大きさを表した数字です。</p>
+  <div class="cols" style="gap:40px">
+    <div class="card accent">
+      <div class="kicker">理由 1</div>
+      <h3>機会費用 ─ 待つ間に稼げたはずのお金</h3>
+      <p>いま100万円あれば、国債を買うだけでも増やせます。1年待つということは、その分の増加を諦めるということ。<strong>時間はタダではないのです。</strong></p>
+    </div>
+    <div class="card accent">
+      <div class="kicker">理由 2</div>
+      <h3>不確実性 ─ 本当にもらえるとは限らない</h3>
+      <p>相手が倒産するかもしれない。約束が守られないかもしれない。<strong>危ないほど、大きく割り引く</strong>。これが企業ごとに割引率が違う理由です。</p>
+    </div>
+  </div>
+  <div class="callout sage" style="margin-top:28px">
+    <p>要求リターン ＝ <em>時間の分</em> ＋ <em>危険の分</em> ＝ <strong>割引率 r</strong></p>
+  </div>
+</section>
+
+<section class="slide" data-ch="1">
+  <div class="eyebrow">割引の正体</div>
+  <h2>割引は、複利の逆回しです</h2>
+  <p class="sub" style="margin-bottom:0">新しい計算を覚える必要はありません。すでにご存じの複利の式を、逆から読むだけです。</p>
+
+  <div class="derive">
+    <div class="derive-row">
+      <div class="derive-cell">
+        <div class="step-tag">すでに知っている ─ 複利</div>
+        <div class="formula" style="font-size:24px;padding:28px 18px">
+          <div class="f-body">将来のお金 ＝ 現在価値 ×(1 + r)<sup>n</sup></div>
+          <div class="formula-note" style="margin-top:12px">この向きで読むとき、r は<strong>「増える率」＝ 要求リターン</strong></div>
+        </div>
+      </div>
+      <div class="derive-arrow">
+        <div class="da-label">両辺を (1 + r)<sup>n</sup><br>で割る</div>
+        <div class="da-mark">→</div>
+      </div>
+      <div class="derive-cell">
+        <div class="step-tag" style="color:var(--akami)">求めたかったもの ─ 現在価値</div>
+        <div class="formula" style="font-size:24px;padding:28px 18px;border-color:var(--akami);background:var(--akami-tint)">
+          <div class="f-body">現在価値 ＝ <span class="frac"><span>将来のお金</span><span class="den">(1 + r)<sup>n</sup></span></span></div>
+          <div class="formula-note" style="margin-top:12px;color:var(--akami-deep)">向きが逆になると、<strong>同じ r</strong> が<strong>「目減りの率」＝ 割引率</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rt-block">
+    <div class="roundtrip">
+      <div class="rt-node"><div class="v" style="color:var(--akami)">100万円</div><div class="l">いま</div></div>
+      <div class="rt-arrow"><div class="op">× 1.09<sup>10</sup></div><div class="line"></div><div class="cap">増やす</div><div class="rname">r = 要求リターン 9%</div></div>
+      <div class="rt-node"><div class="v" style="color:var(--sage)">236.7万円</div><div class="l">10年後</div></div>
+      <div class="rt-arrow"><div class="op">÷ 1.09<sup>10</sup></div><div class="line"></div><div class="cap">割り引く</div><div class="rname">r = 割引率 9%</div></div>
+      <div class="rt-node"><div class="v" style="color:var(--akami)">100万円</div><div class="l">いま</div></div>
+    </div>
+    <div class="rt-caption">
+      <strong>9% はどこから来るのか</strong> ── この株なら年 9% は欲しい、という<strong>自分の要求</strong>です。<br>
+      一度そう決めれば、増やすときも割り引くときも同じ 9%。名前が2つあるだけで、数字は1つ。<br>
+      <span style="color:var(--sage);font-weight:700">では、その 9% を何を根拠に決めるのか ── 次章で扱います。</span>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="1">
+  <h2>n年後の100万円は、いまいくらか</h2>
+  <div class="cols" style="grid-template-columns:1fr 1.35fr; gap:40px; margin-top:8px">
+    <div>
+      <div class="formula" style="font-size:28px;padding:26px 20px">
+        現在価値 =
+        <span class="frac"><span>将来のお金</span><span class="den">(1 + r)<sup>n</sup></span></span>
+      </div>
+      <div class="panel" style="margin-top:20px">
+        <div class="ctrl">
+          <label>割引率 r <b id="pvR">3.0%</b></label>
+          <input type="range" id="pvRs" min="1" max="15" step="0.5" value="3">
+        </div>
+        <div class="ctrl">
+          <label>年数 n <b id="pvN">10年</b></label>
+          <input type="range" id="pvNs" min="1" max="30" step="1" value="10">
+        </div>
+      </div>
+      <div class="readout" style="margin-top:18px">
+        <div class="num-label">100万円の現在価値</div>
+        <div class="big-num" id="pvOut">744,094<span class="u">円</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="stairs" id="stairs"></div>
+      <div class="note" style="margin-top:30px;border-left-color:var(--akami);font-size:17px;line-height:1.7">
+        <div>
+          <strong>n = 10年のまま</strong>、r を 3% → 9% に動かしてください。<br>
+          74万円が 42万円へ、<strong>4割減</strong>。
+        </div>
+        <div style="margin-top:14px">
+          次に <strong>n = 30年</strong> にして、同じことをしてください。<br>
+          41万円が 7.5万円へ、<strong>8割減</strong>。
+        </div>
+        <div style="margin-top:14px;padding-top:14px;margin-left:-16px;border-top:1px solid var(--rule);color:var(--akami-deep);font-weight:700;white-space:nowrap">
+          割引率の差は同じ6ポイントなのに、遠い将来ほど効き方が激しくなります。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="1">
+  <div class="eyebrow">永久に続く場合</div>
+  <h2>会社は、いつ終わるのか</h2>
+  <p class="sub" style="margin-bottom:12px;line-height:1.7">債券には満期がありますが、株式にはありません。会社が続く限り<em>配当</em>も続く。それを全部、現在価値に引き戻して足すと?</p>
+  <div class="formula" style="font-size:21px;padding:14px 24px">
+    PV = <span class="frac"><span>D</span><span class="den">(1+r)</span></span>
+    + <span class="frac"><span>D</span><span class="den">(1+r)<sup>2</sup></span></span>
+    + <span class="frac"><span>D</span><span class="den">(1+r)<sup>3</sup></span></span>
+    + ⋯ ＝ <span style="color:var(--akami)"><span class="frac"><span>D</span><span class="den">r</span></span></span>
+    <div class="formula-note" style="margin-top:8px">D = 1株あたりの配当(Dividend)　／　1年後・2年後・3年後…と受け取る配当を、すべて現在価値に直して足す</div>
+  </div>
+  <div class="setup-bar" style="margin-top:16px;margin-bottom:0">
+    <span class="sb-tag">この先で使う例</span>
+    <span>1株あたりの配当 <b>D = 50円</b></span>
+    <span class="sb-sep">／</span>
+    <span>要求リターン <b>r = 9%</b> ── 前ページで置いた「この株への自分の要求」<span class="sb-note">根拠は第2章で</span></span>
+  </div>
+  <div class="cols" style="margin-top:16px;gap:30px;align-items:stretch">
+    <div class="card sage" style="padding:18px 22px">
+      <h3 style="margin-bottom:10px">1株につき毎年50円の配当が、永久に続くなら</h3>
+      <p style="font-size:17px">50 ÷ 0.09 = <strong style="font-size:24px">556円</strong> が、その1株の価値。<br>無限の未来を、たった一つの割り算で値付けできます。</p>
+    </div>
+    <div class="card" style="padding:18px 22px">
+      <h3 style="margin-bottom:10px">なぜ「永久」でも計算できるのか</h3>
+      <p style="margin-bottom:10px">100年後の50円は、現在価値で0.009円。実質ゼロです。</p>
+      <div class="converge">
+        <div><span class="cv-l">10年分</span><span class="cv-v">321円</span></div>
+        <div><span class="cv-l">30年分</span><span class="cv-v">514円</span></div>
+        <div><span class="cv-l">50年分</span><span class="cv-v">548円</span></div>
+        <div><span class="cv-l">永久</span><span class="cv-v" style="color:var(--akami)">556円</span></div>
+      </div>
+      <p style="margin-top:10px">足す数が小さくなるので、<strong>合計は556円で頭打ち</strong>に。</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="1">
+  <div class="eyebrow">配当が成長する場合</div>
+  <h2>配当が毎年 g% ずつ増えるなら</h2>
+  <p class="sub" style="margin-bottom:10px">会社が成長すれば、配当も増えていきます。前ページと同じ<strong>1株50円の配当</strong>で、増え方だけを変えてみます。</p>
+  <div class="setup-bar">
+    <span class="sb-tag">ここから追加</span>
+    <span>配当の成長率 <b>g</b> ── 配当が毎年 g% ずつ増えていくと考えます<span class="sb-note">g の求め方は第3章で</span></span>
+  </div>
+  <div class="formula" style="font-size:22px;padding:16px 18px">
+    <div class="f-body">PV =
+      <span class="frac"><span class="grow">D</span><span class="den keep">(1+r)</span></span> +
+      <span class="frac"><span class="grow">D(1+g)</span><span class="den keep">(1+r)<sup>2</sup></span></span> +
+      <span class="frac"><span class="grow">D(1+g)<sup>2</sup></span><span class="den keep">(1+r)<sup>3</sup></span></span> + ⋯ ＝
+      <span class="frac"><span>D</span><span class="den">r − g</span></span>
+    </div>
+    <div class="formula-note" style="margin-top:10px">
+      <span style="color:var(--sage);font-weight:700">g が付くのは分子(配当)</span>　／　<span style="color:var(--akami);font-weight:700">分母は最後まで (1+r) のまま</span>　／　これを無限に足した<strong>結果</strong>が D ÷ (r − g)
+    </div>
+  </div>
+  <div class="cols-3" style="margin-top:16px">
+    <div class="card" style="padding:16px 20px">
+      <div class="num-label">g = 0%</div>
+      <div class="big-num" style="font-size:40px">556<span class="u">円</span></div>
+      <div class="split">50 ÷(0.09 − <b>0.00</b>)</div>
+    </div>
+    <div class="card" style="padding:16px 20px">
+      <div class="num-label">g = 3%</div>
+      <div class="big-num" style="font-size:40px">833<span class="u">円</span></div>
+      <div class="split">50 ÷(0.09 − <b>0.03</b>)</div>
+    </div>
+    <div class="card accent" style="padding:16px 20px">
+      <div class="num-label">g = 5%</div>
+      <div class="big-num" style="font-size:40px">1,250<span class="u">円</span></div>
+      <div class="split">50 ÷(0.09 − <b>0.05</b>)</div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:14px;padding:16px 24px">
+    <p>配当も要求リターンも変えていません。<em>増え方(g)を変えただけで、株価は2.25倍になります。</em></p>
+  </div>
+</section><section class="slide" data-ch="1">
+  <div class="eyebrow">重要な制約</div>
+  <h2>g ≧ r になった瞬間、この式は壊れます</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr; gap:40px; margin-top:14px">
+    <div>
+      <table>
+        <thead><tr><th>成長率 g</th><th>r − g</th><th>理論株価</th></tr></thead>
+        <tbody>
+          <tr><td>5.0%</td><td class="val">4.0%</td><td class="val">1,250円</td></tr>
+          <tr><td>7.0%</td><td class="val">2.0%</td><td class="val">2,500円</td></tr>
+          <tr><td>8.5%</td><td class="val">0.5%</td><td class="val">10,000円</td></tr>
+          <tr class="hi"><td>9.0%</td><td class="val">0.0%</td><td class="val">∞</td></tr>
+          <tr><td>10.0%</td><td class="val">−1.0%</td><td class="val">−5,000円</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:18px">D = 50円(1株あたり配当)、r = 9% で計算</div>
+    </div>
+    <div>
+      <div class="callout">
+        <p>成長率が割引率を超える会社は、<br>理論株価が無限大になってしまう。</p>
+      </div>
+      <p class="body-l" style="margin-top:20px;font-size:16.5px">
+        これは計算ミスではなく、<strong>前提が現実的でない</strong>ことを式が教えてくれている状態です。
+      </p>
+      <div class="reason" style="margin-top:18px">
+        <div class="rs-step">
+          <span class="rs-n">1</span>
+          <p>「永久に g% で成長する」とは、<strong>この会社が経済の中で占める割合が、増え続ける</strong>ということ。</p>
+        </div>
+        <div class="rs-step">
+          <span class="rs-n">2</span>
+          <p>経済成長率を上回り続ければ、いつか<strong>その会社が経済そのものになってしまいます。</strong>現実には起こりません。</p>
+        </div>
+        <div class="rs-step">
+          <span class="rs-n">3</span>
+          <p>だから永久成長率の上限は<strong>名目GDP成長率</strong>。実務では 0〜2% 程度、保守的には 0% を置きます。</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top:14px;font-size:13px">
+        高成長企業を評価したいときは、<strong>高成長を永久に続けさせるのではなく</strong>、数年間の高成長を1年ずつ計算し、その後に低い永久成長率を接続します(後半のDCFで扱います)。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 2章 ══════════ -->
+<section class="slide chapter" data-ch="2">
+  <div class="num">CHAPTER 02</div>
+  <h1>r をどう決めるか</h1>
+  <p class="note">
+    ここを曖昧にしたまま、理論株価を語ることはできません。r こそが答えを最も大きく動かします。
+  </p>
+</section>
+
+<section class="slide" data-ch="2">
+  <div class="eyebrow">言葉の整理</div>
+  <h2>r は、立場によって3つの名前を持つ</h2>
+  <p class="sub">同じ数字を、誰の側から見るかで呼び方が変わるだけです。混乱しやすいので最初に揃えておきます。</p>
+  <div class="cols-3" style="margin-top:20px">
+    <div class="card sage">
+      <div class="kicker">株主から見ると</div>
+      <h3>要求リターン</h3>
+      <p>これくらいは<strong>ないと投資しない</strong>という最低ライン。</p>
+    </div>
+    <div class="card sage">
+      <div class="kicker">会社から見ると</div>
+      <h3>資本コスト</h3>
+      <p>株主にこれだけ報いなければならない、という調達コスト。</p>
+    </div>
+    <div class="card sage">
+      <div class="kicker">計算式の中では</div>
+      <h3>割引率</h3>
+      <p>将来のお金を現在に引き戻すときの、目減りの度合い。</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:28px">
+    <p>株主が要求するリターンは、会社にとってはコスト。<em>同じ数字の裏表</em>です。</p>
+  </div>
+  <div class="note" style="margin-top:16px;font-size:13px">
+    <strong>要求リターン</strong>は、教科書では「期待収益率」「期待リターン」とも呼ばれます。この講座では<strong>要求リターン</strong>で統一します。
+  </div>
+</section>
+
+<section class="slide" data-ch="2">
+  <div class="eyebrow">CAPM</div>
+  <h2>r を分解する</h2>
+  <div class="formula" style="font-size:22px;padding:18px 24px;margin-top:4px">
+    r ＝ 無リスク金利 ＋ β × リスクプレミアム
+    <div class="formula-note" style="margin-top:8px">国債を買うだけで得られる分 ＋ 危険を引き受ける対価</div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1fr; gap:38px; margin-top:20px">
+    <div>
+      <table>
+        <thead><tr><th>項目</th><th>値</th><th>出所</th></tr></thead>
+        <tbody>
+          <tr><td>無リスク金利</td><td class="val">3.0%</td><td style="font-size:13px;color:var(--muted)">日本10年国債</td></tr>
+          <tr><td>β(ベータ)</td><td class="val">1.15</td><td style="font-size:13px;color:var(--muted)">A社の想定値</td></tr>
+          <tr><td>リスクプレミアム</td><td class="val">5.2%</td><td style="font-size:13px;color:var(--muted)">日本・2026年7月推計</td></tr>
+          <tr class="hi"><td>r</td><td class="val">9.0%</td><td style="font-size:13px">3.0 + 1.15 × 5.2</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:12px;font-size:13px">
+        β × リスクプレミアム = <strong>6.0%</strong>(危険を引き受ける対価)。以降はこの <strong>r = 9%</strong> を使い続けます。
+      </div>
+    </div>
+    <div>
+      <ul class="pts" style="margin-bottom:12px;font-size:15.5px">
+        <li style="font-size:15.5px;margin-bottom:10px"><strong>β = 1.0</strong> は市場と同じ動き。<strong>1.15</strong> は市場が10%下げると11.5%下げる銘柄。</li>
+        <li style="font-size:15.5px;margin-bottom:10px">リスクプレミアムは<em>観測できない</em>。推定するしかない数字です。</li>
+        <li style="font-size:15.5px;margin-bottom:0"><strong>10年物</strong>を使うのは、株式が長期のキャッシュフローを生むから。<em>年限を揃えます。</em></li>
+      </ul>
+      <div class="card sage" style="padding:14px 18px">
+        <div class="kicker">参考:主要国のリスクプレミアム</div>
+        <table class="tight" style="margin-top:4px">
+          <tbody>
+            <tr class="hi"><td style="font-size:14px">日本</td><td class="val">5.2%</td></tr>
+            <tr><td style="font-size:14px">米国</td><td class="val">4.5%</td></tr>
+            <tr><td style="font-size:14px">成熟国平均</td><td class="val">4.2%</td></tr>
+            <tr><td style="font-size:14px">インド</td><td class="val">7.3%</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12.5px;margin-top:8px;color:var(--muted)">Damodaran(NYU)2026年7月推計。日本が高いのは国債格付けの差。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="2">
+  <div class="eyebrow">いま起きていること</div>
+  <h2>金利が上がると、何が起きたか</h2>
+  <p class="sub" style="margin-bottom:20px">10年国債利回りは 0.5%前後 → <strong>3.0%前後</strong>(約30年ぶりの3%台)へ。<strong>式のどこが動いたか</strong>を見てください。</p>
+  <div class="cols" style="gap:30px; align-items:stretch">
+    <div class="rate-card">
+      <div class="rc-head">2023年頃 ─ 無リスク金利 0.5%</div>
+      <div class="rc-formula">
+        <span class="frac">
+          <span>50円</span>
+          <span class="den">(<b class="chg">0.5%</b> ＋ 6.0%)− 5%</span>
+        </span>
+      </div>
+      <div class="rc-den">↓　分母 ＝ <b>1.5%</b></div>
+      <div class="rc-result" style="color:var(--sage)">3,333<span class="u">円</span></div>
+    </div>
+    <div class="rate-card now">
+      <div class="rc-head">現在 ─ 無リスク金利 3.0%</div>
+      <div class="rc-formula">
+        <span class="frac">
+          <span>50円</span>
+          <span class="den">(<b class="chg">3.0%</b> ＋ 6.0%)− 5%</span>
+        </span>
+      </div>
+      <div class="rc-den">↓　分母 ＝ <b>4.0%</b></div>
+      <div class="rc-result" style="color:var(--akami)">1,250<span class="u">円</span></div>
+    </div>
+  </div>
+  <div class="cmp-legend" style="margin-top:16px;border-top:0;padding-top:0">
+    配当 <b>50円</b>、β×リスクプレミアム <b>6.0%</b>、成長率 <b>5%</b> はすべて同じ。<strong>動いたのは無リスク金利だけ</strong>です。
+  </div>
+  <div class="callout" style="margin-top:16px;padding:18px 26px">
+    <p>2.5ポイントの金利上昇が、分母を <em>1.5% → 4.0% へ2.7倍</em>に。理論株価は 62%下落しました。</p>
+  </div>
+</section>
+
+<!-- ══════════ 3章 ══════════ -->
+<section class="slide chapter" data-ch="3">
+  <div class="num">CHAPTER 03</div>
+  <h1>A社を、<br>最後まで通す</h1>
+  <p class="note">
+    ここから先、登場する会社は1社だけです。同じ数字を別の角度から何度も見ていきます。
+  </p>
+</section>
+
+<section class="slide" data-ch="3">
+  <div class="eyebrow">設定</div>
+  <h2>A社の数字</h2>
+  <div class="cols" style="grid-template-columns:1.28fr 1fr; gap:36px; margin-top:12px">
+    <div>
+      <table>
+        <thead><tr><th>項目</th><th>値</th><th>どこから来たか</th></tr></thead>
+        <tbody>
+          <tr><td>1株当たり利益 EPS</td><td class="val">100円</td><td style="font-size:12.5px;color:var(--muted)">損益計算書</td></tr>
+          <tr><td>1株当たり配当 DPS</td><td class="val">50円</td><td style="font-size:12.5px;color:var(--muted)">配当実績</td></tr>
+          <tr><td>1株当たり純資産 BPS</td><td class="val">1,000円</td><td style="font-size:12.5px;color:var(--muted)">貸借対照表</td></tr>
+          <tr><td>ROE</td><td class="val">10%</td><td style="font-size:12.5px;color:var(--muted)">EPS 100 ÷ BPS 1,000</td></tr>
+          <tr><td>配当性向</td><td class="val">50%</td><td style="font-size:12.5px;color:var(--muted)">DPS 50 ÷ EPS 100</td></tr>
+          <tr class="hi"><td>成長率 g</td><td class="val">5%</td><td style="font-size:12.5px">ROE 10% ×(1 − 配当性向 50%)</td></tr>
+          <tr><td>要求リターン r</td><td class="val">9%</td><td style="font-size:12.5px;color:var(--muted)">CAPM(前章)</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:14px;font-size:13px">
+        上の<strong>3つは決算書に載っている数字</strong>。ROE も配当性向も g も、そこから計算するだけです。<strong>推測は一つも入っていません。</strong>
+      </div>
+    </div>
+    <div>
+      <div class="card accent">
+        <div class="kicker">最重要</div>
+        <h3>g は勝手に決められない</h3>
+        <div class="formula" style="font-size:19px;padding:13px;margin-top:10px;background:var(--cream)">
+          g ＝ ROE ×(1 − 配当性向)
+        </div>
+        <div class="mech">
+          <div class="mech-flow">配当で払わず残した <b>50円</b>(内部留保)▸ 自己資本 <b>1,000 → 1,050円</b> ▸ その資本も同じ ROE 10% で稼ぐ ▸ 利益 <b>100 → 105円</b></div>
+          <div class="mech-end">資本が 5% 増えたぶん、利益も 5% 増える。これが <b>g</b> です。</div>
+        </div>
+        <p style="font-size:15px;margin-top:12px">決算書を読めば g は一つに決まる。上げる道は、式が示す<strong>2つだけ</strong>です。</p>
+        <div class="ways">
+          <div class="way">
+            <span class="way-n">A</span>
+            <div><b>配当性向を下げる</b><span>還元を削り、内部留保を増やす</span></div>
+          </div>
+          <div class="way">
+            <span class="way-n sage">B</span>
+            <div><b>ROE を上げる</b><span>同じ資本で、より多く稼げるようになる</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="note" style="margin-top:14px;border-left-color:var(--akami);font-size:13.5px">
+        同じ g の上昇でも、A と B では中身が違う ── <strong>その差は第4章で扱います。</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="3">
+  <div class="eyebrow">理論株価</div>
+  <h2>A社の理論株価を出す</h2>
+  <div class="formula" style="margin-top:10px;font-size:30px">
+    理論株価 = <span class="frac"><span>DPS</span><span class="den">r − g</span></span>
+    ＝ <span class="frac"><span>50</span><span class="den">0.09 − 0.05</span></span>
+    ＝ <span style="color:var(--akami)">1,250円</span>
+    <div class="formula-note">配当割引モデル(DDM)─ 新しい式ではなく、第1章で導いた式そのものです</div>
+  </div>
+  <div class="cols-3" style="margin-top:36px">
+    <div class="card">
+      <div class="num-label">理論株価</div>
+      <div class="big-num" style="font-size:42px">1,250<span class="u">円</span></div>
+    </div>
+    <div class="card">
+      <div class="num-label">理論PER(÷EPS 100)</div>
+      <div class="big-num" style="font-size:42px">12.5<span class="u">倍</span></div>
+    </div>
+    <div class="card">
+      <div class="num-label">理論PBR(÷BPS 1,000)</div>
+      <div class="big-num" style="font-size:42px">1.25<span class="u">倍</span></div>
+    </div>
+  </div>
+  <div class="callout sage" style="margin-top:30px">
+    <p>PER も PBR も、別々に覚える指標ではありません。<em>理論株価から自動的に決まる、同じ数字の別表現</em>です。</p>
+  </div>
+</section>
+
+<!-- ══════════ 4章 ══════════ -->
+<section class="slide chapter" data-ch="4">
+  <div class="num">CHAPTER 04</div>
+  <h1>価値が生まれる条件</h1>
+  <p class="note">
+    前半の結論にあたる部分です。PBR を分解すると ROE が現れます。その ROE を r と比べたとき、直感に反する結論が出てきます。
+  </p>
+</section>
+
+<section class="slide" data-ch="4">
+  <div class="eyebrow">恒等式</div>
+  <h2>PBR ＝ PER × ROE</h2>
+  <p class="sub" style="margin-bottom:10px">3つの指標はバラバラではなく、1本の式で繋がっています。これは近似ではなく、定義から必ず成立する恒等式です。</p>
+  <div class="formula" style="font-size:25px;padding:20px 24px">
+    <div class="idmap">
+      <div class="idm">
+        <div class="idm-name">PBR</div>
+        <div class="idm-frac"><span class="frac"><span>株価</span><span class="den">BPS</span></span></div>
+        <div class="idm-val">1,250 ÷ 1,000 ＝ <b>1.25倍</b></div>
+      </div>
+      <div class="idm-op">＝</div>
+      <div class="idm">
+        <div class="idm-name">PER</div>
+        <div class="idm-frac"><span class="frac"><span>株価</span><span class="den">EPS</span></span></div>
+        <div class="idm-val">1,250 ÷ 100 ＝ <b>12.5倍</b></div>
+      </div>
+      <div class="idm-op">×</div>
+      <div class="idm">
+        <div class="idm-name">ROE</div>
+        <div class="idm-frac"><span class="frac"><span>EPS</span><span class="den">BPS</span></span></div>
+        <div class="idm-val">100 ÷ 1,000 ＝ <b>10%</b></div>
+      </div>
+    </div>
+    <div class="formula-note" style="margin-top:14px">右辺で <strong>EPS が約分で消える</strong>ので、左辺と一致する ─ ただそれだけのことです</div>
+  </div>
+  <div class="cols" style="margin-top:20px;gap:34px">
+    <div class="card accent" style="padding:18px 22px">
+      <h3 style="margin-bottom:8px">A社で確認</h3>
+      <p style="font-size:19px;font-family:var(--mono)">1.25 ＝ 12.5 × 0.10 ✓</p>
+    </div>
+    <div class="card" style="padding:18px 22px">
+      <h3 style="margin-bottom:8px">ここから分かること</h3>
+      <p>PBR の中には <strong>ROE</strong> が入っています。3つのうち<strong>株価を含まないのは ROE だけ</strong> ── 会社の実力そのものを表す数字です。<br>次のページで、この ROE を <strong>r</strong> と比べます。</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="4">
+  <div class="eyebrow">導出</div>
+  <h2>理論PBRを、式で表す</h2>
+  <p class="sub" style="margin-bottom:16px">出発点は第1章の DDM。<strong>両辺を BPS で割る</strong>だけで、PBR の式になります。</p>
+
+  <div class="drow">
+    <div class="dcell">
+      <div class="ds-tag">1 ─ 第1章の DDM</div>
+      <div class="ds-body">株価 ＝ <span class="frac"><span>DPS</span><span class="den">r − g</span></span></div>
+    </div>
+    <div class="dop">
+      <div class="dop-act">両辺を BPS で割る</div>
+      <div class="dop-mark">▸</div>
+    </div>
+    <div class="dcell">
+      <div class="ds-tag">2 ─ 左辺が PBR になる</div>
+      <div class="ds-body"><span class="frac"><span>株価</span><span class="den">BPS</span></span> ＝ <span class="frac"><span>DPS</span><span class="den">BPS ×(r − g)</span></span></div>
+      <div class="ds-sub"><b>株価 ÷ BPS ＝ PBR</b>　─ これが PBR の定義そのものです</div>
+    </div>
+  </div>
+
+  <div class="drow" style="margin-top:14px">
+    <div class="dcell">
+      <div class="ds-tag">3 ─ DPS と BPS をまとめる</div>
+      <div class="ds-body">PBR ＝ <span class="frac"><span>ROE × 配当性向</span><span class="den">r − g</span></span></div>
+      <div class="ds-sub"><b>DPS ÷ BPS ＝ ROE × 配当性向</b>　A社:50 ÷ 1,000 ＝ 5% ＝ 10% × 50%</div>
+    </div>
+    <div class="dop">
+      <div class="dop-act">配当性向 ＝ 1 − g ÷ ROE</div>
+      <div class="dop-mark">▸</div>
+    </div>
+    <div class="dcell last">
+      <div class="ds-tag">4 ─ 完成</div>
+      <div class="ds-body">PBR ＝ <span class="frac"><span>ROE − g</span><span class="den">r − g</span></span></div>
+      <div class="ds-sub">A社:(0.10 − 0.05)÷(0.09 − 0.05)＝ <b>1.25</b>　─ S19 と一致</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:18px;padding:16px 24px">
+    <p style="font-size:18px">分子と分母を見比べてください。<em>ROE と r を比べているだけ</em>の式です。</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="4">
+  <div class="eyebrow">結論</div>
+  <div class="lead" style="flex:none;padding-top:4px">
+    <div class="formula" style="font-size:24px;padding:14px 24px;margin-bottom:12px">
+      PBR ＝ <span class="frac"><span>ROE − g</span><span class="den">r − g</span></span>
+      <div class="formula-note" style="margin-top:8px">分母は必ずプラス(r &gt; g)。だから <strong>1 を超えるかは、分子が分母より大きいか</strong>で決まる</div>
+    </div>
+    <h2 style="font-size:38px;line-height:1.25;text-align:center;margin-bottom:12px">PBR &gt; 1 ⟺ ROE &gt; r</h2>
+  </div>
+  <div class="cols-3" style="margin-bottom:14px">
+    <div class="card" style="padding:14px 18px">
+      <h3 style="color:var(--sage);margin-bottom:6px">ROE 12% &gt; r 9%</h3>
+      <p class="jcalc">(0.12 − <b class="g">0.05</b>)÷(0.09 − <b class="g">0.05</b>)＝ <b>1.75</b></p>
+      <p style="font-size:13.5px;margin-top:6px">9%求められて<strong>12%稼ぐ</strong>。お釣りが出る。</p>
+    </div>
+    <div class="card" style="padding:14px 18px">
+      <h3 style="margin-bottom:6px">ROE 9% ＝ r 9%</h3>
+      <p class="jcalc">(0.09 − <b class="g">0.05</b>)÷(0.09 − <b class="g">0.05</b>)＝ <b>1.00</b></p>
+      <p style="font-size:13.5px;margin-top:6px">求められた通り<strong>9%稼ぐ</strong>。過不足なし。</p>
+    </div>
+    <div class="card" style="padding:14px 18px">
+      <h3 style="color:var(--akami);margin-bottom:6px">ROE 7% &lt; r 9%</h3>
+      <p class="jcalc">(0.07 − <b class="g">0.05</b>)÷(0.09 − <b class="g">0.05</b>)＝ <b>0.50</b></p>
+      <p style="font-size:13.5px;margin-top:6px">9%求められて<strong>7%しか稼げない</strong>。毎年不足。</p>
+    </div>
+  </div>
+  <div class="closing">
+    <p>分子と分母から<strong>同じ g(＝0.05)を引いている</strong>だけ。だから結論は <strong>ROE と r の大小</strong>だけで決まります。</p>
+    <p style="margin-top:9px">東証が「PBR1倍割れ企業」に改善を求めるのも同じ理由。株価が安いことではなく、<em>資本コストを稼げていない</em>ことが問題なのです。</p>
+    <div class="closing-recall">思い出してください ── <b>資本コスト ＝ 要求リターン ＝ 割引率 ＝ r</b>　立場が違うだけで、同じ 9% です(S14)</div>
+  </div>
+</section>
+
+<section class="slide" data-ch="4">
+  <div class="eyebrow">直感に反する帰結</div>
+  <h2>成長が、価値を破壊することがある</h2>
+  <div class="cols" style="grid-template-columns:.85fr 1.15fr; gap:32px; margin-top:10px">
+    <div>
+      <div class="panel">
+        <div class="toggle" id="roeToggle">
+          <button data-roe="7" class="sel">ROE 7%</button>
+          <button data-roe="9">ROE 9%</button>
+          <button data-roe="12">ROE 12%</button>
+        </div>
+        <div class="ctrl">
+          <label>内部留保率(利益を社内に残す割合) <b id="bOut">0%</b></label>
+          <input type="range" id="bs" min="0" max="100" step="10" value="0">
+        </div>
+        <div class="live">
+          <div class="live-item">
+            <span>成長率 g ＝ ROE ×(1 − 配当性向)</span>
+            <b id="gOut">0.0%</b>
+          </div>
+          <div class="live-item fix">
+            <span>要求リターン r</span>
+            <b>9.0%</b>
+          </div>
+        </div>
+      </div>
+      <div class="formula" style="font-size:18px;padding:10px 12px;margin-top:10px">
+        <span class="f-body">PBR ＝ <span class="frac"><span class="gen">ROE − g</span><span class="den gen">r − g</span></span>
+        ＝ <span class="frac"><span><b id="fROE">0.07</b> − <b id="fG">0.00</b></span><span class="den">0.09 − <b id="fG2">0.00</b></span></span></span>
+      </div>
+      <div class="readout" style="margin-top:10px">
+        <div class="num-label">理論PBR</div>
+        <div class="big-num" id="pbrOut">0.78<span class="u">倍</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="opsteps" style="margin-bottom:14px">
+        <div class="opstep"><span class="op-n">1</span><p>内部留保率を <b id="st1">0% → 100%</b> に動かす<span style="color:var(--muted)">(利益を社内に残す)</span></p></div>
+        <div class="opstep"><span class="op-n">2</span><p>成長率 g は <b id="st2">0% → 7.0%</b> に上がる</p></div>
+        <div class="opstep"><span class="op-n res">3</span><p><span id="st3lead">それなのに</span> PBR は <b class="down" id="st3">0.78 → 0.00</b> に<em id="st3verb">下がる</em><br><span id="verdictText" class="verdict-line">成長するほど、価値が減っていきます。</span></p></div>
+      </div>
+      <div class="recall-box" style="margin-top:0;padding:9px 14px">
+        <b id="recallMain">年9%を求められている資本を、7%でしか回せない。</b><span id="recallSub">社内に留めるほど株主の価値は削られます。</span><br>
+        r ＝ 9% は<b>増やす義務を負ったお金</b>＝資本コスト<span class="rb-ref">S14</span>
+      </div>
+      <div class="limitbox">
+        <div class="lb-head" id="lbHead">では逆に、留保率を下げれば(配当を増やせば)よいのか</div>
+        <div class="lb-body">
+          <div class="lb-row"><span>内部留保率 50%　<i>半分を社内に残す</i></span><b id="lb50">PBR 0.64</b></div>
+          <div class="lb-row"><span>内部留保率 20%　<i>少しだけ残す</i></span><b id="lb20">PBR 0.74</b></div>
+          <div class="lb-row last"><span>内部留保率 0%　<i>何も残さない</i></span><b id="lb0">PBR 0.78</b></div>
+        </div>
+        <p id="lbConcl"><strong>何も残さなくても 0.78 が上限。</strong>還元は目減りを止めるだけで、<em>価値を生み出す手段ではない</em>のです。</p>
+      </div>
+      <div class="note" id="lbNote" style="margin-top:10px;border-left-color:var(--akami);font-size:13px">
+        全額留保なら <strong>PBR 0.00</strong> ── 一円も受け取らないなら価値はゼロ。本質的な解は <strong>ROE を r より上へ</strong>(S18のBの道)。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="4">
+  <div class="eyebrow">前半のまとめ</div>
+  <h2>ここまでに手に入れたもの</h2>
+  <div class="cols" style="gap:40px;margin-top:22px">
+    <div>
+      <ul class="pts">
+        <li><strong>価格と価値は別物</strong>。価格は一つ、価値は人の数だけ。だから比較でき、投資が成立する。</li>
+        <li><strong>理論株価</strong>とは、将来受け取る配当を現在に引き戻して合計したもの。見えない価値に対する、<strong>自分の推定値</strong>です。</li>
+        <li>割り引く理由は<strong>機会費用と不確実性</strong>の2つだけ。割引率 r ＝ 無リスク金利 ＋ β × リスクプレミアム。</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="pts">
+        <li>成長率 g は<strong>勝手に決められない</strong>。ROE と配当性向から自動的に決まる。</li>
+        <li>PBR ＝ PER × ROE。3つの指標は<strong>1本の式で繋がっている</strong>。</li>
+        <li><strong>PBR &gt; 1 ⟺ ROE &gt; r</strong>。ROE が r を下回るなら、成長は価値を破壊する。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="conclusion-line">理論株価が出て初めて、<strong>「割安」という言葉に中身が入ります。</strong></div>
+  <div class="callout" style="margin-top:14px">
+    <p>ここまでは、<strong>株主が受け取る配当</strong>から理論株価を出しました。<br>後半は<strong>会社全体が生むお金</strong>へ ── そして、<em>この計算がどれだけ当てにならないか</em>を確かめます。</p>
+  </div>
+</section>
+
+<section class="slide chapter" data-ch="4">
+  <div class="num">前半 完</div>
+  <h1>後半へ</h1>
+  <p class="note">
+    視点が<strong>株主の取り分</strong>から<strong>会社全体</strong>へ移ります。ここまでの r は<strong>株主だけの要求</strong>でした ── 後半では、<strong>債権者の要求も混ぜます</strong>。<br><br>会社全体が生むお金(FCFF)／ WACC ─ 株主と債権者の要求を混ぜる ／ A社をDCFで通す ／ 前提を動かすと答えがどれだけ動くか ／ 株価から市場の前提を逆算する ／ この計算の、二つの限界
+  </p>
+</section>
+
+<section class="slide qr-slide" data-ch="">
+  <div class="eyebrow">受講者のみなさまへ</div>
+  <h2>この資料は、あとから見返せます</h2>
+  <p class="sub" style="margin-bottom:0">スマートフォンで読み取るか、URLを直接開いてください。<strong>PC・タブレット、またはスマホの横画面</strong>を推奨します。</p>
+  <div class="qr-wrap">
+    <div class="qr-box"><svg viewBox="0 0 41 41" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="2" y="2" width="7" height="1"/><rect x="16" y="2" width="2" height="1"/><rect x="20" y="2" width="1" height="1"/><rect x="26" y="2" width="1" height="1"/><rect x="32" y="2" width="7" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="10" y="3" width="3" height="1"/><rect x="17" y="3" width="7" height="1"/><rect x="25" y="3" width="2" height="1"/><rect x="28" y="3" width="1" height="1"/><rect x="30" y="3" width="1" height="1"/><rect x="32" y="3" width="1" height="1"/><rect x="38" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="4" y="4" width="3" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="17" y="4" width="3" height="1"/><rect x="21" y="4" width="4" height="1"/><rect x="27" y="4" width="4" height="1"/><rect x="32" y="4" width="1" height="1"/><rect x="34" y="4" width="3" height="1"/><rect x="38" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="4" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="12" y="5" width="7" height="1"/><rect x="20" y="5" width="1" height="1"/><rect x="23" y="5" width="1" height="1"/><rect x="27" y="5" width="3" height="1"/><rect x="32" y="5" width="1" height="1"/><rect x="34" y="5" width="3" height="1"/><rect x="38" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="4" y="6" width="3" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="2" height="1"/><rect x="14" y="6" width="2" height="1"/><rect x="18" y="6" width="1" height="1"/><rect x="23" y="6" width="1" height="1"/><rect x="25" y="6" width="1" height="1"/><rect x="27" y="6" width="1" height="1"/><rect x="30" y="6" width="1" height="1"/><rect x="32" y="6" width="1" height="1"/><rect x="34" y="6" width="3" height="1"/><rect x="38" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="13" y="7" width="3" height="1"/><rect x="18" y="7" width="1" height="1"/><rect x="21" y="7" width="2" height="1"/><rect x="25" y="7" width="1" height="1"/><rect x="28" y="7" width="1" height="1"/><rect x="30" y="7" width="1" height="1"/><rect x="32" y="7" width="1" height="1"/><rect x="38" y="7" width="1" height="1"/><rect x="2" y="8" width="7" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="16" y="8" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="20" y="8" width="1" height="1"/><rect x="22" y="8" width="1" height="1"/><rect x="24" y="8" width="1" height="1"/><rect x="26" y="8" width="1" height="1"/><rect x="28" y="8" width="1" height="1"/><rect x="30" y="8" width="1" height="1"/><rect x="32" y="8" width="7" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="16" y="9" width="1" height="1"/><rect x="18" y="9" width="1" height="1"/><rect x="21" y="9" width="3" height="1"/><rect x="26" y="9" width="1" height="1"/><rect x="28" y="9" width="3" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="7" y="10" width="4" height="1"/><rect x="13" y="10" width="1" height="1"/><rect x="15" y="10" width="2" height="1"/><rect x="18" y="10" width="2" height="1"/><rect x="22" y="10" width="1" height="1"/><rect x="24" y="10" width="1" height="1"/><rect x="31" y="10" width="1" height="1"/><rect x="33" y="10" width="5" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="7" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="18" y="11" width="4" height="1"/><rect x="24" y="11" width="7" height="1"/><rect x="32" y="11" width="2" height="1"/><rect x="35" y="11" width="2" height="1"/><rect x="38" y="11" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="6" y="12" width="5" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="16" y="12" width="2" height="1"/><rect x="19" y="12" width="2" height="1"/><rect x="23" y="12" width="1" height="1"/><rect x="25" y="12" width="2" height="1"/><rect x="29" y="12" width="6" height="1"/><rect x="37" y="12" width="2" height="1"/><rect x="5" y="13" width="2" height="1"/><rect x="10" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="2" height="1"/><rect x="20" y="13" width="3" height="1"/><rect x="28" y="13" width="1" height="1"/><rect x="30" y="13" width="1" height="1"/><rect x="33" y="13" width="3" height="1"/><rect x="38" y="13" width="1" height="1"/><rect x="3" y="14" width="2" height="1"/><rect x="6" y="14" width="3" height="1"/><rect x="11" y="14" width="5" height="1"/><rect x="18" y="14" width="3" height="1"/><rect x="24" y="14" width="1" height="1"/><rect x="26" y="14" width="1" height="1"/><rect x="29" y="14" width="2" height="1"/><rect x="32" y="14" width="2" height="1"/><rect x="35" y="14" width="1" height="1"/><rect x="37" y="14" width="2" height="1"/><rect x="4" y="15" width="1" height="1"/><rect x="6" y="15" width="1" height="1"/><rect x="9" y="15" width="1" height="1"/><rect x="11" y="15" width="1" height="1"/><rect x="15" y="15" width="1" height="1"/><rect x="17" y="15" width="2" height="1"/><rect x="21" y="15" width="1" height="1"/><rect x="24" y="15" width="1" height="1"/><rect x="26" y="15" width="1" height="1"/><rect x="29" y="15" width="4" height="1"/><rect x="36" y="15" width="1" height="1"/><rect x="38" y="15" width="1" height="1"/><rect x="3" y="16" width="2" height="1"/><rect x="6" y="16" width="3" height="1"/><rect x="13" y="16" width="1" height="1"/><rect x="16" y="16" width="1" height="1"/><rect x="18" y="16" width="2" height="1"/><rect x="21" y="16" width="1" height="1"/><rect x="23" y="16" width="2" height="1"/><rect x="27" y="16" width="1" height="1"/><rect x="29" y="16" width="1" height="1"/><rect x="31" y="16" width="2" height="1"/><rect x="35" y="16" width="2" height="1"/><rect x="38" y="16" width="1" height="1"/><rect x="3" y="17" width="1" height="1"/><rect x="5" y="17" width="1" height="1"/><rect x="7" y="17" width="1" height="1"/><rect x="9" y="17" width="2" height="1"/><rect x="12" y="17" width="1" height="1"/><rect x="15" y="17" width="1" height="1"/><rect x="20" y="17" width="1" height="1"/><rect x="26" y="17" width="1" height="1"/><rect x="31" y="17" width="5" height="1"/><rect x="37" y="17" width="1" height="1"/><rect x="2" y="18" width="1" height="1"/><rect x="4" y="18" width="1" height="1"/><rect x="6" y="18" width="1" height="1"/><rect x="8" y="18" width="1" height="1"/><rect x="10" y="18" width="1" height="1"/><rect x="12" y="18" width="1" height="1"/><rect x="14" y="18" width="1" height="1"/><rect x="16" y="18" width="3" height="1"/><rect x="21" y="18" width="1" height="1"/><rect x="25" y="18" width="1" height="1"/><rect x="29" y="18" width="4" height="1"/><rect x="37" y="18" width="2" height="1"/><rect x="2" y="19" width="1" height="1"/><rect x="4" y="19" width="1" height="1"/><rect x="10" y="19" width="4" height="1"/><rect x="15" y="19" width="11" height="1"/><rect x="29" y="19" width="2" height="1"/><rect x="32" y="19" width="2" height="1"/><rect x="35" y="19" width="2" height="1"/><rect x="38" y="19" width="1" height="1"/><rect x="3" y="20" width="1" height="1"/><rect x="5" y="20" width="1" height="1"/><rect x="7" y="20" width="3" height="1"/><rect x="12" y="20" width="1" height="1"/><rect x="14" y="20" width="1" height="1"/><rect x="21" y="20" width="7" height="1"/><rect x="29" y="20" width="1" height="1"/><rect x="34" y="20" width="1" height="1"/><rect x="36" y="20" width="1" height="1"/><rect x="38" y="20" width="1" height="1"/><rect x="2" y="21" width="1" height="1"/><rect x="4" y="21" width="4" height="1"/><rect x="10" y="21" width="2" height="1"/><rect x="14" y="21" width="1" height="1"/><rect x="16" y="21" width="1" height="1"/><rect x="20" y="21" width="3" height="1"/><rect x="24" y="21" width="1" height="1"/><rect x="28" y="21" width="8" height="1"/><rect x="3" y="22" width="3" height="1"/><rect x="7" y="22" width="2" height="1"/><rect x="10" y="22" width="1" height="1"/><rect x="12" y="22" width="1" height="1"/><rect x="18" y="22" width="2" height="1"/><rect x="21" y="22" width="1" height="1"/><rect x="23" y="22" width="1" height="1"/><rect x="25" y="22" width="2" height="1"/><rect x="29" y="22" width="2" height="1"/><rect x="32" y="22" width="1" height="1"/><rect x="35" y="22" width="1" height="1"/><rect x="3" y="23" width="1" height="1"/><rect x="5" y="23" width="3" height="1"/><rect x="10" y="23" width="1" height="1"/><rect x="21" y="23" width="1" height="1"/><rect x="24" y="23" width="1" height="1"/><rect x="29" y="23" width="1" height="1"/><rect x="31" y="23" width="3" height="1"/><rect x="35" y="23" width="2" height="1"/><rect x="38" y="23" width="1" height="1"/><rect x="2" y="24" width="3" height="1"/><rect x="7" y="24" width="2" height="1"/><rect x="10" y="24" width="1" height="1"/><rect x="13" y="24" width="5" height="1"/><rect x="22" y="24" width="1" height="1"/><rect x="25" y="24" width="1" height="1"/><rect x="28" y="24" width="3" height="1"/><rect x="32" y="24" width="4" height="1"/><rect x="38" y="24" width="1" height="1"/><rect x="3" y="25" width="4" height="1"/><rect x="10" y="25" width="2" height="1"/><rect x="13" y="25" width="1" height="1"/><rect x="15" y="25" width="1" height="1"/><rect x="18" y="25" width="1" height="1"/><rect x="20" y="25" width="1" height="1"/><rect x="22" y="25" width="1" height="1"/><rect x="24" y="25" width="2" height="1"/><rect x="29" y="25" width="1" height="1"/><rect x="31" y="25" width="1" height="1"/><rect x="33" y="25" width="1" height="1"/><rect x="35" y="25" width="1" height="1"/><rect x="37" y="25" width="1" height="1"/><rect x="3" y="26" width="2" height="1"/><rect x="8" y="26" width="2" height="1"/><rect x="11" y="26" width="2" height="1"/><rect x="16" y="26" width="1" height="1"/><rect x="18" y="26" width="2" height="1"/><rect x="21" y="26" width="2" height="1"/><rect x="26" y="26" width="1" height="1"/><rect x="32" y="26" width="2" height="1"/><rect x="35" y="26" width="1" height="1"/><rect x="37" y="26" width="1" height="1"/><rect x="3" y="27" width="2" height="1"/><rect x="7" y="27" width="1" height="1"/><rect x="10" y="27" width="1" height="1"/><rect x="12" y="27" width="5" height="1"/><rect x="19" y="27" width="2" height="1"/><rect x="22" y="27" width="2" height="1"/><rect x="29" y="27" width="2" height="1"/><rect x="32" y="27" width="2" height="1"/><rect x="35" y="27" width="2" height="1"/><rect x="38" y="27" width="1" height="1"/><rect x="2" y="28" width="2" height="1"/><rect x="8" y="28" width="3" height="1"/><rect x="14" y="28" width="1" height="1"/><rect x="16" y="28" width="1" height="1"/><rect x="18" y="28" width="5" height="1"/><rect x="25" y="28" width="1" height="1"/><rect x="27" y="28" width="3" height="1"/><rect x="31" y="28" width="2" height="1"/><rect x="34" y="28" width="2" height="1"/><rect x="38" y="28" width="1" height="1"/><rect x="4" y="29" width="1" height="1"/><rect x="6" y="29" width="2" height="1"/><rect x="11" y="29" width="1" height="1"/><rect x="18" y="29" width="1" height="1"/><rect x="20" y="29" width="3" height="1"/><rect x="25" y="29" width="2" height="1"/><rect x="28" y="29" width="2" height="1"/><rect x="31" y="29" width="4" height="1"/><rect x="37" y="29" width="1" height="1"/><rect x="2" y="30" width="2" height="1"/><rect x="5" y="30" width="1" height="1"/><rect x="8" y="30" width="1" height="1"/><rect x="11" y="30" width="2" height="1"/><rect x="14" y="30" width="1" height="1"/><rect x="16" y="30" width="2" height="1"/><rect x="22" y="30" width="1" height="1"/><rect x="24" y="30" width="1" height="1"/><rect x="26" y="30" width="1" height="1"/><rect x="29" y="30" width="7" height="1"/><rect x="38" y="30" width="1" height="1"/><rect x="10" y="31" width="4" height="1"/><rect x="16" y="31" width="2" height="1"/><rect x="19" y="31" width="2" height="1"/><rect x="25" y="31" width="3" height="1"/><rect x="30" y="31" width="1" height="1"/><rect x="34" y="31" width="2" height="1"/><rect x="38" y="31" width="1" height="1"/><rect x="2" y="32" width="7" height="1"/><rect x="10" y="32" width="1" height="1"/><rect x="13" y="32" width="1" height="1"/><rect x="18" y="32" width="2" height="1"/><rect x="25" y="32" width="4" height="1"/><rect x="30" y="32" width="1" height="1"/><rect x="32" y="32" width="1" height="1"/><rect x="34" y="32" width="3" height="1"/><rect x="38" y="32" width="1" height="1"/><rect x="2" y="33" width="1" height="1"/><rect x="8" y="33" width="1" height="1"/><rect x="10" y="33" width="1" height="1"/><rect x="12" y="33" width="1" height="1"/><rect x="15" y="33" width="1" height="1"/><rect x="17" y="33" width="2" height="1"/><rect x="20" y="33" width="2" height="1"/><rect x="24" y="33" width="1" height="1"/><rect x="26" y="33" width="1" height="1"/><rect x="29" y="33" width="2" height="1"/><rect x="34" y="33" width="2" height="1"/><rect x="37" y="33" width="2" height="1"/><rect x="2" y="34" width="1" height="1"/><rect x="4" y="34" width="3" height="1"/><rect x="8" y="34" width="1" height="1"/><rect x="11" y="34" width="3" height="1"/><rect x="15" y="34" width="1" height="1"/><rect x="17" y="34" width="1" height="1"/><rect x="21" y="34" width="1" height="1"/><rect x="23" y="34" width="4" height="1"/><rect x="29" y="34" width="6" height="1"/><rect x="37" y="34" width="1" height="1"/><rect x="2" y="35" width="1" height="1"/><rect x="4" y="35" width="3" height="1"/><rect x="8" y="35" width="1" height="1"/><rect x="12" y="35" width="2" height="1"/><rect x="15" y="35" width="1" height="1"/><rect x="17" y="35" width="1" height="1"/><rect x="21" y="35" width="1" height="1"/><rect x="23" y="35" width="3" height="1"/><rect x="28" y="35" width="1" height="1"/><rect x="30" y="35" width="1" height="1"/><rect x="34" y="35" width="1" height="1"/><rect x="36" y="35" width="1" height="1"/><rect x="38" y="35" width="1" height="1"/><rect x="2" y="36" width="1" height="1"/><rect x="4" y="36" width="3" height="1"/><rect x="8" y="36" width="1" height="1"/><rect x="10" y="36" width="1" height="1"/><rect x="12" y="36" width="1" height="1"/><rect x="16" y="36" width="2" height="1"/><rect x="19" y="36" width="4" height="1"/><rect x="25" y="36" width="1" height="1"/><rect x="27" y="36" width="2" height="1"/><rect x="30" y="36" width="1" height="1"/><rect x="34" y="36" width="1" height="1"/><rect x="36" y="36" width="3" height="1"/><rect x="2" y="37" width="1" height="1"/><rect x="8" y="37" width="1" height="1"/><rect x="15" y="37" width="1" height="1"/><rect x="18" y="37" width="3" height="1"/><rect x="23" y="37" width="1" height="1"/><rect x="26" y="37" width="1" height="1"/><rect x="28" y="37" width="1" height="1"/><rect x="30" y="37" width="4" height="1"/><rect x="2" y="38" width="7" height="1"/><rect x="12" y="38" width="1" height="1"/><rect x="14" y="38" width="3" height="1"/><rect x="18" y="38" width="2" height="1"/><rect x="22" y="38" width="2" height="1"/><rect x="25" y="38" width="1" height="1"/><rect x="30" y="38" width="2" height="1"/><rect x="33" y="38" width="1" height="1"/><rect x="35" y="38" width="1" height="1"/><rect x="38" y="38" width="1" height="1"/></svg></div>
+    <div class="qr-side">
+      <div class="qr-label">URL</div>
+      <div class="qr-url">akami-s.github.io<br>/valuation-lecture/</div>
+      <div class="qr-note">
+        <b>操作方法</b><br>
+        ← → キー ／ 画面下の ‹ › ボタンで移動<br>
+        <b>F</b> キーで全画面
+      </div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:auto;font-size:13px">
+    このURLは<b>前半・後半の入口</b>です ── どちらにも行けます。講義で扱った計算は、すべてこの資料の中で再現できます。スライダーのある2枚(現在価値・理論PBR)は、ご自身で数字を動かして確かめてください。
+  </div>
+</section>
+
+<div id="rail"></div>
+<div id="nav">
+  <button id="prev" aria-label="前のスライド">‹</button>
+  <button id="next" aria-label="次のスライド">›</button>
+</div>
+<div id="hud"><span class="ch" id="hudCh"></span><span id="hudNum"></span></div>
+
+</div></div>
+<div id="help">← → スライド移動　　F 全画面</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ── A社の設定 ── ここだけ変えれば連動箇所すべてに反映 ── */
+var A = { BPS:1000, ROE:0.10, payout:0.50, r:0.09 };
+
+var CH = ["価格と価値","割引","r をどう決めるか","A社を通す","価値が生まれる条件"];
+
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var i = 0;
+
+/* レール */
+var rail = document.getElementById('rail');
+slides.forEach(function(){
+  var d = document.createElement('div');
+  d.className = 'rail-seg';
+  d.style.flex = '1';
+  rail.appendChild(d);
+});
+var segs = Array.prototype.slice.call(rail.children);
+
+function show(n){
+  i = Math.max(0, Math.min(slides.length-1, n));
+  slides.forEach(function(s,k){ s.classList.toggle('on', k===i); });
+  segs.forEach(function(s,k){ s.classList.toggle('act', k<=i); });
+  document.getElementById('hudNum').textContent = (i+1)+' / '+slides.length;
+  var c = slides[i].getAttribute('data-ch');
+  document.getElementById('hudCh').textContent = (c!=='' && c!==null) ? CH[+c] : '';
+  /* インタラクティブ面は、表示のたびに初期状態へ戻す
+     ─ 講義を繰り返し行うため、前回触った状態を持ち越さない */
+  if(slides[i].querySelector('#stairs')) resetPV();
+  if(slides[i].querySelector('#pbrOut')) resetPBR();
+}
+
+document.getElementById('next').onclick = function(){ show(i+1); };
+document.getElementById('prev').onclick = function(){ show(i-1); };
+
+document.addEventListener('keydown', function(e){
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); show(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(i-1); }
+  else if(e.key==='Home'){ show(0); }
+  else if(e.key==='End'){ show(slides.length-1); }
+  else if(e.key==='f'||e.key==='F'){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+
+/* 拡大縮小 */
+function fit(){
+  var d = document.getElementById('deck');
+  var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.96;
+  d.style.transform = 'scale('+s+')';
+}
+window.addEventListener('resize', fit);
+fit();
+
+/* ── 現在価値スライダー ── */
+var pvRs = document.getElementById('pvRs');
+var pvNs = document.getElementById('pvNs');
+
+function drawStairs(){
+  var r = +pvRs.value/100, n = +pvNs.value;
+  var pv = 1000000/Math.pow(1+r,n);
+  document.getElementById('pvR').textContent = (+pvRs.value).toFixed(1)+'%';
+  document.getElementById('pvN').textContent = n+'年';
+  document.getElementById('pvOut').innerHTML = Math.round(pv).toLocaleString()+'<span class="u">円</span>';
+
+  /* 0年目(現在価値)＋ 均等に選んだ将来年 */
+  var yrs = [0];
+  var step = Math.max(1, Math.round(n/6));
+  for(var y=step; y<n; y+=step) yrs.push(y);
+  if(yrs[yrs.length-1] !== n) yrs.push(n);
+  yrs = yrs.slice(0,8);
+
+  var host = document.getElementById('stairs');
+  host.innerHTML = '';
+  yrs.forEach(function(y){
+    var v = 1000000/Math.pow(1+r,y);
+    var w = document.createElement('div');
+    w.className = 'bar-wrap';
+    var h = Math.max(2, (v/1000000)*205);
+    w.innerHTML =
+      '<div class="bar-val">'+Math.round(v/10000)+'万</div>'+
+      '<div class="bar'+(y===0?' now':'')+'" style="height:'+h+'px"></div>'+
+      '<div class="bar-x">'+(y===0?'現在':y+'年後')+'</div>';
+    host.appendChild(w);
+  });
+}
+pvRs.addEventListener('input', drawStairs);
+pvNs.addEventListener('input', drawStairs);
+
+/* 初期状態:r = 3%、n = 10年(注記の1ステップ目に合わせる) */
+function resetPV(){
+  pvRs.value = 3;
+  pvNs.value = 10;
+  drawStairs();
+}
+
+/* ── 成長が価値を破壊する ── */
+var bs = document.getElementById('bs');
+var roeBtns = Array.prototype.slice.call(document.querySelectorAll('#roeToggle button'));
+var curROE = 0.07;
+
+function updPBR(){
+  var b = +bs.value/100;
+  var g = curROE * b;
+  var r = A.r;
+  var broken = (g >= r - 1e-9);
+
+  document.getElementById('bOut').textContent = Math.round(b*100)+'%';
+  document.getElementById('gOut').textContent = (g*100).toFixed(1)+'%';
+
+  /* 式のライブ表示 */
+  document.getElementById('fROE').textContent = curROE.toFixed(2);
+  document.getElementById('fG').textContent  = g.toFixed(2);
+  document.getElementById('fG2').textContent = g.toFixed(2);
+
+  var out = document.getElementById('pbrOut');
+  var vt  = document.getElementById('verdictText');
+
+  if(broken){
+    out.innerHTML = '計算不能';
+    out.style.fontSize = '34px';
+    vt.textContent = 'g が r 以上になり、この式は使えません(S12)。';
+  } else {
+    out.style.fontSize = '';
+    var pbr = (curROE - g)/(r - g);
+    out.innerHTML = pbr.toFixed(2)+'<span class="u">倍</span>';
+    if(pbr < 1e-9){
+      vt.textContent = '株主は永久に一円も受け取れません。だから価値はゼロです。';
+    } else if(Math.abs(curROE - r) < 1e-9){
+      vt.textContent = 'ROE = r。社内に残しても、配当で出しても、株主の受け取る価値は同じ。だから選択が価値を変えません。';
+    } else if(curROE < r){
+      vt.textContent = '成長するほど、価値が減っていきます。';
+    } else {
+      vt.textContent = '成長するほど、価値が増えていきます。';
+    }
+  }
+
+  /* ── 下段カードを ROE に連動させる ── */
+  function pbrAt(bb){ var gg = curROE*bb; return (curROE-gg)/(r-gg); }
+  document.getElementById('lb50').textContent = 'PBR '+pbrAt(0.5).toFixed(2);
+  document.getElementById('lb20').textContent = 'PBR '+pbrAt(0.2).toFixed(2);
+  document.getElementById('lb0' ).textContent = 'PBR '+pbrAt(0).toFixed(2);
+
+  /* 式が壊れない最大の内部留保率(10%刻み)*/
+  var bMax = 100;
+  for(var k=0; k<=100; k+=10){ if(curROE*k/100 >= r-1e-9){ bMax = k-10; break; } }
+  var gMax = curROE*bMax/100;
+
+  var pct = (curROE*100).toFixed(0);
+  document.getElementById('st1').textContent = '0% → '+bMax+'%';
+  document.getElementById('st2').textContent = '0% → '+(gMax*100).toFixed(1)+'%';
+  document.getElementById('st3').textContent = pbrAt(0).toFixed(2)+' → '+pbrAt(bMax/100).toFixed(2);
+
+  var lead = document.getElementById('st3lead');
+  var verb = document.getElementById('st3verb');
+  var head = document.getElementById('lbHead');
+  var concl= document.getElementById('lbConcl');
+  var note = document.getElementById('lbNote');
+  var rMain= document.getElementById('recallMain');
+  var rSub = document.getElementById('recallSub');
+
+  if(curROE < r - 1e-9){
+    lead.textContent  = 'それなのに';
+    verb.textContent  = '下がる';
+    rMain.textContent = '年9%を求められている資本を、'+pct+'%でしか回せない。';
+    rSub.textContent  = '社内に留めるほど株主の価値は削られます。';
+    head.textContent  = 'では逆に、留保率を下げれば(配当を増やせば)よいのか';
+    concl.innerHTML   = '<strong>何も残さなくても '+pbrAt(0).toFixed(2)+' が上限。</strong>還元は目減りを止めるだけで、<em>価値を生み出す手段ではない</em>のです。';
+    note.innerHTML    = '全額留保なら <strong>PBR 0.00</strong> ── 一円も受け取らないなら価値はゼロ。本質的な解は <strong>ROE を r より上へ</strong>(S18のBの道)。';
+  } else if(Math.abs(curROE - r) < 1e-9){
+    lead.textContent  = 'それでも';
+    verb.textContent  = '動かない';
+    rMain.textContent = '年9%を求められている資本を、ちょうど9%で回している。';
+    rSub.textContent  = '過不足がないので、留保しても配っても価値は動きません。';
+    head.textContent  = '留保率を変えても、PBR は動かない';
+    concl.innerHTML   = '<strong>どこを取っても 1.00。</strong>ROE と r が等しいとき、<em>還元方針は価値に影響しない</em>のです。';
+    note.innerHTML    = '留保率100%だけは <strong>g = r</strong> となり計算不能(S12)。ここが価値創造と破壊の<strong>分水嶺</strong>です。';
+  } else {
+    lead.textContent  = 'すると';
+    verb.textContent  = '上がる';
+    rMain.textContent = '年9%を求められている資本を、'+pct+'%で回せる。';
+    rSub.textContent  = '社内に留めるほど株主の価値は増えていきます。';
+    head.textContent  = 'では逆に、留保率を下げれば(配当を増やせば)どうなるか';
+    concl.innerHTML   = '<strong>何も残さないと '+pbrAt(0).toFixed(2)+' まで下がる。</strong>稼ぐ力があるなら、<em>配るより社内で回すほうが価値は大きい</em>のです。';
+    note.innerHTML    = '留保率80%以上は <strong>g が r を超えて</strong>計算不能に(S12)。<strong>高成長を永久に続ける前提は置けません。</strong>';
+  }
+}
+
+bs.addEventListener('input', updPBR);
+roeBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    roeBtns.forEach(function(b2){ b2.classList.remove('sel'); });
+    btn.classList.add('sel');
+    curROE = +btn.getAttribute('data-roe')/100;
+    bs.value = 0;          /* ROE を変えたら出発点(留保率0%)へ戻す */
+    updPBR();
+  });
+});
+
+/* 初期状態:ROE 7%、内部留保率 0%(操作手順の出発点に合わせる) */
+function resetPBR(){
+  bs.value = 0;
+  curROE = 0.07;
+  roeBtns.forEach(function(b2){
+    b2.classList.toggle('sel', b2.getAttribute('data-roe') === '7');
+  });
+  updPBR();
+}
+
+resetPV();
+resetPBR();
+show(0);
+})();
+</script>
+</body>
+</html>

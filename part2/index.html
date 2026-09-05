@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>割引という考え方 後半｜会社全体が生むお金 - Akami Studio</title>
+<style>
+/* ============================================================
+   Akami Studio ─ 講義スライド 後半
+   色を変えたい場合はここだけ触れば全体に反映されます
+   ============================================================ */
+:root{
+  --akami:#B7282E;          /* akamiRed */
+  --akami-deep:#8C1B21;
+  --akami-tint:#F5E3E2;
+  --cream:#FAF6EF;
+  --cream-2:#F2ECE0;
+  --sage:#6E8266;
+  --sage-light:#A9B8A1;
+  --sage-tint:#E6EBE2;
+  --ink:#26221F;
+  --ink-2:#5C554D;
+  --muted:#948C81;
+  --rule:#DCD4C6;
+  --chapter-bg:#DFE5D8;      /* 章扉の地色 ─ 落ち着いた淡いセージ */
+  --chapter-note:#4C5646;    /* 章扉の本文 */
+
+  --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --gothic:"Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Noto Sans JP",sans-serif;
+  --mono:"SFMono-Regular","Menlo","Consolas",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--ink);
+  font-family:var(--gothic);
+  color:var(--ink);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- ステージ ---------- */
+#stage{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+#deck{
+  position:relative;
+  width:1280px; height:720px; flex:none;
+  transform-origin:center center;
+  background:var(--cream);
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+}
+
+/* ---------- スライド ---------- */
+.slide{
+  position:absolute; inset:0;
+  padding:64px 88px 76px;
+  display:none;
+  flex-direction:column;
+  background:var(--cream);
+}
+.slide.on{display:flex; animation:fade .38s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* 章ラベル */
+.eyebrow{
+  font-size:13px; letter-spacing:.18em; color:var(--sage);
+  font-weight:700; margin-bottom:8px;
+  display:flex; align-items:center; gap:12px;
+}
+.eyebrow::after{content:""; flex:1; height:1px; background:var(--rule)}
+
+h1{font-family:var(--mincho); font-size:52px; font-weight:600; line-height:1.3; letter-spacing:.02em}
+h2{font-family:var(--mincho); font-size:38px; font-weight:600; line-height:1.35; margin-bottom:8px; letter-spacing:.02em}
+.sub{font-size:17px; color:var(--ink-2); line-height:1.75; margin-bottom:24px; max-width:58em}
+.body-l{font-size:20px; line-height:1.9; color:var(--ink-2)}
+.lead{flex:1; display:flex; flex-direction:column; justify-content:center}
+
+strong{color:var(--akami); font-weight:700}
+em{font-style:normal; background:linear-gradient(transparent 62%, var(--sage-tint) 62%); font-weight:600}
+
+/* ---------- 表紙 ---------- */
+.cover{
+  background:var(--cream);
+  justify-content:center;
+  padding-left:110px;
+}
+.cover .rule{width:64px;height:5px;background:var(--akami);margin-bottom:32px}
+.cover h1{font-size:66px; line-height:1.24}
+.cover .tag{font-size:19px;color:var(--sage);margin-top:26px;letter-spacing:.08em}
+.cover .brand{
+  position:absolute; right:88px; bottom:64px;
+  text-align:right; font-size:13px; color:var(--muted); letter-spacing:.14em; line-height:2;
+}
+
+/* ---------- 章扉 ---------- */
+.chapter{
+  background:var(--chapter-bg);
+  justify-content:center; align-items:flex-start; padding-left:110px;
+}
+.chapter::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:14px;
+  background:var(--akami);
+}
+.chapter h1{color:var(--ink); font-size:58px}
+.chapter .num{
+  font-family:var(--mono); font-size:15px; color:var(--akami);
+  letter-spacing:.3em; margin-bottom:20px; font-weight:700;
+}
+.chapter .num::after{
+  content:""; display:block; width:52px; height:3px;
+  background:var(--akami); margin-top:14px;
+}
+.chapter .note{
+  border:0; padding:0; color:var(--chapter-note); font-size:19px;
+  margin-top:26px; max-width:34em; line-height:1.9;
+}
+
+/* ---------- レイアウト部品 ---------- */
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1; align-items:start}
+.cols-3{display:grid; grid-template-columns:repeat(3,1fr); gap:26px}
+
+.card{
+  background:#fff; border:1px solid var(--rule); border-radius:3px;
+  padding:26px 28px;
+}
+.card.accent{border-left:4px solid var(--akami)}
+.card.sage{border-left:4px solid var(--sage)}
+.card h3{font-size:19px; margin-bottom:12px; font-weight:700; color:var(--ink)}
+.card p{font-size:15.5px; line-height:1.85; color:var(--ink-2)}
+
+.kicker{
+  font-family:var(--mono); font-size:12px; letter-spacing:.2em;
+  color:var(--akami); font-weight:700; margin-bottom:10px;
+}
+
+/* 数式 */
+.formula{
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:30px 34px; text-align:center; border-radius:3px;
+  font-family:var(--mincho); font-size:34px; line-height:1.6; letter-spacing:.02em;
+}
+.formula .den{border-top:2px solid var(--ink); padding-top:4px}
+.frac{display:inline-flex; flex-direction:column; vertical-align:middle; margin:0 10px; text-align:center}
+.frac span{padding:2px 10px}
+.formula-note{font-family:var(--gothic); font-size:14px; color:var(--muted); margin-top:14px; letter-spacing:.02em}
+
+/* 数値ハイライト */
+.big-num{font-family:var(--mincho); font-size:60px; color:var(--akami); font-weight:600; line-height:1}
+.big-num .u{font-size:24px; margin-left:4px}
+.num-label{font-size:13.5px; color:var(--muted); letter-spacing:.1em; margin-bottom:8px}
+
+.split{
+  font-size:12.5px; color:var(--muted); margin-top:10px;
+  padding-top:9px; border-top:1px solid var(--rule); letter-spacing:.01em;
+}
+.split b{font-family:var(--mono); font-size:13.5px; color:var(--ink-2); font-weight:700}
+
+/* テーブル */
+table.tight th, table.tight td{padding:7px 10px}
+table{width:100%; border-collapse:collapse; font-size:16px}
+th,td{padding:12px 14px; text-align:right; border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{
+  font-size:13px; letter-spacing:.08em; color:var(--sage);
+  border-bottom:2px solid var(--sage-light); font-weight:700;
+}
+td.val{font-family:var(--mono); font-size:17px}
+tr.hi td{background:var(--akami-tint); font-weight:700}
+tr.hi td.val{color:var(--akami-deep)}
+
+/* ---------- インタラクティブ ---------- */
+.panel{
+  background:#fff; border:1px solid var(--rule); border-radius:3px;
+  padding:18px 22px;
+}
+.ctrl{margin-bottom:18px}
+.ctrl:last-child{margin-bottom:0}
+.ctrl label{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:14px; color:var(--ink-2); margin-bottom:8px; letter-spacing:.03em;
+}
+.ctrl label b{font-family:var(--mono); font-size:19px; color:var(--akami); font-weight:700}
+input[type=range]{
+  width:100%; height:4px; -webkit-appearance:none; appearance:none;
+  background:var(--rule); border-radius:2px; outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:19px; height:19px; border-radius:50%;
+  background:var(--akami); cursor:pointer; border:3px solid #fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.28);
+}
+input[type=range]::-moz-range-thumb{
+  width:19px; height:19px; border-radius:50%; border:3px solid #fff;
+  background:var(--akami); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.28);
+}
+input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--sage-tint)}
+
+.toggle{display:flex; gap:0; border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin-bottom:18px}
+.toggle button{
+  flex:1; padding:11px 8px; border:0; background:#fff; cursor:pointer;
+  font-family:var(--gothic); font-size:14px; color:var(--ink-2); font-weight:600;
+  border-right:1px solid var(--rule); transition:.15s;
+}
+.toggle button:last-child{border-right:0}
+.toggle button.sel{background:var(--akami); color:#fff}
+.toggle button:focus-visible{outline:2px solid var(--sage); outline-offset:-2px}
+
+.readout{
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:16px 26px; border-radius:3px; text-align:center;
+}
+.readout .num-label{margin-bottom:6px}
+
+/* 割引の階段(シグネチャー) */
+.stairs{display:flex; align-items:flex-end; gap:9px; height:250px; padding-top:10px}
+.bar-wrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%}
+.bar{
+  width:100%; background:var(--sage-light); border-radius:2px 2px 0 0;
+  transition:height .45s cubic-bezier(.2,.7,.3,1), background .3s;
+  position:relative;
+}
+.bar.now{background:var(--akami)}
+.bar-val{
+  font-family:var(--mono); font-size:11px; color:var(--ink-2);
+  margin-bottom:5px; white-space:nowrap;
+}
+.bar-x{font-size:11.5px; color:var(--muted); margin-top:7px; letter-spacing:.02em}
+
+/* 比較バー */
+.cmp{display:flex; flex-direction:column; gap:14px}
+.cmp-row{display:grid; grid-template-columns:112px 1fr 96px; align-items:center; gap:14px}
+.cmp-row2{
+  display:grid; grid-template-columns:96px 272px 1fr 96px;
+  align-items:center; gap:16px;
+}
+.cmp-eq{
+  font-family:var(--mono); font-size:14px; color:var(--ink-2);
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:7px 10px; border-radius:2px; text-align:center; white-space:nowrap;
+}
+.cmp-eq b{color:var(--akami); font-weight:700}
+.cmp-legend{
+  font-size:13.5px; color:var(--ink-2); text-align:center;
+  margin-top:4px; padding-top:12px; border-top:1px solid var(--rule);
+}
+.cmp-legend b{font-family:var(--mono); color:var(--sage); font-weight:700}
+.cmp-name{font-size:14px; color:var(--ink-2); text-align:right}
+.cmp-track{height:26px; background:var(--cream-2); border-radius:2px; overflow:hidden}
+.cmp-fill{height:100%; background:var(--sage); transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.cmp-fill.red{background:var(--akami)}
+.cmp-val{font-family:var(--mono); font-size:16px; font-weight:700}
+
+/* 導出フロー(横並び) */
+.derive{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+  padding:6px 0;
+}
+.derive-row{display:flex; align-items:stretch; gap:0; width:100%}
+.derive-cell{flex:1; display:flex; flex-direction:column}
+.derive-cell .formula{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+}
+.f-body{white-space:nowrap}
+.frac .grow{color:var(--sage)}
+.frac .keep{color:var(--akami)}
+.frac .gen{color:var(--muted); font-size:.82em}
+.derive-arrow{
+  width:142px; flex:none;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding-top:22px;
+}
+.da-label{
+  font-size:13px; color:var(--sage); font-weight:700;
+  line-height:1.6; text-align:center; letter-spacing:.03em;
+}
+.da-mark{font-size:26px; color:var(--rule); line-height:1; margin-top:8px}
+.step-tag{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+  color:var(--muted); margin-bottom:9px; text-align:center;
+}
+
+/* 収束の見せ方 */
+.converge{
+  display:flex; background:var(--cream-2); border:1px solid var(--rule);
+  border-radius:3px; overflow:hidden;
+}
+.converge > div{
+  flex:1; padding:11px 4px; text-align:center;
+  border-right:1px solid var(--rule);
+}
+.converge > div:last-child{border-right:0; background:var(--akami-tint)}
+.cv-l{display:block; font-size:11px; color:var(--muted); letter-spacing:.03em}
+.cv-v{display:block; font-family:var(--mono); font-size:17px; font-weight:700; margin-top:4px}
+
+/* 往復 */
+.rt-block{padding-top:14px}
+.rt-caption{
+  font-size:15px; color:var(--ink-2); line-height:1.75;
+  text-align:center; margin-top:15px;
+}
+.roundtrip{
+  display:flex; align-items:center; justify-content:center; gap:0;
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:22px 20px; border-radius:3px;
+}
+.rt-node{text-align:center; padding:0 6px; min-width:118px}
+.rt-node .v{font-family:var(--mincho); font-size:29px; font-weight:600}
+.rt-node .l{font-size:11.5px; color:var(--muted); margin-top:5px; letter-spacing:.04em}
+.rt-arrow{text-align:center; padding:0 4px; flex:1; max-width:190px}
+.rt-arrow .op{font-family:var(--mono); font-size:13.5px; color:var(--ink-2); margin-bottom:5px}
+.rt-arrow .line{height:1px; background:var(--rule); position:relative}
+.rt-arrow .line::after{
+  content:""; position:absolute; right:0; top:-3.5px;
+  border-left:7px solid var(--rule); border-top:4px solid transparent; border-bottom:4px solid transparent;
+}
+.rt-arrow .cap{font-size:11px; color:var(--muted); margin-top:6px; letter-spacing:.04em}
+.rt-arrow .rname{
+  font-size:11.5px; color:var(--akami); font-weight:700;
+  margin-top:3px; letter-spacing:.02em;
+}
+
+/* 設定の宣言バー */
+.setup-bar{
+  display:flex; align-items:center; flex-wrap:wrap; gap:0 10px;
+  background:#fff; border:1px solid var(--rule); border-left:3px solid var(--sage);
+  padding:9px 16px; border-radius:2px; font-size:13.5px; color:var(--ink-2);
+  margin-bottom:12px;
+}
+.sb-tag{
+  font-size:11px; letter-spacing:.12em; color:var(--sage); font-weight:700;
+  padding-right:12px; border-right:1px solid var(--rule); margin-right:4px;
+}
+.setup-bar b{font-family:var(--mono); font-size:15px; color:var(--akami); font-weight:700}
+.sb-sep{color:var(--rule)}
+.sb-note{
+  font-size:11.5px; color:var(--muted); margin-left:8px;
+  padding:2px 8px; background:var(--cream-2); border-radius:2px;
+}
+
+/* 段階的な理由づけ */
+.reason{display:flex; flex-direction:column; gap:11px}
+.rs-step{display:flex; gap:12px; align-items:flex-start}
+.rs-n{
+  flex:none; width:21px; height:21px; border-radius:50%;
+  background:var(--sage); color:#fff; font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.rs-step p{font-size:15px; line-height:1.72; color:var(--ink-2)}
+
+/* 金利比較カード */
+.rate-card{
+  background:#fff; border:1px solid var(--rule); border-top:3px solid var(--sage);
+  border-radius:3px; padding:16px 22px 22px; text-align:center;
+  display:flex; flex-direction:column;
+}
+.rate-card.now{border-top-color:var(--akami); background:var(--akami-tint)}
+.rc-head{
+  font-size:12.5px; letter-spacing:.1em; color:var(--muted);
+  font-weight:700; padding-bottom:6px;
+}
+.rc-formula{
+  font-family:var(--mincho); font-size:21px; padding:16px 0 10px;
+  white-space:nowrap;
+}
+/* 分数の横線 ─ このカード内で唯一の水平線にする */
+.rc-formula .den{border-top:2px solid var(--ink); padding-top:6px}
+.rc-formula .frac{margin:0}
+.rc-formula .frac span{padding:3px 12px}
+.rc-formula .chg{color:var(--akami); font-weight:700; font-size:24px}
+.rc-den{
+  font-size:13px; color:var(--muted); padding-bottom:14px; letter-spacing:.04em;
+}
+.rc-den b{font-family:var(--mono); font-size:16px; color:var(--ink-2); font-weight:700}
+.rc-result{
+  font-family:var(--mincho); font-size:46px; font-weight:600; line-height:1;
+}
+.rc-result .u{font-size:20px; margin-left:2px}
+
+.minibtn{
+  font-family:var(--gothic); font-size:11px; letter-spacing:.02em;
+  padding:3px 10px; margin-left:8px; border:1px solid var(--rule); background:#fff;
+  color:var(--ink-2); border-radius:99px; cursor:pointer; transition:.15s; vertical-align:2px;
+}
+.minibtn.on{background:var(--sage); color:#fff; border-color:var(--sage)}
+.minibtn:focus-visible{outline:2px solid var(--sage); outline-offset:2px}
+.loopbox{
+  background:#fff; border:1px solid var(--rule); border-left:3px solid var(--akami);
+  border-radius:0 2px 2px 0; padding:10px 18px 8px;
+}
+.lp-line{
+  font-size:14px; line-height:1.75; color:var(--ink);
+  position:relative; padding-left:27px;
+}
+.lp-n{
+  position:absolute; left:0; top:2px;
+  width:19px; height:19px; border-radius:50%; background:var(--sage);
+  color:#fff; font-family:var(--mono); font-size:11.5px; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.lp-back{
+  margin-top:9px; padding-top:9px; border-top:1px dashed var(--rule);
+  font-size:13.5px; line-height:1.6; color:var(--akami-deep);
+}
+.ivchain{
+  font-size:12.5px; line-height:1.5; color:var(--ink-2); margin-top:10px;
+  display:flex; flex-wrap:wrap; align-items:center; gap:0 6px;
+}
+.ivchain b{font-family:var(--mono); font-size:14px; color:var(--ink); font-weight:700}
+.ivchain i{font-style:normal; color:var(--muted)}
+.ivwarn{
+  margin-top:10px; font-size:13px; line-height:1.5; color:var(--akami-deep);
+  background:var(--akami-tint); border-radius:2px; padding:7px 10px; min-height:1px;
+}
+.bandbar{position:relative; height:78px; margin:14px 0 6px}
+.bb-track{position:absolute; left:0; right:0; top:34px; height:12px;
+  background:var(--cream-2); border:1px solid var(--rule); border-radius:6px}
+.bb-mark{position:absolute; top:22px; width:1px; height:28px; background:var(--muted)}
+.bb-mlab{position:absolute; top:2px; font-size:11.5px; color:var(--muted); white-space:nowrap}
+.bb-ptr{position:absolute; top:26px; width:3px; height:28px; background:var(--akami); border-radius:2px}
+.bb-plab{position:absolute; top:52px; font-family:var(--mono); font-size:14px; font-weight:700;
+  line-height:1.15; color:var(--akami); white-space:nowrap; transform:translateX(-50%)}
+.bb-axis{position:absolute; left:0; right:0; top:2px; display:flex;
+  justify-content:space-between; font-size:11px; color:var(--muted)}
+.rev-eq{
+  display:flex; align-items:flex-end; justify-content:center; flex-wrap:nowrap;
+  gap:0 10px; font-family:var(--mincho); font-size:20px; line-height:1.5; color:var(--ink);
+}
+.re-seg{display:flex; flex-direction:column; align-items:center; gap:3px}
+.re-lab{
+  font-family:var(--gothic); font-size:11.5px; line-height:1.2; color:var(--muted);
+  white-space:nowrap; letter-spacing:.01em;
+}
+.re-res{
+  font-family:var(--gothic); font-size:11.5px; line-height:1.2; color:var(--sage);
+  font-weight:700; white-space:nowrap; letter-spacing:.01em;
+}
+.re-val{white-space:nowrap}
+.re-brace{font-size:24px; color:var(--ink-2)}
+.jcalc{
+  font-family:var(--mono); font-size:12.5px; color:var(--ink-2);
+  background:var(--cream-2); border:1px solid var(--rule);
+  padding:6px 8px; border-radius:2px; text-align:center; white-space:nowrap;
+}
+.jcalc b{font-size:15px; color:var(--akami-deep); font-weight:700}
+.jcalc b.g{font-size:12.5px; color:var(--sage); font-weight:700}
+
+/* ライブ表示 */
+.live{margin-top:12px; padding-top:11px; border-top:1px solid var(--rule)}
+.live-item{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  margin-bottom:10px;
+}
+.live-item:last-child{margin-bottom:0}
+.live-item span{font-size:12px; color:var(--muted); line-height:1.4}
+.live-item b{
+  font-family:var(--mono); font-size:28px; color:var(--akami);
+  font-weight:700; line-height:1; white-space:nowrap;
+}
+.live-item.fix b{font-size:18px; color:var(--muted)}
+
+/* 用語の想起 */
+.recall-box{
+  background:var(--sage-tint); border-left:3px solid var(--sage);
+  border-radius:0 2px 2px 0; padding:11px 16px; margin-top:14px;
+  font-size:14px; line-height:1.7; color:#3F5238;
+}
+.recall-box b{font-weight:700; color:#2F4028}
+.rb-ref{
+  font-family:var(--mono); font-size:10.5px; color:var(--sage);
+  border:1px solid var(--sage-light); border-radius:2px;
+  padding:1px 5px; margin-left:8px; vertical-align:1px;
+}
+
+/* 還元の限界 */
+.limitbox{
+  border:1px solid var(--rule); border-left:3px solid var(--akami);
+  border-radius:0 3px 3px 0; padding:10px 16px; margin-top:10px; background:#fff;
+}
+.lb-head{font-size:13.5px; font-weight:700; color:var(--ink); margin-bottom:7px}
+.lb-body{background:var(--cream-2); border-radius:2px; padding:7px 11px}
+.lb-row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:13px; color:var(--ink-2); padding:3px 0;
+  border-bottom:1px solid var(--rule);
+}
+.lb-row.last{border-bottom:0}
+.lb-row i{font-style:normal; color:var(--muted); font-size:11.5px; margin-left:4px}
+.lb-row b{font-family:var(--mono); font-size:14.5px; color:var(--akami-deep); font-weight:700}
+.limitbox p{font-size:13.5px; line-height:1.55; color:var(--ink-2); margin-top:7px}
+
+/* 操作手順 */
+.opsteps{display:flex; flex-direction:column; gap:7px}
+.opstep{display:flex; gap:11px; align-items:flex-start}
+.op-n{
+  flex:none; width:21px; height:21px; border-radius:50%;
+  background:var(--sage); color:#fff; font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.op-n.res{background:var(--akami)}
+.opstep p{font-size:15.5px; line-height:1.6; color:var(--ink-2)}
+.opstep b{font-family:var(--mono); font-size:16px; color:var(--ink); font-weight:700}
+.opstep b.down{color:var(--akami)}
+.verdict-line{display:inline-block; margin-top:5px; font-size:14px; line-height:1.55; color:var(--akami-deep); font-weight:700}
+
+.conclusion-line{
+  margin-top:auto; padding:14px 0 0;
+  border-top:1px solid var(--rule);
+  font-size:19px; text-align:center; color:var(--ink); letter-spacing:.01em;
+}
+.conclusion-line strong{color:var(--akami)}
+
+
+/* QRスライド */
+.qr-wrap{display:flex; align-items:center; justify-content:center; gap:48px; flex:1}
+.qr-box{
+  width:250px; height:250px; padding:14px; background:#fff;
+  border:1px solid var(--rule); border-radius:4px; flex:none;
+}
+.qr-box svg{width:100%; height:100%; fill:var(--ink)}
+.qr-side{max-width:400px}
+.qr-label{
+  font-family:var(--mono); font-size:11px; letter-spacing:.2em;
+  color:var(--sage); font-weight:700; margin-bottom:8px;
+}
+.qr-url{
+  font-family:var(--mono); font-size:22px; color:var(--akami);
+  font-weight:700; line-height:1.5; letter-spacing:-.01em;
+}
+.qr-note{
+  margin-top:22px; padding-top:16px; border-top:1px solid var(--rule);
+  font-size:14px; line-height:1.9; color:var(--ink-2);
+}
+.qr-note b{color:var(--ink); font-weight:700}
+
+/* 締めのメッセージ */
+.closing{
+  background:var(--cream-2); border-left:4px solid var(--akami);
+  border-radius:0 3px 3px 0; padding:16px 24px 14px;
+}
+.closing p{font-size:16.5px; line-height:1.7; color:var(--ink)}
+.closing-recall{
+  margin-top:12px; padding-top:11px; border-top:1px solid var(--rule);
+  font-size:13.5px; color:var(--ink-2);
+}
+.closing-recall b{
+  font-family:var(--mono); font-size:14px; color:var(--sage);
+  font-weight:700; letter-spacing:.02em;
+}
+
+/* 2段の導出 */
+.drow{display:flex; align-items:stretch; gap:0}
+.dcell{
+  flex:1; background:var(--cream-2); border:1px solid var(--rule);
+  border-radius:3px; padding:12px 16px 14px; text-align:center;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.dcell.last{border-color:var(--akami); background:var(--akami-tint)}
+.ds-tag{
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  color:var(--muted); margin-bottom:8px;
+}
+.dcell.last .ds-tag{color:var(--akami); font-weight:700}
+.ds-body{
+  font-family:var(--mincho); font-size:22px; white-space:nowrap;
+  display:flex; align-items:center; justify-content:center; padding:2px 0;
+}
+.ds-body .den{border-top:2px solid var(--ink); padding-top:5px}
+.ds-body .frac span{padding:3px 10px}
+.ds-sub{
+  font-size:12px; color:var(--muted); line-height:1.6;
+  margin-top:9px; padding-top:8px; border-top:1px solid var(--rule);
+}
+.ds-sub b{font-family:var(--mono); color:var(--akami-deep); font-weight:700; font-size:12.5px}
+.dop{
+  flex:none; width:170px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:0 8px;
+}
+.dop-act{
+  font-size:12.5px; color:var(--sage); font-weight:700;
+  text-align:center; line-height:1.5;
+}
+.dop-mark{font-size:20px; color:var(--rule); line-height:1; margin-top:4px}
+
+/* 指標名つきの恒等式 */
+.idmap{display:flex; align-items:center; justify-content:center; gap:16px}
+.idm{display:flex; flex-direction:column; align-items:center; min-width:150px}
+.idm-name{
+  font-family:var(--gothic); font-size:15px; font-weight:700;
+  color:#fff; background:var(--sage); letter-spacing:.08em;
+  padding:3px 16px; border-radius:2px; margin-bottom:10px;
+}
+.idm:first-child .idm-name{background:var(--akami)}
+.idm-frac{padding:2px 0 8px}
+.idm-val{
+  font-family:var(--gothic); font-size:12.5px; color:var(--muted);
+  border-top:1px solid var(--rule); padding-top:8px; width:100%; text-align:center;
+}
+.idm-val b{font-family:var(--mono); font-size:14.5px; color:var(--ink-2); font-weight:700}
+.idm-op{font-family:var(--mincho); font-size:24px; color:var(--ink-2); padding-bottom:22px}
+
+/* 式の意味の言語化 */
+.mech{margin-top:11px}
+.mech-flow{
+  font-size:13px; line-height:1.75; color:var(--ink-2);
+  background:var(--cream); border-radius:2px; padding:9px 12px;
+}
+.mech-flow b{font-family:var(--mono); font-size:13.5px; color:var(--akami-deep); font-weight:700}
+.mech-end{
+  font-size:13.5px; color:var(--ink-2); margin-top:8px; padding-left:2px;
+}
+.mech-end b{color:var(--akami); font-weight:700; font-size:15px}
+
+/* g を上げる2つの道 */
+.ways{display:flex; flex-direction:column; gap:9px; margin-top:10px}
+.way{display:flex; gap:11px; align-items:flex-start}
+.way-n{
+  flex:none; width:20px; height:20px; border-radius:3px;
+  background:var(--akami); color:#fff; font-size:11.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.way-n.sage{background:var(--sage)}
+.way b{display:block; font-size:14.5px; color:var(--ink); line-height:1.5}
+.way span{display:block; font-size:13px; color:var(--muted); line-height:1.55}
+
+/* 注記 */
+.note{
+  font-size:13.5px; color:var(--muted); line-height:1.8;
+  border-left:2px solid var(--rule); padding-left:14px; margin-top:auto;
+}
+.callout{
+  background:var(--akami-tint); border-left:4px solid var(--akami);
+  padding:22px 26px; border-radius:0 3px 3px 0;
+}
+.callout p{font-size:19px; line-height:1.8; color:var(--akami-deep); font-weight:600}
+.callout.sage{background:var(--sage-tint); border-left-color:var(--sage)}
+.callout.sage p{color:#3F5238}
+
+ul.pts{list-style:none}
+ul.pts li{
+  font-size:17px; line-height:1.8; color:var(--ink-2);
+  padding-left:26px; position:relative; margin-bottom:16px;
+}
+ul.pts li::before{
+  content:""; position:absolute; left:0; top:11px;
+  width:8px; height:8px; background:var(--sage); border-radius:50%;
+}
+
+/* ---------- ナビゲーション ---------- */
+#rail{
+  position:absolute; left:0; top:0; bottom:0; width:5px;
+  display:flex; flex-direction:column; z-index:5;
+}
+.rail-seg{background:var(--rule); transition:background .3s}
+.rail-seg.act{background:var(--akami)}
+.slide.chapter ~ #rail{}
+
+#hud{
+  position:absolute; right:34px; bottom:26px; z-index:6;
+  font-family:var(--mono); font-size:12px; color:var(--muted);
+  letter-spacing:.12em; display:flex; align-items:center; gap:14px;
+}
+#hud .ch{color:var(--sage); letter-spacing:.06em; font-family:var(--gothic); font-size:12px}
+
+#nav{position:absolute; left:34px; bottom:22px; display:flex; gap:8px; z-index:6}
+#nav button{
+  width:32px; height:32px; border:1px solid var(--rule); background:#fff;
+  color:var(--ink-2); cursor:pointer; border-radius:3px; font-size:14px; line-height:1;
+}
+#nav button:hover{border-color:var(--akami); color:var(--akami)}
+#nav button:focus-visible{outline:2px solid var(--sage); outline-offset:2px}
+
+#help{
+  position:fixed; left:50%; bottom:14px; transform:translateX(-50%);
+  color:rgba(255,255,255,.4); font-size:12px; letter-spacing:.1em; z-index:20;
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important}
+}
+
+/* ============================================================
+   後半で追加したコンポーネント
+   ============================================================ */
+
+/* FCF の各項の説明（2×2） */
+.termgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:13px 30px; margin-top:18px}
+.term{display:flex; gap:12px; align-items:flex-start}
+.term-k{
+  flex:none; font-family:var(--mono); font-size:12.5px; font-weight:700;
+  color:#fff; background:var(--sage); border-radius:2px; padding:3px 9px;
+  margin-top:2px; white-space:nowrap;
+}
+.term-k.minus{background:var(--akami)}
+.term b{display:block; font-size:14.5px; color:var(--ink); line-height:1.5}
+.term span{display:block; font-size:13px; color:var(--ink-2); line-height:1.62; margin-top:3px}
+
+/* 前半からの引き継ぎ（引用） */
+.handoff{
+  background:var(--cream-2); border-left:4px solid var(--sage);
+  border-radius:0 3px 3px 0; padding:18px 26px;
+}
+.handoff .from{
+  font-family:var(--mono); font-size:11px; letter-spacing:.16em;
+  color:var(--sage); font-weight:700; margin-bottom:9px;
+}
+.handoff p{font-family:var(--mincho); font-size:21px; line-height:1.75; color:var(--ink)}
+
+/* 後半の地図（3つの塊） */
+.roadmap{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:22px}
+.rm{
+  border:1px solid var(--rule); border-right:0; background:#fff;
+  padding:16px 20px 18px; display:flex; flex-direction:column;
+}
+.rm:last-child{border-right:1px solid var(--rule)}
+.rm.core{background:var(--akami-tint); border-color:var(--akami); border-right:1px solid var(--akami)}
+.rm-n{
+  font-family:var(--mono); font-size:11px; letter-spacing:.16em;
+  color:var(--muted); font-weight:700; margin-bottom:8px;
+}
+.rm.core .rm-n{color:var(--akami)}
+.rm b{font-size:17px; color:var(--ink); line-height:1.45; margin-bottom:8px; font-weight:700}
+.rm span{font-size:13.5px; color:var(--ink-2); line-height:1.7}
+
+/* 見出しつき小表（左右2枚並べる用） */
+.tbl-head{
+  font-size:13px; letter-spacing:.06em; color:#fff; background:var(--sage);
+  font-weight:700; padding:5px 12px; border-radius:2px 2px 0 0;
+}
+.tbl-head.alt{background:var(--ink-2)}
+.tbl-wrap{border:1px solid var(--rule); border-top:0; border-radius:0 0 2px 2px; padding:2px 12px 4px}
+.tbl-wrap table td{padding:6px 4px; font-size:14px}
+.tbl-wrap table td.val{font-size:15px}
+.tbl-wrap table tr:last-child td{border-bottom:0}
+.tbl-wrap table td.memo{
+  text-align:left; padding-left:14px; font-size:12px;
+  color:var(--muted); line-height:1.5;
+}
+.tbl-wrap table tr.hi td.memo{color:var(--akami-deep); font-weight:700}
+
+/* A社の紹介バー（コンパクト版） */
+.co-bar{padding:6px 16px !important; margin-bottom:8px !important}
+.co-bar .who{font-weight:700; color:var(--ink)}
+
+/* FCF の3つの層 ─ 列をそろえた表にして、「どこが違うか」を目で見えるようにする
+   列: ラベル / 出発点 / ＋減価償却 / −設備投資 / −運転資本増 / ＝金額 / 用途
+   ※項目の並びは S5 の FCF の式・S7 の表と同順に統一（順序が違うと混乱する） */
+.ladder{border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin-top:8px}
+.ld-hd, .ld-lv{
+  display:grid;
+  grid-template-columns:150px 112px 100px 112px 112px 100px 1fr;
+  align-items:center; gap:10px;
+}
+.ld-hd{
+  padding:5px 14px; background:var(--ink-2); color:#fff;
+  font-size:11px; letter-spacing:.05em; font-weight:700; text-align:right;
+}
+.ld-hd .l{text-align:left}
+.ld-lv{background:#fff; padding:9px 14px; border-top:1px solid var(--rule)}
+.ld-lv.top{background:var(--akami-tint); border-top:0}
+.ld-lv.mid{background:var(--cream-2)}
+.ld-lv.bot{background:var(--sage-tint)}
+.ld-tag{
+  font-family:var(--mono); font-size:12.5px; font-weight:700; letter-spacing:.05em;
+  color:#fff; background:var(--ink-2); border-radius:2px;
+  padding:3px 9px; display:inline-block;
+}
+.ld-lv.top .ld-tag{background:var(--akami)}
+.ld-lv.bot .ld-tag{background:var(--sage)}
+/* 略語の展開 ─ 初出の用語を、あとから見返しても引けるように */
+.ld-en{
+  font-family:var(--mono); font-size:10px; color:var(--muted);
+  line-height:1.35; margin-top:5px;
+}
+/* 数字のセル ─ 3行で同じ項目は淡く、違う項目だけ濃く */
+.n{font-family:var(--mono); font-size:16px; font-weight:700; text-align:right; color:var(--muted)}
+.n.k{color:var(--akami-deep); font-size:19px}
+.n.none{color:var(--rule)}
+.ld-amt{
+  font-family:var(--mono); font-size:22px; font-weight:700;
+  text-align:right; color:var(--ink);
+  border-left:1px solid var(--rule); padding-left:12px;
+}
+.ld-lv.top .ld-amt{color:var(--akami-deep)}
+.ld-lv.bot .ld-amt{color:#3F5238}
+.ld-use{
+  font-size:12.5px; color:var(--ink-2); line-height:1.5;
+  border-left:1px solid var(--rule); padding-left:12px;
+}
+.ld-use b{color:var(--akami); font-weight:700; font-size:13px}
+.ld-use b.g{color:var(--sage)}
+table th, table td{ line-height:1.35; }
+.s28t .sym{ font-family:var(--mono); font-size:16px; color:var(--akami); font-weight:700; }
+.s28t .cap2{ display:block; font-size:11.5px; color:var(--muted); line-height:1.5; margin-top:1px; }
+.s28t th,.s28t td{ vertical-align:top; padding-top:9px; padding-bottom:9px; }
+.s35 .stack{ display:flex; flex-direction:column; gap:22px; }
+.s35 .card{ padding:18px 24px; }
+.s35 .rs-step{ gap:14px; }
+.s35 .rs-step p{ font-size:20px; line-height:1.9; color:var(--ink); }
+.s35 .rs-n{ width:26px; height:26px; font-size:14px; margin-top:7px; }
+.pairgrid{ display:grid; justify-content:start; column-gap:7px; row-gap:5px; }
+.pairgrid > span{ text-align:center; }
+.pairgrid .w{ font-size:12px; color:var(--muted); line-height:1.35; }
+.pairgrid .n{ font-family:var(--mono); font-size:14px; font-weight:700; color:var(--ink); line-height:1.35; }
+.pairgrid .res{ color:var(--akami); }
+.s34t th,.s34t td{ vertical-align:top; padding-top:17px; padding-bottom:17px; }
+.s34t .lab{ color:var(--sage); font-weight:700; font-size:12.5px; line-height:1.4; }
+.s34t .cap{ display:block; font-size:11.5px; color:var(--muted); line-height:1.5; margin-top:5px; }
+
+.s30t th,.s30t td{ padding-top:3px; padding-bottom:3px; }
+.s31c{ padding-top:10px; }
+.loopbox .lp-line{ line-height:1.5; }
+.loopbox .lp-back{ margin-top:4px; padding-top:4px; }
+</style>
+</head>
+<body>
+
+<div id="stage"><div id="deck">
+
+<!-- ══════════ 表紙 ══════════ -->
+<section class="slide cover on" data-ch="">
+  <div class="rule"></div>
+  <h1>割引という考え方<br>― 理論株価はどう決まるか</h1>
+  <div class="tag">後半｜会社全体が生むお金</div>
+  <div class="brand">AKAMI STUDIO<br>投資家のための意思決定講座</div>
+</section>
+
+<section class="slide" data-ch="">
+  <div class="eyebrow">後半のはじめに</div>
+  <h2>前半は、この一文で終わりました</h2>
+  <div class="handoff" style="margin-top:18px">
+    <div class="from">前半 S25 ─ ここまでに手に入れたもの</div>
+    <p>ここまでは、<strong>株主が受け取る配当</strong>から理論株価を出しました。<br>
+    後半は<strong>会社全体が生むお金</strong>へ ── そして、<em>この計算がどれだけ当てにならないか</em>を確かめます。</p>
+  </div>
+  <div class="roadmap">
+    <div class="rm">
+      <div class="rm-n">STEP 1 ─ 第5章</div>
+      <b>生まれたばかりの<br>お金を測る</b>
+      <span>配当は「渡すと決めた分」。決める前のお金を見ます。それが FCF です。</span>
+    </div>
+    <div class="rm">
+      <div class="rm-n">STEP 2 ─ 第6・7章</div>
+      <b>誰の要求に<br>応えるのかを決める</b>
+      <span>株主だけでなく債権者にも報いる。割引率が r から WACC に変わります。</span>
+    </div>
+    <div class="rm core">
+      <div class="rm-n">STEP 3 ─ 第8章 ★本題</div>
+      <b>その計算を、疑う</b>
+      <span>前提を動かすと答えはどれだけ動くのか。そして株価から、市場の前提を逆算します。</span>
+    </div>
+  </div>
+  <div class="note" style="margin-top:auto">
+    前半で身につけた<strong>割引という考え方</strong>は、そのまま使います。新しく覚えることは多くありません。<strong>割り引く対象</strong>と<strong>割引率</strong>が変わるだけです。
+  </div>
+</section>
+
+<!-- ══════════ 5章 ══════════ -->
+<section class="slide chapter" data-ch="5">
+  <div class="num">CHAPTER 05</div>
+  <h1>会社全体を見る</h1>
+  <p class="note">
+    視点を、株主の取り分から、会社が生むお金そのものへ移します。同じ会社を、別の場所から見ることになります。
+  </p>
+</section>
+
+<section class="slide" data-ch="5">
+  <div class="eyebrow">視点を移す理由</div>
+  <h2>なぜ、配当だけでは足りないのか</h2>
+  <p class="sub">前半の式は正しく動きました。ただし<strong>配当を出している会社にしか</strong>使えません。困る場面が3つあります。</p>
+  <div class="cols-3">
+    <div class="card accent">
+      <div class="kicker">困る場面 1</div>
+      <h3>無配企業が、価値ゼロになる</h3>
+      <p>前半の式に配当 0 円を入れると、価値は 0 円。しかし現実の無配企業にも値段はついています。<strong>式が現実に負けている</strong>状態です。</p>
+    </div>
+    <div class="card accent">
+      <div class="kicker">困る場面 2</div>
+      <h3>自社株買いが、式に入らない</h3>
+      <p>買い戻しも株主への還元ですが、配当ではありません。<strong>DPS だけを見ていると、還元の一部を見落とします。</strong></p>
+    </div>
+    <div class="card accent">
+      <div class="kicker">困る場面 3</div>
+      <h3>配当は、平準化される</h3>
+      <p>会社は減配を嫌います。稼ぐ力が落ちても配当は据え置かれる。<strong>配当は、実力から遅れて動く</strong>数字です。</p>
+    </div>
+  </div>
+  <div class="callout sage" style="margin-top:26px">
+    <p>配当とは、会社が生んだお金のうち <em>「株主に渡す」と決めた分</em>。<br>決める前のお金を見れば、この3つはまとめて消えます。</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="5">
+  <div class="eyebrow">新しい主役</div>
+  <h2>FCF ─ 会社が生んだ、自由に使えるお金</h2>
+  <p class="sub" style="margin-bottom:14px">フリーキャッシュフロー。事業を回し続けるために必要な支出をすべて済ませたあとに、<em>手元に残る現金</em>です。</p>
+  <div class="formula" style="font-size:26px;padding:22px 20px;margin-top:2px">
+    <div class="f-body">FCF ＝ 営業利益 ×(1 − 税率) ＋ 減価償却費 − 設備投資 − 運転資本の増加</div>
+  </div>
+  <div class="termgrid">
+    <div class="term">
+      <span class="term-k">NOPAT</span>
+      <div><b>営業利益 ×(1 − 税率)</b><span>本業だけで稼いだ利益から、税金を引いたもの。<strong>NOPAT ＝ 税引後営業利益</strong>と呼びます。税金は、誰かに渡す前に必ず出ていきます。</span></div>
+    </div>
+    <div class="term">
+      <span class="term-k">＋</span>
+      <div><b>減価償却費</b><span>費用として引かれていますが、現金は出ていっていません。だから足し戻します。</span></div>
+    </div>
+    <div class="term">
+      <span class="term-k minus">−</span>
+      <div><b>設備投資</b><span>利益には現れませんが、現金は確実に出ていきます。工場も機械も、買えばお金は減ります。</span></div>
+    </div>
+    <div class="term">
+      <span class="term-k minus">−</span>
+      <div><b>運転資本の増加</b><span>売掛金や在庫に寝てしまったお金。帳簿の上では資産ですが、手元にはありません。</span></div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:auto;border-left-color:var(--akami);font-size:14px">
+    <strong>支払利息を引いていないこと</strong>に注意してください。利息は債権者の取り分、配当は株主の取り分 ── <strong>誰にどう配るかは、まだ決めません。</strong>生まれたばかりのお金を、そのまま測っています。<span style="color:var(--sage);font-weight:700">配り方は、次章の割引率のほうで引き受けます。</span><br>なお、FCF には「営業CF ＋ 投資CF」という別の定義もあります ── <strong>次のページで、関係を整理します。</strong>
+  </div>
+</section>
+
+<section class="slide" data-ch="5">
+  <div class="eyebrow">用語の交通整理</div>
+  <h2>フリーキャッシュフローは、2つある</h2>
+  <p class="sub" style="margin-bottom:6px">「<strong>営業CF ＋ 投資CF</strong>」という定義もよく使われます。<em>間違いではありません。</em>ただし、<strong>数えているお金が違います。</strong></p>
+
+  <div class="setup-bar co-bar">
+    <span class="sb-tag">この講座で使う1社</span>
+    <span class="who">A社</span>
+    <span>─ 前半から通して使っている会社</span>
+    <span class="sb-sep">／</span>
+    <span>営業利益 <b>165億円</b></span>
+    <span>支払利息 <b>15億円</b></span>
+    <span>純利益 <b>100億円</b></span>
+    <span>実効税率 <b>33.3%</b></span>
+    <span>有利子負債 <b>500億円</b></span>
+    <span class="rb-ref">前半 S18</span>
+  </div>
+
+  <div class="ladder">
+    <div class="ld-hd">
+      <div class="l">単位：億円</div>
+      <div>出発点の利益</div>
+      <div>＋ 減価償却</div>
+      <div>− 設備投資</div>
+      <div>− 運転資本増</div>
+      <div>＝ 金額（億円）</div>
+      <div class="l">誰のお金か　→　何のための数字か</div>
+    </div>
+
+    <div class="ld-lv top">
+      <div>
+        <span class="ld-tag">FCFF</span>
+        <div class="ld-en">Free Cash Flow<br>to the Firm</div>
+      </div>
+      <div class="n k">110</div>
+      <div class="n">50</div>
+      <div class="n">105</div>
+      <div class="n">20</div>
+      <div class="ld-amt">35</div>
+      <div class="ld-use">債権者と株主、両方のお金<br><b>理論株価の材料</b> ── ただし r ＝ 9% では割れない</div>
+    </div>
+
+    <div class="ld-lv mid">
+      <div>
+        <span class="ld-tag">簡便法</span>
+        <div class="ld-en">営業CF ＋ 投資CF</div>
+      </div>
+      <div class="n k">100</div>
+      <div class="n">50</div>
+      <div class="n">105</div>
+      <div class="n">20</div>
+      <div class="ld-amt">25</div>
+      <div class="ld-use">利息を払い終えたあとの、株主寄りのお金<br><b>財務の余力を見る指標</b> ── 配当・返済の点検に使う</div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:10px;font-size:13px;border-left-color:var(--sage);line-height:1.85">
+    <strong>出発点は、どちらも税引後の利益</strong>です。違いは、<em>税金を計算する前に利息を引いたかどうか</em>だけ。<br>
+    <b style="font-family:var(--mono);color:var(--akami-deep)">110 ＝ 165 ×(1 − 33.3%)</b>　利息を引く<strong>前</strong>の営業利益に課税（S5 の NOPAT）　／　<b style="font-family:var(--mono);color:var(--akami-deep)">100 ＝ (165 − 15) ×(1 − 33.3%)</b>　利息を引いた<strong>後</strong>に課税（＝純利益）<br>
+    簡便法を決算書から出すときは　<b style="font-family:var(--mono);color:var(--ink-2)">営業CF 130（＝ 100 ＋ 50 − 20） ＋ 投資CF △105 ＝ 25億円</b>　── 2行を足すだけです。
+  </div>
+
+  <div class="callout" style="margin-top:12px;padding:10px 24px">
+    <p style="font-size:17px;line-height:1.7"><em>誰のお金かと、誰の要求で割るかを、揃える。</em>　── 割引率のほうを、次章で作り直します。</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="5">
+  <div class="eyebrow">設定</div>
+  <h2>A社の、決算書の続き</h2>
+  <p class="sub" style="margin-bottom:10px"><strong>A社</strong> ── 前半で理論株価 <strong>1,250円</strong> を出した会社です<span class="rb-ref">前半 S18・S19</span>。その決算書の、<em>まだ読んでいない部分</em>を開きます。</p>
+  <div class="setup-bar" style="margin-top:0">
+    <span class="sb-tag">まず単位を揃える</span>
+    <span>発行済株式数 <b>1億株</b></span>
+    <span class="sb-sep">／</span>
+    <span>EPS <b>100円</b> × 1億株 ＝ 当期純利益 <b>100億円</b></span>
+    <span class="sb-sep">／</span>
+    <span>BPS <b>1,000円</b> × 1億株 ＝ 純資産 <b>1,000億円</b></span>
+  </div>
+  <div class="cols" style="gap:34px;align-items:start;margin-top:4px">
+    <div>
+      <div class="tbl-head">損益計算書から</div>
+      <div class="tbl-wrap">
+        <table class="tight">
+          <tbody>
+            <tr><td>営業利益</td><td class="val">165億円</td></tr>
+            <tr><td>支払利息</td><td class="val">15億円</td></tr>
+            <tr><td>税引前利益</td><td class="val">150億円</td><td class="memo">165 − 15</td></tr>
+            <tr><td>法人税等</td><td class="val">50億円</td></tr>
+            <tr class="hi"><td>当期純利益</td><td class="val">100億円</td><td class="memo">前半と一致 ✓</td></tr>
+            <tr><td>実効税率</td><td class="val">33.3%</td><td class="memo">50 ÷ 150</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="tbl-head alt">貸借対照表から</div>
+      <div class="tbl-wrap" style="margin-bottom:12px">
+        <table class="tight">
+          <tbody>
+            <tr class="hi"><td>純資産</td><td class="val">1,000億円</td><td class="memo">前半と一致 ✓</td></tr>
+            <tr><td>有利子負債</td><td class="val">500億円</td></tr>
+            <tr><td>借入金利</td><td class="val">3.0%</td><td class="memo">15 ÷ 500</td></tr>
+            <tr><td>現金</td><td class="val">100億円</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-head alt">キャッシュフロー計算書から</div>
+      <div class="tbl-wrap">
+        <table class="tight">
+          <tbody>
+            <tr><td>減価償却費</td><td class="val">50億円</td></tr>
+            <tr><td>設備投資</td><td class="val">105億円</td></tr>
+            <tr><td>運転資本の増加</td><td class="val">20億円</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:auto;font-size:13.5px">
+    <strong>ここでも推測は一つも入っていません。</strong>すべて決算書に載っている数字か、その割り算です。実効税率も借入金利も、設定した値ではなく<strong>計算結果</strong>です。<br>
+    <span style="color:var(--sage);font-weight:700">A社は無借金ではありません。</span>だからこそ、次章で「誰の要求に応えるのか」を考える必要が出てきます。
+  </div>
+</section>
+
+<!-- ══════════ 6章 ══════════ -->
+<section class="slide chapter" data-ch="6">
+  <div class="num">CHAPTER 06</div>
+  <h1>WACC ─<br>誰の要求に応えるのか</h1>
+  <p class="note">
+    FCFF は、債権者と株主、両方のお金でした。それを割り引く率も、両方の要求からできていなければなりません。前半の r を、部品として組み込みます。
+  </p>
+</section>
+
+<section class="slide" data-ch="6">
+  <div class="eyebrow">2種類の出資者</div>
+  <h2>会社は、2種類の人からお金を預かっている</h2>
+  <p class="sub" style="margin-bottom:10px">どちらも「増やして返せ」と要求します。ただし、<strong>要求の中身がまったく違います。</strong></p>
+  <div class="setup-bar co-bar">
+    <span class="sb-tag">この講座で使う1社</span>
+    <span class="who">A社</span>
+    <span>─ 前半から通して使っている会社</span>
+    <span class="sb-sep">／</span>
+    <span>有利子負債 <b>500億円</b></span>
+    <span>支払利息 <b>15億円</b>（金利 3.0%）</span>
+    <span>配当 <b>50億円</b></span>
+    <span class="rb-ref">前半 S18</span>
+  </div>
+  <div class="cols" style="gap:34px;margin-top:4px">
+    <div class="card" style="border-top:3px solid var(--ink-2)">
+      <div class="kicker" style="color:var(--ink-2)">債権者 ── 貸した人（銀行など）</div>
+      <h3>約束した分だけ、先に受け取る</h3>
+      <p style="margin-bottom:8px">A社に <strong>500億円</strong> を貸し、毎年 <strong>金利 3.0%</strong>（15億円）を要求する。会社が良くても悪くても 3% は 3%。<strong>株主より先に</strong>支払われます。</p>
+      <p style="font-size:13.5px;color:var(--muted)">確実に・先に・決まった額だけ ── だから要求は低い。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--akami)">
+      <div class="kicker">株主 ── 預けた人</div>
+      <h3>残ったものを、全部受け取る</h3>
+      <p style="margin-bottom:8px">利息も税金も払った<strong>あとの残り</strong>が取り分。多いか少ないか、保証はない。だから <strong>r ＝ 9.0%</strong> を要求する<span class="rb-ref">前半 S15</span>。</p>
+      <p style="font-size:13.5px;color:var(--muted)">不確実に・最後に・残り全部 ── だから要求は高い。</p>
+    </div>
+  </div>
+  <div class="callout sage" style="margin-top:20px">
+    <p>FCFF は、この<em>2人がこれから分け合うお金</em>でした<span class="rb-ref" style="border-color:var(--sage)">S6</span>。<br>割り引く率も、<em>2人の要求を混ぜたもの</em>でなければ、つじつまが合いません。</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="6">
+  <div class="eyebrow">前半との接続</div>
+  <h2>前半の r は、WACC の部品だった</h2>
+  <p class="sub" style="margin-bottom:14px">新しい割引率の名前は <strong>WACC</strong>（Weighted Average Cost of Capital ─ 加重平均資本コスト）。中身は、いま出てきた2人の要求の<em>混ぜ合わせ</em>です。</p>
+  <div class="formula" style="font-size:23px;padding:22px 20px">
+    <div class="f-body">WACC ＝ <span style="color:var(--akami)">株主の要求</span> × 株主の割合 ＋ <span style="color:var(--ink-2)">債権者の要求</span> × 債権者の割合</div>
+    <div class="formula-note" style="margin-top:10px"><span style="color:var(--akami);font-weight:700">左の箱に入るのが、前半の r ＝ 9%</span>　── 前半で組み立てた CAPM は、そのままここで使います</div>
+  </div>
+  <div class="cols" style="margin-top:18px;gap:34px">
+    <div class="card accent" style="padding:18px 22px">
+      <h3 style="margin-bottom:8px">前半の r は、消えない</h3>
+      <p>無リスク金利 3.0% ＋ β 1.15 × リスクプレミアム 5.2% ＝ <strong>9.0%</strong><span class="rb-ref">前半 S15</span>。<br>これは<strong>株主資本コスト</strong>という名前で、WACC の部品になります。</p>
+    </div>
+    <div class="card" style="padding:18px 22px">
+      <h3 style="margin-bottom:8px">ただし、r ＝ WACC ではない</h3>
+      <p>r は<strong>株主だけ</strong>の要求。WACC は<strong>株主と債権者</strong>の要求の平均。<br>前半の「資本コスト ＝ r」<span class="rb-ref">前半 S14</span>は、<strong>株主のお金だけ</strong>を見ていた話。会社全体を見るいまは、債権者の要求も混ぜます。</p>
+    </div>
+  </div>
+  <div class="conclusion-line">割り引く<strong>お金</strong>を会社全体に広げたのだから、割り引く<strong>率</strong>も会社全体に広げる。</div>
+</section>
+
+<section class="slide" data-ch="6">
+  <div class="eyebrow">組み立て</div>
+  <h2>A社の WACC を組む</h2>
+  <div class="setup-bar co-bar" style="margin-top:4px">
+    <span class="sb-tag">部品はすべて既出</span>
+    <span>株主資本コスト <b>9.0%</b><span class="rb-ref">前半 S15</span></span>
+    <span class="sb-sep">／</span>
+    <span>借入金利 <b>3.0%</b>・税率 <b>33.3%</b><span class="rb-ref">S7</span></span>
+    <span class="sb-sep">／</span>
+    <span>株主価値 <b>1,250億円</b> ── <strong>前段階：</strong>前半の DDM の答え 1,250円 × 1億株<span class="rb-ref">前半 S19</span></span>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr;gap:30px;margin-top:2px;align-items:stretch">
+    <div class="card" style="padding:18px 22px">
+      <h3 style="margin-bottom:10px">手順1 ── 2人の割合を出す</h3>
+      <p style="margin-bottom:10px"><b style="font-family:var(--mono)">株主価値 1,250億 ＋ 有利子負債 500億 ＝ 1,750億</b></p>
+      <p class="jcalc" style="margin-bottom:7px">株主の割合　 1,250 ÷ 1,750 ＝ <b>71.4%</b></p>
+      <p class="jcalc">債権者の割合　 500 ÷ 1,750 ＝ <b>28.6%</b></p>
+      <p style="font-size:13px;color:var(--muted);margin-top:10px"><strong>順序に注意</strong> ── 先に前半の DDM で株主価値を出し、それから WACC を組む。割合は簿価 1,000億円 ではなく<strong>いまの価値</strong>で測ります。</p>
+    </div>
+    <div class="card" style="padding:18px 22px">
+      <h3 style="margin-bottom:10px">手順2 ── 要求を割合で混ぜる</h3>
+      <p class="jcalc" style="margin-bottom:7px">株主の分　 71.4% × 9.0% ＝ <b>6.43%</b></p>
+      <p class="jcalc" style="margin-bottom:7px">債権者の分　 28.6% × 3.0% ×(1 − 33.3%) ＝ <b>0.57%</b></p>
+      <p style="font-size:13.5px;margin-bottom:4px">3.0% は<strong>債権者が受け取る率</strong>。ここで使うのは<strong>会社が実際に失う率</strong>です。利息を払うと税金が 5億円 減るので<span class="rb-ref">S6</span>、1% 分は国が肩代わりし、実質負担は <strong>2%</strong>。<strong>なぜ株主側には同じ調整が付かないのか ── 次のページで。</strong></p>
+    </div>
+  </div>
+  <div class="formula" style="font-size:24px;padding:12px 20px;margin-top:10px;border-color:var(--akami);background:var(--akami-tint)">
+    <div class="f-body">WACC ＝ 6.43% ＋ 0.57% ＝ <span style="color:var(--akami);font-weight:700">7.0%</span></div>
+    <div class="formula-note" style="margin-top:6px;color:var(--akami-deep)">以降、会社全体のお金（FCFF）を割り引くときは、この 7.0% を使います</div>
+  </div>
+  <div class="note" style="margin-top:6px;font-size:12.5px">
+    WACC は単独では組めません ── <strong>先に株主価値という「値段」が要ります。</strong>A社は前半の DDM の答えを、実務では市場の時価総額を使います。どちらにせよ「株主価値を出すのに、株主価値が要る」。<strong>この循環は第9章で正面から扱います。</strong>
+  </div>
+</section>
+
+<section class="slide" data-ch="6">
+  <div class="eyebrow">残った疑問</div>
+  <h2>利息と配当は、税金の扱いが違う</h2>
+  <p class="sub" style="margin-bottom:14px">×(1 − 税率) は債権者側にだけ付きました<span class="rb-ref">S11</span>。危険の違いは S9 の通り ── ここで見るのは、<strong>税金の違い</strong>です。</p>
+
+  <table class="tight">
+    <thead><tr><th></th><th>利息 ── 債権者への支払い</th><th>配当 ── 株主への支払い</th></tr></thead>
+    <tbody>
+      <tr><td>相手に渡る額</td><td class="val">満額 15億円</td><td class="val">満額 50億円</td></tr>
+      <tr><td>税金への効き方</td><td style="font-size:14.5px">費用になる ── 税金が <strong>5億円 減る</strong><span class="rb-ref">S6</span></td><td style="font-size:14.5px">費用にならない ── <strong>1円も減らない</strong></td></tr>
+      <tr><td>会社の自腹</td><td class="val">10億円 <span style="font-size:12px;color:var(--muted)">（国が 5億円 負担）</span></td><td class="val">50億円 <span style="font-size:12px;color:var(--muted)">（全額）</span></td></tr>
+      <tr><td>率になおすと</td><td class="val">3.0% → <b style="color:var(--akami-deep)">2.0%</b></td><td class="val">9.0% → <b>9.0%</b> のまま</td></tr>
+      <tr class="hi"><td>WACC での扱い</td><td class="val">×(1 − 税率) を付ける</td><td class="val">何も付けない</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note" style="margin-top:14px;font-size:13px;border-left-color:var(--sage);line-height:1.8">
+    <strong>なぜ「要求 3%」ではなく「自腹 2%」で割り引くのか</strong> ── FCFF の税金は、利息を無視した 55億円 で引いてあります<span class="rb-ref">S6</span>。実際に払うのは 50億円。<br>つまり FCFF は、借金がもたらす<em>節税 5億円 を数えていません</em>。その 5億円 を、<strong>割引率を軽くすることで取り戻す</strong> ── これが ×(1 − 税率) の正体です。
+  </div>
+  <div class="callout" style="margin-top:12px;padding:14px 24px">
+    <p>負担 2% は 9% よりはるかに安い。しかし借金を増やすほど<em>先に払う約束</em>が積み上がり、株主の危険が増して r が上がる。<br><strong>タダ飯はありません</strong> ── どこまで借りるべきかは、この講座の外の大きな主題です。</p>
+  </div>
+</section>
+
+<!-- ══════════ 7章 ══════════ -->
+<section class="slide chapter" data-ch="7">
+  <div class="num">CHAPTER 07</div>
+  <h1>A社を、DCFで通す</h1>
+  <p class="note">
+    部品はそろいました。FCFF 35億円<span class="rb-ref">S6</span> と WACC 7.0%<span class="rb-ref">S11</span>。残るは成長率だけ ── そして前半と同じく、決算書から通します。
+  </p>
+</section>
+
+<section class="slide" data-ch="7">
+  <div class="eyebrow">成長率ふたたび</div>
+  <h2>g は勝手に決められない ── 会社全体版</h2>
+  <div class="setup-bar co-bar">
+    <span class="sb-tag">この講座で使う1社</span>
+    <span class="who">A社</span>
+    <span class="sb-sep">／</span>
+    <span>NOPAT <b>110億円</b><span class="rb-ref">S6</span></span>
+    <span class="sb-sep">／</span>
+    <span>投下資本 <b>1,500億円</b>（純資産1,000＋負債500）<span class="rb-ref">S7</span></span>
+    <span class="sb-sep">／</span>
+    <span>純再投資 <b>75億円</b>（設備投資105 − 減価償却50 ＋ 運転資本増20）<span class="rb-ref">S7</span><span class="sb-note">資本は 設備投資で増え、すり減り（減価償却）で減る ── 差し引きが正味の積み増し</span></span>
+  </div>
+  <div class="formula" style="font-size:24px;padding:12px 20px;margin-top:2px">
+    <div class="f-body">g ＝ ROIC × 再投資率 ＝ 7.33% × 68.2% ＝ <span style="color:var(--akami);font-weight:700">5.0%</span></div>
+    <div class="formula-note" style="margin-top:8px">ROIC ＝ NOPAT ÷ 投下資本 ＝ 110 ÷ 1,500（投下資本利益率・Return on Invested Capital）　／　再投資率 ＝ 純再投資 ÷ NOPAT ＝ 75 ÷ 110</div>
+  </div>
+  <div class="cols" style="margin-top:10px;gap:30px">
+    <div class="card sage" style="padding:16px 20px">
+      <h3 style="margin-bottom:8px">「稼ぐ力 × 残して回す割合」── 論理は一つ</h3>
+      <p style="font-size:14.5px">株主版　g ＝ <strong>ROE</strong> ×(1 − 配当性向)＝ 10% × 50% ＝ <b style="font-family:var(--mono)">5%</b><span class="rb-ref">前半 S18</span><br>
+      会社版　g ＝ <strong>ROIC</strong> × 再投資率 ＝ 7.33% × 68.2% ＝ <b style="font-family:var(--mono)">5%</b><br>
+      前半と<strong>同じ形</strong>で、答えも<strong>同じ 5%</strong> になります。</p>
+      <p style="font-size:13px;color:var(--muted);margin-top:8px">答えまで一致するのは偶然ではなく、<strong>条件つき</strong> ── 借入も同じ 5% で増える（資本構成を保つ）前提の帰結です。借入の割合を変える会社では、2つの g はずれます。</p>
+    </div>
+    <div class="card" style="padding:16px 20px">
+      <h3 style="margin-bottom:6px">75億円 を積むと、翌年こうなる</h3>
+      <p style="font-size:13.5px;margin-bottom:6px">今年の NOPAT 110億円 のうち、<strong>75億円 を事業に積みます</strong>。すると ──</p>
+      <table class="tight" style="font-size:13px">
+        <thead><tr><th>単位：億円</th><th>今年</th><th>来年</th><th>伸び</th></tr></thead>
+        <tbody>
+          <tr><td>投下資本</td><td class="val" style="font-size:14px">1,500</td><td class="val" style="font-size:14px">1,575</td><td class="val" style="font-size:14px;color:var(--akami-deep)">＋5%</td></tr>
+          <tr><td>NOPAT<span style="font-size:11px;color:var(--muted)">（× ROIC 7.33%）</span></td><td class="val" style="font-size:14px">110</td><td class="val" style="font-size:14px">115.5</td><td class="val" style="font-size:14px;color:var(--akami-deep)">＋5%</td></tr>
+          <tr><td>FCFF</td><td class="val" style="font-size:14px">35</td><td class="val" style="font-size:14px">36.75</td><td class="val" style="font-size:14px;color:var(--akami-deep)">＋5%</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:13.5px;margin-top:8px">そろって <strong>5% ずつ育つ</strong> ── これが g ＝ 5% の中身です<span class="rb-ref">前半 S18</span>。</p>
+    </div>
+  </div>
+  <div class="conclusion-line">この式で g ＝ 5% を掛ける相手は、<strong>配当ではなく FCFF</strong> ── 前半の式との違いは、ここだけです。</div>
+</section>
+
+<section class="slide" data-ch="7">
+  <div class="eyebrow">DCF</div>
+  <h2>会社全体の値段 ── 事業価値</h2>
+  <p class="sub" style="margin-bottom:12px">式の形は、前半で級数から導いたもの<span class="rb-ref">前半 S11</span>そのまま。<strong>入れるものを、会社全体版に置き換えるだけ</strong>です。</p>
+
+  <div class="formula" style="font-size:26px;padding:20px 24px;border-color:var(--akami);background:var(--akami-tint)">
+    <div class="f-body">事業価値 ＝ <span class="frac"><span>FCFF</span><span class="den">WACC − g</span></span> ＝ <span class="frac"><span>35億円</span><span class="den">7.0% − 5.0%</span></span> ＝ <span style="color:var(--akami);font-weight:700">1,750億円</span></div>
+  </div>
+  <div class="setup-bar co-bar" style="margin-top:12px">
+    <span class="sb-tag">入れた数字</span>
+    <span>FCFF <b>35億円</b><span class="rb-ref">S6</span></span>
+    <span class="sb-sep">／</span>
+    <span>WACC <b>7.0%</b><span class="rb-ref">S11</span></span>
+    <span class="sb-sep">／</span>
+    <span>g <b>5.0%</b><span class="rb-ref">S14</span> ── 3つとも、決算書と前半の計算から来た数字です</span>
+  </div>
+
+  <div class="cols" style="grid-template-columns:1fr 1fr;gap:34px;margin-top:6px;align-items:start">
+    <div>
+      <div class="tbl-head">前半 → 後半で、置き換わったもの</div>
+      <div class="tbl-wrap">
+        <table class="tight">
+          <tbody>
+            <tr><td>割り引くお金</td><td class="val" style="font-size:14px">配当 D → <b>FCFF</b></td></tr>
+            <tr><td>割引率</td><td class="val" style="font-size:14px">r → <b>WACC</b></td></tr>
+            <tr><td>成長するもの</td><td class="val" style="font-size:14px">g（配当）→ <b>g（FCFF）</b></td></tr>
+            <tr class="hi"><td>出てくる答え</td><td class="val" style="font-size:14px">1株の価値 → <b>事業価値</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="note" style="font-size:13.5px;line-height:1.8">
+        <strong>事業価値</strong> ── 本業がこれから生む FCFF を、すべて現在に引き戻して足した合計。<strong>会社の値段の本体</strong>です。
+      </div>
+      <div class="note" style="margin-top:12px;font-size:13.5px;line-height:1.8;border-left-color:var(--sage)">
+        分子は<strong>配る前のお金</strong>、分母は<strong>2人の要求の平均</strong><span class="rb-ref">S9</span> ── レベルが揃っています。誰にいくら配るかは、<strong>すべて分母が引き受ける</strong><span class="rb-ref">S5</span>。
+      </div>
+      <div class="note" style="margin-top:12px;font-size:13.5px;line-height:1.8;border-left-color:var(--akami)">
+        ただしこの 1,750億円 は、<strong>「毎年 5% で永久に成長する」という前提</strong>の上に立っています ── ここを<strong>第8章で揺らします</strong>。
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="7">
+  <div class="eyebrow">会社の値段から、株の値段へ</div>
+  <h2>事業価値から、1株へ降りる</h2>
+  <p class="sub" style="margin-bottom:12px">会社全体の値段から、借金を返し、株数で割る ── <strong>前半と同じ 1,250円</strong> に着きます。</p>
+
+  <div class="drow">
+    <div class="dcell">
+      <div class="ds-tag">事業価値<span class="rb-ref">S15</span></div>
+      <div class="ds-body" style="font-size:21px">1,750億円</div>
+      <div class="ds-sub">本業の値段</div>
+    </div>
+    <div class="dop">
+      <div class="dop-act">＋ 非事業資産 0</div>
+      <div class="dop-mark">▸</div>
+    </div>
+    <div class="dcell">
+      <div class="ds-tag">企業価値（EV）</div>
+      <div class="ds-body" style="font-size:21px">1,750億円</div>
+      <div class="ds-sub">Enterprise Value<br>会社まるごとの値段</div>
+    </div>
+    <div class="dop">
+      <div class="dop-act">− 有利子負債 500<span class="rb-ref">S7</span></div>
+      <div class="dop-mark">▸</div>
+    </div>
+    <div class="dcell">
+      <div class="ds-tag">株主価値</div>
+      <div class="ds-body" style="font-size:21px">1,250億円</div>
+      <div class="ds-sub">債権者に返した残り<br>＝ 株主のもの</div>
+    </div>
+    <div class="dop">
+      <div class="dop-act">÷ 1億株<span class="rb-ref">S7</span></div>
+      <div class="dop-mark">▸</div>
+    </div>
+    <div class="dcell last">
+      <div class="ds-tag">理論株価</div>
+      <div class="ds-body" style="font-size:21px">1,250円</div>
+      <div class="ds-sub">前半 S19 と<b>同じ</b></div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:14px;font-size:13px;line-height:1.8">
+    <strong>「非事業資産 ＝ 0」は判断です</strong> ── A社の現金 100億円<span class="rb-ref">S7</span>を「全額、事業に必要な運転資金」とみなしました。決算書には書いていない、<em>この計算で唯一の判断</em>です。余った現金や遊休不動産を持つ会社なら、ここに足し込みます。
+  </div>
+  <div class="callout" style="margin-top:12px;padding:14px 24px">
+    <p>前半は<strong>株主の取り分</strong>から、今回は<strong>会社全体が生むお金</strong>から ── <em>別の道で、同じ 1,250円 に着きました。</em><br>偶然でしょうか。<strong>次のページで確かめます。</strong></p>
+  </div>
+</section>
+
+<section class="slide" data-ch="7">
+  <div class="eyebrow">答え合わせ</div>
+  <h2 style="margin-bottom:4px">道が違っても、理論株価は同じ</h2>
+  <p class="sub" style="margin-bottom:4px">偶然ではありません。<strong>誰のお金かと、誰の要求で割るかを、揃える</strong><span class="rb-ref">S6</span> ── 原則を守るかぎり同じ<strong>理論株価</strong>に着き、破ると外れます。</p>
+  <div class="setup-bar co-bar" style="margin-bottom:4px">
+    <span class="sb-tag">使う数字はすべて既出</span>
+    <span>FCFF <b>35億円</b><span class="rb-ref">S6</span></span>
+    <span class="sb-sep">／</span>
+    <span>簡便法 <b>25億円</b><span class="rb-ref">S6</span></span>
+    <span class="sb-sep">／</span>
+    <span>WACC <b>7.0%</b><span class="rb-ref">S11</span></span>
+    <span class="sb-sep">／</span>
+    <span>r <b>9.0%</b><span class="rb-ref">前半 S15</span></span>
+    <span class="sb-sep">／</span>
+    <span>g <b>5.0%</b><span class="rb-ref">S14</span></span>
+    <span class="sb-sep">／</span>
+    <span>有利子負債 <b>500億円</b><span class="rb-ref">S7</span></span>
+    <span class="sb-sep">／</span>
+    <span>発行済 <b>1億株</b><span class="rb-ref">S7</span></span>
+  </div>
+  <div class="cols-3" style="gap:22px;margin-top:2px">
+    <div class="card sage" style="padding:10px 18px">
+      <div class="kicker" style="color:var(--sage)">道 1 ── 会社全体から</div>
+      <p class="jcalc" style="margin-bottom:5px">FCFF 35億円 ÷(WACC 7% − g 5%)</p>
+      <p class="jcalc" style="margin-bottom:5px">＝ 事業価値 1,750億円</p>
+      <p class="jcalc" style="margin-bottom:5px">− 負債 500億円 ＝ 株主価値 1,250億円</p>
+      <p class="jcalc" style="margin-bottom:8px">÷ 1億株 ＝ 1株 <b>1,250円</b> ✓</p>
+      <p style="font-size:13px">会社全体のお金を、2人の要求（WACC）で。<strong>今回の道。</strong></p>
+    </div>
+    <div class="card sage" style="padding:10px 18px">
+      <div class="kicker" style="color:var(--sage)">道 2 ── 株主の取り分から</div>
+      <p class="jcalc" style="margin-bottom:5px">FCFE 50億円 ÷(r 9% − g 5%)</p>
+      <p class="jcalc" style="margin-bottom:5px">＝ 株主価値 1,250億円</p>
+      <p class="jcalc" style="margin-bottom:5px">　　　　　── 負債は引かない</p>
+      <p class="jcalc" style="margin-bottom:8px">÷ 1億株 ＝ 1株 <b>1,250円</b> ✓</p>
+      <p style="font-size:13px">株主のお金を、株主の要求（r）で。<strong>前半の DDM がこれ</strong><span class="rb-ref">前半 S19</span>。</p>
+    </div>
+    <div class="card accent" style="padding:10px 18px">
+      <div class="kicker">揃え損なった道</div>
+      <p class="jcalc" style="margin-bottom:5px">簡便法 25億円 ÷(WACC 7% − g 5%)</p>
+      <p class="jcalc" style="margin-bottom:5px">＝ 1,250億円（事業価値ではない）</p>
+      <p class="jcalc" style="margin-bottom:5px">− 負債 500億円 ＝ 750億円</p>
+      <p class="jcalc" style="margin-bottom:8px">÷ 1億株 ＝ 1株 <b style="color:var(--akami-deep)">750円</b> ✗</p>
+      <p style="font-size:13px">利息を払った後のお金を WACC で割ると、<strong>4割も低く出ます</strong><span class="rb-ref">S6</span>。</p>
+    </div>
+  </div>
+  <div class="note" style="margin-top:8px;font-size:13px;border-left-color:var(--sage);line-height:1.65">
+    <strong>FCFE</strong>（Free Cash Flow to Equity ── 株主に帰属する FCF）＝ 純利益 100 ＋ 減価償却 50 − 設備投資 105 − 運転資本増 20 ＋ <strong>借入の増加 25</strong> ＝ <strong>50億円</strong> ＝ 配当<span class="rb-ref">前半 S18</span><br>
+    ＋25 は今年<strong>新たに借りた元本</strong>（500億円 × g 5%）。5% 成長する会社は資産が 5% 増える ── 資本構成を保つなら、借入も同じ 5% 増えます。<br>
+    「＝ 配当」は偶然ではありません。FCFE は<strong>配れる</strong>お金、配当は<strong>配った</strong>お金 ── A社は配れる分を全額配る設定（自社株買い・現金の積み増しなし）なので一致します。
+  </div>
+</section>
+
+<section class="slide" data-ch="7">
+  <div class="eyebrow">技法の引き出し</div>
+  <h2>高成長の会社は、二段構えで測る</h2>
+  <p class="sub" style="margin-bottom:14px">前半の約束<span class="rb-ref">前半 S12</span> ── 高成長を<strong>永久に続けさせてはいけない</strong>。実務では、成長を2つの期間に割って計算します（多段階モデル）。</p>
+
+  <div class="drow">
+    <div class="dcell">
+      <div class="ds-tag">第1段 ── 1〜5年目など</div>
+      <div class="ds-body" style="font-size:19px;white-space:normal;line-height:1.5">高成長のまま、1年ずつ<br>個別に割り引く</div>
+      <div class="ds-sub">高成長は<b>期間限定</b>なら置いてよい</div>
+    </div>
+    <div class="dop">
+      <div class="dop-act">6年目以降を<br>接続する</div>
+      <div class="dop-mark">▸</div>
+    </div>
+    <div class="dcell last">
+      <div class="ds-tag">第2段 ── 6年目以降、ずっと</div>
+      <div class="ds-body" style="font-size:19px;white-space:normal;line-height:1.5">低い永久成長率に落として、<br>まとめて一つの値段に</div>
+      <div class="ds-sub">この塊を<b>ターミナルバリュー（TV）</b>と呼ぶ</div>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:16px;gap:30px">
+    <div class="card" style="padding:16px 20px">
+      <h3 style="margin-bottom:8px">TV が、値段の大半を占める</h3>
+      <p style="font-size:14.5px">典型的には事業価値の <strong>6〜9割</strong> が TV。つまり答えの大半は「遠い将来をどう置くか」で決まります。永久成長率の上限は<strong>名目GDP成長率</strong><span class="rb-ref">前半 S12</span>。</p>
+    </div>
+    <div class="card accent" style="padding:16px 20px">
+      <h3 style="margin-bottom:8px">では、A社の 5% 永久は？</h3>
+      <p style="font-size:14.5px">実は<strong>強い前提</strong>です。永久の 5% は、上限論と緊張関係にある ── この違和感は正しい。<strong>次章の感度分析で、この前提を揺らします。</strong></p>
+    </div>
+  </div>
+  <div class="note" style="margin-top:auto;font-size:13px">
+    A社には二段構えを使わず、永久成長 5% のまま通しました。使いどころは、g が r や WACC に迫るような高成長企業です<span class="rb-ref">前半 S12</span>。
+  </div>
+</section>
+
+<!-- ══════════ 8章 ══════════ -->
+<section class="slide chapter" data-ch="8">
+  <div class="num">CHAPTER 08</div>
+  <h1>この計算は当たらない</h1>
+  <p class="note">
+    1,250円 が出ました。しかしこの数字は、いくつもの前提の上に立っています。<br>前半の冒頭で約束しました ── <strong>前提が少し違うだけで、答えは倍以上動く</strong>。ここで実際に動かして、確かめます。
+  </p>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">約束の実演</div>
+  <h2>前提を、少しだけ動かしてみる</h2>
+  <p class="sub" style="margin-bottom:8px">WACC と g を、それぞれ<strong>上下に 1% だけ</strong>動かします。1% は大げさな幅ではありません ── β もリスクプレミアムも、推定値でした<span class="rb-ref">前半 S15</span>。</p>
+  <div class="setup-bar co-bar">
+    <span class="sb-tag">動かすもの・固定するもの</span>
+    <span>WACC <b>6〜8%</b>（基準 7.0%<span class="rb-ref">S11</span>）</span>
+    <span class="sb-sep">／</span>
+    <span>g <b>4〜6%</b>（基準 5.0%<span class="rb-ref">S14</span>）</span>
+    <span class="sb-sep">／</span>
+    <span>FCFF <b>35億円</b><span class="rb-ref">S6</span>・負債 <b>500億円</b><span class="rb-ref">S7</span>・1億株<span class="rb-ref">S7</span> は固定</span>
+  </div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr;gap:34px;margin-top:4px;align-items:start">
+    <div>
+      <table>
+        <thead><tr><th>理論株価</th><th>g ＝ 4%</th><th>g ＝ 5%</th><th>g ＝ 6%</th></tr></thead>
+        <tbody>
+          <tr><td>WACC 6%</td><td class="val">1,250円</td><td class="val">3,000円</td><td class="val" style="color:var(--muted)">─</td></tr>
+          <tr><td>WACC 7%</td><td class="val">667円</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,250円</td><td class="val">3,000円</td></tr>
+          <tr><td>WACC 8%</td><td class="val">375円</td><td class="val">667円</td><td class="val">1,250円</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:10px;font-size:12.5px">
+        各マス ＝ <strong>理論株価</strong> ＝｛35 ÷(WACC − g) − 負債500｝億円 ÷ 1億株。中央が第7章の <strong>1,250円</strong><span class="rb-ref">S16</span>。「─」は g ≧ WACC で計算不能<span class="rb-ref">前半 S12</span>。
+      </div>
+    </div>
+    <div>
+      <div class="readout">
+        <div class="num-label">答えの幅（9マスの最小と最大）</div>
+        <div class="big-num" style="font-size:40px">375〜3,000<span class="u">円</span></div>
+        <div class="split" style="text-align:center">最小 ＝ WACC 8%・g 4%　／　最大 ＝ WACC 6%・g 5%</div>
+      </div>
+      <div class="note" style="margin-top:12px;font-size:12.5px;line-height:1.75">
+        最小 <b style="font-family:var(--mono)">375円</b> は WACC を 1% <strong>上げ</strong>、同時に g を 1% <strong>下げた</strong>マス。最大 <b style="font-family:var(--mono)">3,000円</b> は WACC を 1% 下げた<strong>だけ</strong>のマスです。片方を 1% 動かすだけで、中央の 1,250円 は <b style="font-family:var(--mono)">667円</b> や <b style="font-family:var(--mono)">3,000円</b> になります。
+      </div>
+      <div class="callout" style="margin-top:16px;padding:14px 20px">
+        <p style="font-size:16.5px">9マスとも、<em>計算はすべて正しい</em>。<br>違うのは<strong>信じる前提</strong>だけです。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">種明かし</div>
+  <h2>いまの表には、嘘があります</h2>
+  <p class="sub" style="margin-bottom:10px">g ＝ 5% を作っていたのは、<strong>積んだ 75億円</strong>でした<span class="rb-ref">S14</span>。ならば g ＝ 6% は「もっと積む」ということ。積むお金は NOPAT から出る ── <strong>残る FCFF は減るはず</strong>なのに、表は 35億円 のままでした。</p>
+  <div class="formula" style="font-size:23px;padding:14px 20px">
+    <div class="f-body">FCFF ＝ NOPAT ×(1 − g ÷ ROIC)</div>
+    <div class="formula-note" style="margin-top:6px">再投資 ＝ g × 投下資本 ＝ g × NOPAT ÷ ROIC<span class="rb-ref">S14</span> を、FCFF ＝ NOPAT − 再投資 に入れて整理した式です</div>
+  </div>
+  <div class="cols-3" style="margin-top:12px">
+    <div class="card" style="padding:14px 18px">
+      <div class="num-label">g = 4% なら</div>
+      <div class="big-num" style="font-size:36px">50<span class="u">億円</span></div>
+      <div class="split">110 ×(1 − <b>4 ÷ 7.33</b>)</div>
+    </div>
+    <div class="card" style="padding:14px 18px">
+      <div class="num-label">g = 5% なら</div>
+      <div class="big-num" style="font-size:36px">35<span class="u">億円</span></div>
+      <div class="split">110 ×(1 − <b>5 ÷ 7.33</b>)　← 第7章の値</div>
+    </div>
+    <div class="card accent" style="padding:14px 18px">
+      <div class="num-label">g = 6% なら</div>
+      <div class="big-num" style="font-size:36px">20<span class="u">億円</span></div>
+      <div class="split">110 ×(1 − <b>6 ÷ 7.33</b>)</div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:12px;font-size:13px;line-height:1.8">
+    白状すると、<strong>前半も同じ嘘をついていました</strong> ── <span class="rb-ref">前半 S11</span><span class="rb-ref">前半 S16</span> では、配当 50円 を固定したまま g と r を振りました。分かりやすさを優先した<em>素朴版</em>です。ここからは、直します。
+  </div>
+  <div class="callout" style="margin-top:10px;padding:14px 24px">
+    <p><strong>成長はタダではありません。</strong>g を上げるなら、FCFF は減る ── この連動を入れて、表を作り直します。</p>
+  </div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">作り直し</div>
+  <h2>嘘を直した表 ── g と FCFF を連動させる</h2>
+  <p class="sub" style="margin-bottom:8px">g を動かせば、FCFF も動く<span class="rb-ref">S21</span>。その連動を表に入れました。<strong>FCFF の行が増えた</strong>以外、作りは前の表と同じです。</p>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr;gap:34px;margin-top:4px;align-items:start">
+    <div>
+      <table>
+        <thead><tr><th>理論株価</th><th>g ＝ 4%</th><th>g ＝ 5%</th><th>g ＝ 6%</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--cream-2)"><td style="font-size:13px">FCFF（g に連動）<span class="rb-ref">S21</span></td><td class="val" style="font-size:14px;color:var(--sage)">50億円</td><td class="val" style="font-size:14px;color:var(--sage)">35億円</td><td class="val" style="font-size:14px;color:var(--sage)">20億円</td></tr>
+          <tr><td>WACC 6%</td><td class="val">2,000円</td><td class="val">3,000円</td><td class="val" style="color:var(--muted)">─</td></tr>
+          <tr><td>WACC 7%<br><span style="font-size:10.5px;color:var(--muted);font-weight:400">（前の表<span class="rb-ref" style="margin-left:3px">S20</span>）</span></td><td class="val">1,167円<br><span style="font-size:11px;color:var(--muted);font-weight:400">667円</span></td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,250円<br><span style="font-size:11px;color:var(--muted);font-weight:400">1,250円</span></td><td class="val">1,500円<br><span style="font-size:11px;color:var(--muted);font-weight:400">3,000円</span></td></tr>
+          <tr><td>WACC 8%</td><td class="val">750円</td><td class="val">667円</td><td class="val">500円</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:10px;font-size:12.5px">
+        各マス ＝ <strong>理論株価</strong> ＝｛FCFF(g) ÷(WACC − g) − 負債500｝億円 ÷ 1億株。<b>g ＝ 5% の列</b>は、前の表<span class="rb-ref">S20</span>と<b>同じ数字</b>です（FCFF 35億 が共通）。
+      </div>
+    </div>
+    <div>
+      <div class="reason">
+        <div class="rs-step"><span class="rs-n">1</span><p>中央の行に、前の表<span class="rb-ref">S20</span>の値を<span style="color:var(--muted)">薄い字</span>で並べました。横の開きは <strong>4.5倍 → 1.3倍</strong> ── g は、ほぼ利かなくなりました。</p></div>
+        <div class="rs-step"><span class="rs-n">2</span><p>なぜか。g を上げると、分母（WACC − g）が縮んで理論株価を<strong>押し上げ</strong>、同時に分子 FCFF が 50 → 20億円 と減って<strong>押し下げる</strong>。<strong>綱引きで打ち消し合う</strong>からです。</p></div>
+        <div class="rs-step"><span class="rs-n">3</span><p>ただし <strong>WACC 8% の行だけは違います</strong>。g を上げると理論株価は増えず、<strong>750 → 667 → 500円 と下がります</strong>。</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="conclusion-line">なぜ <strong>WACC 8% だけ</strong>、成長すると理論株価が下がるのか ── 次のページで、<strong>g を 5% → 6% に上げる一歩を切り出します</strong>。</div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">切り出して測る</div>
+  <h2>速く育てるには、多く積むしかない</h2>
+  <p class="sub" style="margin-bottom:8px">前のページの問い<span class="rb-ref">S22</span>に、g を 5% → 6% に上げる<strong>一歩だけを切り出して</strong>答えます。まず、その一歩で<strong>今年のお金がどう動くか</strong>。</p>
+  <div class="reason">
+    <div class="rs-step"><span class="rs-n">1</span><p><strong>速く育てるには、多く積むしかない。</strong>ROIC ＝ NOPAT ÷ 投下資本<span class="rb-ref">S14</span> を移項して <strong>NOPAT ＝ 投下資本 × ROIC</strong>。ROIC が変わらないなら、利益の伸びを <strong>5% → 6%</strong> に上げる道は、<strong>資本の伸びを 5% → 6% に上げる</strong>ことだけ。</p></div>
+  </div>
+  <table class="tight" style="font-size:14px;margin-top:10px">
+        <thead><tr><th>単位：億円</th><th>g ＝ 5%<br><span style="font-weight:400;color:var(--muted)">決算書の実績</span></th><th>g ＝ 6%<br><span style="font-weight:400;color:var(--muted)">もし〜なら</span></th><th>差</th></tr></thead>
+        <tbody>
+          <tr><td>今年の投下資本<span class="rb-ref">S14</span></td><td class="val">1,500</td><td class="val">1,500</td><td class="val" style="color:var(--muted)">0</td></tr>
+          <tr><td>今年の NOPAT<span class="rb-ref">S7</span></td><td class="val">110</td><td class="val">110</td><td class="val" style="color:var(--muted)">0</td></tr>
+          <tr><td style="border-top:2px solid var(--rule)"><strong>① 今年、資本に積んだ分</strong>（純再投資）</td><td class="val" style="font-size:14px;border-top:2px solid var(--rule)">75</td><td class="val" style="font-size:14px;color:var(--akami-deep);border-top:2px solid var(--rule)">90<span style="display:block;font-size:12px;line-height:1.2;color:var(--muted);font-weight:400;margin-top:1px">1,500×6%</span></td><td class="val" style="border-top:2px solid var(--rule)"><strong>＋15</strong></td></tr>
+          <tr><td><strong>② 今年、外へ出ていった分</strong> ＝ FCFF（110 − ①）</td><td class="val" style="font-size:14px">35</td><td class="val" style="font-size:14px;color:var(--akami-deep)">20<span style="display:block;font-size:12px;line-height:1.2;color:var(--muted);font-weight:400;margin-top:1px">110−90</span></td><td class="val"><strong>−15</strong></td></tr>
+          <tr><td>→ 来年の投下資本 ＝ 1,500 ×(1＋g)　<span style="color:var(--muted);font-size:12px">※予測</span></td><td class="val">1,575</td><td class="val" style="color:var(--akami-deep)">1,590</td><td class="val">＋15</td></tr>
+        </tbody>
+      </table>
+  <div class="note" style="margin-top:8px;font-size:12.5px;line-height:1.65">
+        元手 <strong>110 は両列とも同じ</strong>。※ <strong>式のある数字は、g を 6% と置いてから埋めたもの</strong>。① ＝ 1,500 × g なので、最下段は 1,500 ＋ ① と書いても同じ額です。
+      </div>
+  <div class="conclusion-line">g を <strong>5% → 6%</strong> にすると、今年 <strong>外へ出ていくお金は 35億円 から 20億円</strong> へ。減った <strong>15億円</strong> は、会社の中に積まれました ── <strong>その 15億円 が何を生むかは、次のページで</strong>。</div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">切り出して測る</div>
+  <h2>積んだ 15億円 は、得か損か</h2>
+  <p class="sub" style="margin-bottom:8px">前のページ<span class="rb-ref">S23</span>で、g を 6% にすると今年 外へ出ていくお金が <strong>15億円 減り</strong>、そのぶん<strong>資本に積まれる</strong>と分かりました。では、その 15億円 は<strong>いくらになって返ってくる</strong>のか。</p>
+  <div class="reason">
+    <div class="rs-step"><span class="rs-n">2</span><p><strong>5% → 6% で増えた資本 15億円 が、新たに利益を生む。</strong>この 15億円 も ROIC 7.33% で回るからです ── 15 × 7.33% ＝ <strong>毎年 1.1億円</strong>。</p></div>
+    <div class="rs-step"><span class="rs-n">3</span><p><strong>g ＝ 6%</strong> にすると、今年、<strong>外へ出ていくお金が 15億円 減り<span class="rb-ref">S23</span></strong>、そのかわり翌年から<strong>毎年 1.1億円 ずつ多くなります</strong>。毎年おなじ額が永久に続くときの<strong>現在価値</strong>は <strong>額 ÷ 割引率</strong><span class="rb-ref">前半 S10</span> ── ここでは 1.1 ÷ WACC。<strong>今年手放す 15億円 より大きければ得</strong>、小さければ損です。</p></div>
+  </div>
+  <table class="tight" style="font-size:14px;margin-top:10px">
+        <thead><tr><th></th><th>毎年 1.1億円 の現在価値<br><span style="font-weight:400;color:var(--muted)">1.1 ÷ WACC</span></th><th>今年手放す 15億円<br><span style="font-weight:400;color:var(--muted)">との差</span></th></tr></thead>
+        <tbody>
+          <tr><td>WACC 6%</td><td class="val">18.3億円</td><td class="val" style="color:var(--sage)">＋3.3億円 → 得</td></tr>
+          <tr><td>WACC 7%</td><td class="val">15.7億円</td><td class="val" style="color:var(--sage)">＋0.7億円 → 得</td></tr>
+          <tr class="hi"><td>WACC 8%</td><td class="val">13.8億円</td><td class="val">−1.2億円 → <b>損</b></td></tr>
+        </tbody>
+      </table>
+  <div class="note" style="margin-top:8px;font-size:12.5px;line-height:1.65">
+        得なら積むほど理論株価が増え、損なら減る ── 前の表<span class="rb-ref">S22</span>の3行の増減と一致。※一歩の切り出しは近似ですが、<strong>得か損かの結論は必ず一致</strong>します。
+      </div>
+  <div class="conclusion-line"><strong>増えた資本 15億円</strong> が <strong>13.8億円</strong> にしかならない ── だから WACC 8% では理論株価が下がる。<strong>分かれ目は次のページで</strong>。</div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">確かめ</div>
+  <h2>効いているのは、ROIC と WACC</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;gap:32px;margin-top:10px;align-items:start">
+    <div>
+      <div class="setup-bar">ROIC 7.33%・g 5% を固定。FCFF は 35億円 のまま、WACC だけを動かします。</div>
+      <table class="tight">
+        <thead><tr><th>WACC</th><th>理論株価</th><th>事業価値</th><th></th><th>投下資本</th></tr></thead>
+        <tbody>
+          <tr><td>6.0%</td><td class="val">3,000円</td><td class="val">3,500億</td><td class="val" style="color:var(--muted);font-family:var(--mono)">＞</td><td class="val">1,500億</td></tr>
+          <tr><td>7.0%</td><td class="val">1,250円</td><td class="val">1,750億</td><td class="val" style="color:var(--muted);font-family:var(--mono)">＞</td><td class="val">1,500億</td></tr>
+          <tr><td style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">7.33% ＝ ROIC</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,000円</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,500億</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">＝</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,500億</td></tr>
+          <tr><td>8.0%</td><td class="val">667円</td><td class="val">1,167億</td><td class="val" style="color:var(--muted);font-family:var(--mono)">＜</td><td class="val">1,500億</td></tr>
+          <tr><td>9.0%</td><td class="val">375円</td><td class="val">875億</td><td class="val" style="color:var(--muted);font-family:var(--mono)">＜</td><td class="val">1,500億</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:10px;font-size:12.5px">各マス ＝ <strong>理論株価</strong> ＝｛35 ÷(WACC − 5%) − 負債500｝億円 ÷ 1億株。</div>
+      <div class="recall-box" style="margin-top:14px">
+        <b>なぜ g は効かなかったのか</b> ── S22 で g を 4% → 6% に上げても、理論株価は 1,167 → 1,500円 までしか動きませんでした。A社は <b>ROIC 7.33% と WACC 7.0% がほぼ等しい</b>からです。上の表で両者が等しい行では、g が 0% でも 6% でも <b>1,000円 のまま</b>。成長が効くのは、両者に差があるときだけ。
+      </div>
+    </div>
+    <div>
+      <div class="card sage" style="padding:16px 20px">
+        <h3 style="margin-bottom:10px">前半の到達点と、同じ形</h3>
+        <p style="font-size:14px;margin-bottom:8px">株主版<span class="rb-ref">前半 S23</span></p>
+        <p class="jcalc" style="margin-bottom:10px">PBR &gt; 1 ⟺ ROE &gt; r</p>
+        <p style="font-size:14px;margin-bottom:8px">会社版（いまの表）</p>
+        <p class="jcalc" style="margin-bottom:10px">事業価値 &gt; 投下資本 ⟺ ROIC &gt; WACC</p>
+        <p style="font-size:13.5px">A社で確認：事業価値 <b style="font-family:var(--mono)">1,750億</b><span class="rb-ref">S15</span> &gt; 投下資本 <b style="font-family:var(--mono)">1,500億</b><span class="rb-ref">S14</span> ⟺ ROIC <b style="font-family:var(--mono)">7.33%</b> &gt; WACC <b style="font-family:var(--mono)">7.0%</b> ✓</p>
+      </div>
+      <div class="callout sage" style="margin-top:14px;padding:14px 20px">
+        <p style="font-size:16px">要求を上回って稼ぐときだけ、成長は価値を生む。<br><em>前半の結論が、会社全体でも成立しました。</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">手で確かめる</div>
+  <h2>前提を選ぶと、理論株価が決まる</h2>
+  <p class="sub" style="margin-bottom:10px">ここまでの結論を、<strong>手で確かめます</strong><span class="rb-ref">S25</span>。式は S22 の整合版のまま<span class="rb-ref">S22</span>、<strong>ROIC・WACC・g を自分で置きます</strong>。</p>
+  <div class="cols" style="grid-template-columns:0.9fr 1.2fr;gap:32px;align-items:start">
+    <div class="panel">
+      <div class="ctrl">
+        <label>稼ぐ力 ROIC <b id="ivRv">7.33%</b></label>
+        <div class="toggle" id="ivRoic">
+          <button type="button" data-k="0">6.0%</button><button type="button" data-k="1" class="sel">7.33%<br><span style="font-size:11px;font-weight:400">A社</span></button><button type="button" data-k="2">9.0%</button><button type="button" data-k="3">12.0%</button>
+        </div>
+      </div>
+      <div class="ctrl">
+        <label><span>株主と債権者の要求 WACC <button type="button" class="minibtn" id="ivLock">ROIC に合わせる</button></span><b id="ivWv">7.0%</b></label>
+        <input type="range" id="ivW" min="500" max="1000" step="10" value="700">
+      </div>
+      <div class="ctrl">
+        <label>成長率 g <b id="ivGv">5.0%</b></label>
+        <input type="range" id="ivG" min="0" max="800" step="10" value="500">
+      </div>
+    </div>
+    <div>
+      <div class="readout">
+        <div class="num-label">この前提での理論株価</div>
+        <div class="big-num" id="ivPrice" style="font-size:52px">1,250<span class="u">円</span></div>
+      </div>
+      <div class="ivchain">
+        <span>NOPAT <b>110億</b></span><i>→</i>
+        <span>再投資率 <b id="ivRR">68.2%</b></span><i>→</i>
+        <span>FCFF <b id="ivF">35.0億</b></span><i>→</i>
+        <span>事業価値 <b id="ivEV">1,750億</b></span><i>→</i>
+        <span>− 有利子負債 500億 ＝ 株主価値 <b id="ivEQ">1,250億</b></span><i>→</i>
+        <span>÷ 株式数 1億株 ＝ 理論株価 <b id="ivPS">1,250円</b></span>
+      </div>
+      <div class="ivwarn" id="ivWarn" style="visibility:hidden">&nbsp;</div>
+    </div>
+  </div>
+  <div class="bandbar">
+    <div class="bb-track"></div>
+    <div class="bb-mark" style="left:31.25%"></div>
+    <div class="bb-mlab" style="left:31.25%;transform:translateX(-100%);padding-right:6px">第7章の基準 1,250円<span class="rb-ref">S16</span></div>
+    <div class="bb-ptr" id="ivPtr" style="left:31.25%"></div>
+    <div class="bb-plab" id="ivPlab" style="left:31.25%">1,250円</div>
+    <div class="bb-axis"><span>0円</span><span>4,000円</span></div>
+  </div>
+  <div class="conclusion-line">動かしているのは式ではなく、<strong>前提</strong>です。── 次は、<strong>市場の値段から前提を読み取ります</strong>。</div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">逆からたどる</div>
+  <h2 style="margin-bottom:4px">株価から、市場の前提を逆算する</h2>
+  <p class="sub" style="margin-bottom:4px">ここまでは、前提を決めて計算し、<strong>理論株価</strong>を出しました。今度は、<strong>その計算を逆にたどります</strong> ── 市場の株価 <strong>1,500円</strong> が正しいとしたら、<strong>市場は何を信じているのか</strong>。</p>
+  <div class="setup-bar co-bar" style="margin-bottom:4px">
+    <span class="sb-tag">ここで初めて、市場の値段</span>
+    <span>A社の株価 <b>1,500円</b></span>
+    <span class="sb-note">想定値</span>
+  </div>
+  <div class="formula" style="padding:10px 20px;margin-top:0">
+    <div class="rev-eq">
+      <span class="re-seg"><span class="re-lab">&nbsp;</span><span class="re-res">&nbsp;</span><span class="re-val">理論株価 ＝</span></span>
+      <span class="re-seg"><span class="re-lab">&nbsp;</span><span class="re-res">&nbsp;</span><span class="re-val re-brace">｛</span></span>
+      <span class="re-seg"><span class="re-lab">&nbsp;</span><span class="re-res">今年の NOPAT<span class="rb-ref">S7</span></span><span class="re-val">110億</span></span>
+      <span class="re-seg"><span class="re-lab">外へ出る割合をかける<span class="rb-ref">S21</span></span><span class="re-res">→ FCFF</span><span class="re-val">×(1 − g ÷ 7.33%)</span></span>
+      <span class="re-seg"><span class="re-lab">WACC − g で割る</span><span class="re-res">→ 事業価値<span class="rb-ref">S15</span></span><span class="re-val">÷(7% − g)</span></span>
+      <span class="re-seg"><span class="re-lab">有利子負債を引く<span class="rb-ref">S7</span></span><span class="re-res">→ 株主価値</span><span class="re-val">− 500億</span></span>
+      <span class="re-seg"><span class="re-lab">&nbsp;</span><span class="re-res">&nbsp;</span><span class="re-val re-brace">｝</span></span>
+      <span class="re-seg"><span class="re-lab">株式数で割る</span><span class="re-res">→ 理論株価</span><span class="re-val">÷ 1億株</span></span>
+      <span class="re-seg"><span class="re-lab">&nbsp;</span><span class="re-res">市場の株価</span><span class="re-val">＝ 1,500円</span></span>
+    </div>
+    <div class="formula-note" style="margin-top:8px">理論株価が <strong>1,500円</strong> と一致する <strong>g</strong> を探します ── <strong>入力が株価、出力が g</strong>。理論株価を出す計算ではなく、市場の頭の中を読む道具です</div>
+  </div>
+  <div class="cols" style="margin-top:6px;gap:32px">
+    <div class="readout">
+      <div class="num-label">市場が織り込んでいる成長率</div>
+      <div class="big-num" style="font-size:44px">g ＝ 6.0<span class="u">%</span></div>
+    </div>
+    <div>
+      <p style="font-size:12.5px;line-height:1.65;color:var(--muted);margin-bottom:10px">g ＝ 6% のとき ── 再投資率 ＝ g ÷ ROIC ＝ 6% ÷ 7.33% ＝ <b style="color:var(--ink-2)">82%</b><br>FCFF ＝ NOPAT 110億 ×(1 − 再投資率) ＝ <b style="color:var(--ink-2)">20億円</b></p>
+      <p style="font-size:15px;line-height:1.85;color:var(--ink-2)">1,500円 を信じることは、<strong>「A社は利益の 82% を事業に積み続け、永久に年 6% で育つ」を信じること</strong>と同じです。<br>ROIC 7.33% のままで、それは相当に強い前提 ── さて、あなたはどう見ますか。</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:6px;padding:12px 24px">
+    <p>問いが変わりました。<em>「1,500円は高いか、安いか」</em>から、<em>「年6%の永久成長は、妥当か」</em>へ。<br><strong>答えの出ない問いが、確かめられる問いになります。</strong></p>
+  </div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">逆からたどる</div>
+  <h2>同じ 1,500円 が、3通りに読める</h2>
+  <p class="sub" style="margin-bottom:10px">前のページで解いたのは <strong>g</strong> でした<span class="rb-ref">S27</span>。解ける相手は g だけではありません。<strong>ほかを動かさずに、1つだけ動かす</strong>と、こうなります。</p>
+  <table class="tight s28t" style="font-size:13px;margin-top:6px">
+    <colgroup><col style="width:132px"><col style="width:158px"><col style="width:176px"><col style="width:86px"><col></colgroup>
+    <thead><tr>
+      <th style="text-align:left">動かす仮定</th>
+      <th style="text-align:left">出発点 → 市場の値</th>
+      <th style="text-align:left">固定したもの</th>
+      <th style="text-align:left">FCFF</th>
+      <th style="text-align:left">市場は、こう見ている</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="text-align:left"><b class="sym">g</b><span class="cap2">成長率</span></td>
+        <td class="val" style="text-align:left">5.0% → <b>6.0%</b></td>
+        <td style="text-align:left">ROIC 7.33%・WACC 7.0%</td>
+        <td class="val" style="text-align:left">20億</td>
+        <td style="text-align:left">利益の <b>81.8%</b> を積み続け、永久に年6%で育つ会社</td>
+      </tr>
+      <tr>
+        <td style="text-align:left"><b class="sym">WACC</b><span class="cap2">株主と債権者の要求</span></td>
+        <td class="val" style="text-align:left">7.0% → <b>6.75%</b></td>
+        <td style="text-align:left">ROIC 7.33%・g 5.0%</td>
+        <td class="val" style="text-align:left">35億</td>
+        <td style="text-align:left">いまの想定より、<b>危険が小さい</b>会社</td>
+      </tr>
+      <tr>
+        <td style="text-align:left"><b class="sym">ROIC</b><span class="cap2">稼ぐ力</span></td>
+        <td class="val" style="text-align:left">7.33% → <b>7.86%</b></td>
+        <td style="text-align:left">WACC 7.0%・g 5.0%</td>
+        <td class="val" style="text-align:left">40億</td>
+        <td style="text-align:left">同じ投資から、<b>より多く稼ぐ</b>会社</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note" style="margin-top:10px;font-size:12.5px;line-height:1.7">
+    どの行も <b>事業価値 ＝ FCFF ÷(WACC − g)</b>、そこから <b>有利子負債 500億</b><span class="rb-ref">S7</span> を引いて <b>1,500億</b> ── 1億株で割って <b>1株 1,500円</b><span class="rb-ref">S16</span>。厳密には g ＝ 6.00%、WACC ＝ 6.75%、ROIC ＝ 7.857%。<b>FCFF は g と ROIC で決まる</b>ので<span class="rb-ref">S21</span>、行ごとに変わります。
+  </div>
+  <div class="conclusion-line">3つを少しずつ動かしても <strong>1,500円</strong> になります ── それでも、<strong>どれも自分で確かめられる問い</strong>です。</div>
+</section>
+
+<section class="slide" data-ch="8">
+  <div class="eyebrow">持ち方</div>
+  <h2>理論株価は、点ではなく帯</h2>
+  <p class="sub" style="margin-bottom:8px">1,250円 は「正解」ではなく、<strong>帯のまん中の一点</strong>にすぎません。</p>
+
+  <div class="setup-bar">S22 の9マスを並べ直したもの ── <b>ROIC 7.33% は固定</b>のまま、WACC 6〜8% と g 4〜6% を振っています</div>
+  <div class="converge" style="margin-bottom:8px">
+    <div style="background:transparent"><span class="cv-l">WACC 8%・g 6%</span><span class="cv-v" style="">500円</span></div>
+    <div style="background:transparent"><span class="cv-l">WACC 8%・g 5%</span><span class="cv-v" style="">667円</span></div>
+    <div style="background:transparent"><span class="cv-l">WACC 8%・g 4%</span><span class="cv-v" style="">750円</span></div>
+    <div style="background:transparent"><span class="cv-l">WACC 7%・g 4%</span><span class="cv-v" style="">1,167円</span></div>
+    <div style="background:var(--akami-tint)"><span class="cv-l">WACC 7%・g 5%</span><span class="cv-v" style="color:var(--akami)">1,250円</span></div>
+    <div style="background:var(--sage-tint)"><span class="cv-l">WACC 7%・g 6%</span><span class="cv-v" style="color:var(--sage)">1,500円</span></div>
+    <div style="background:transparent"><span class="cv-l">WACC 6%・g 4%</span><span class="cv-v" style="">2,000円</span></div>
+    <div style="background:transparent"><span class="cv-l">WACC 6%・g 5%</span><span class="cv-v" style="">3,000円</span></div>
+  </div>
+  <div class="note" style="font-size:12.5px;margin-bottom:12px"><b style="color:var(--akami)">赤</b> ＝ 第7章で出した基準 1,250円<span class="rb-ref">S16</span> ／ <b style="color:var(--sage)">緑</b> ＝ 市場の 1,500円<span class="rb-ref">S27</span>。ROIC を動かせば帯はさらに広がります ── 次の章で扱います。</div>
+
+  <div class="cols" style="gap:34px">
+    <div class="card sage" style="padding:16px 20px">
+      <h3 style="margin-bottom:8px">市場の 1,500円 は、この範囲の中</h3>
+      <p style="font-size:14.5px">1,500円 が出るのは <b style="font-family:var(--mono)">WACC 7%・g 6%</b> のマス<span class="rb-ref">S27</span>。自分で置いた範囲の中に、ちゃんとあります。だから「市場が間違っている」とは<strong>言えません</strong>。</p>
+    </div>
+    <div class="card accent" style="padding:16px 20px">
+      <h3 style="margin-bottom:8px">範囲は、自分で決めている</h3>
+      <p style="font-size:14.5px">400円 や 4,000円 は、どのマスからも出てきません。市場の見落としか、<strong>自分の前提の不足か</strong>、どちらかです。範囲を広げれば何でも説明できます ── <strong>値段を見てから動かさないこと。</strong></p>
+    </div>
+  </div>
+  <div class="closing" style="margin-top:16px">
+    <p>思い出してください ── <em>計算式は、答えを出す装置ではなく、自分が何を信じているかを可視化する装置</em><span class="rb-ref">前半 S3</span>。</p>
+    <div class="closing-recall">この帯こそ、その可視化です。「この計算がどれだけ当てにならないか」<b>前半 S25 の約束、果たしました。</b></div>
+  </div>
+</section>
+
+<section class="slide chapter" data-ch="9">
+  <div class="num">CHAPTER 09</div>
+  <h1>この計算の、二つの限界</h1>
+  <p class="note">
+    ここまで、A社を最後まで通しました。通せたのは、<strong>条件がそろっていた</strong>からです。<br>限界は二種類あります ── <strong>そもそも当てはまらない会社</strong>があり、そして<strong>当てはまる会社でも、計算に入れる数字は、最後は人が決めています</strong>。
+  </p>
+</section>
+
+<section class="slide" data-ch="9">
+  <div class="eyebrow">限界①　当てはまらない会社</div>
+  <h2>この手順が、そもそも組み立たない会社</h2>
+  <p class="sub" style="margin-bottom:10px">A社では最後まで通りました<span class="rb-ref">S17</span>。しかしこの式は、<strong>ある形の会社</strong>を前提にしています ── その形をしていない会社では、どこかで必ず壊れます。</p>
+  <table style="font-size:14px;line-height:1.7">
+    <colgroup><col style="width:190px"><col style="width:520px"><col></colgroup>
+    <thead><tr><th style="text-align:left;vertical-align:top">会社の型</th><th style="text-align:left;vertical-align:top">この手順の、どこが壊れるか</th><th style="text-align:left;vertical-align:top">実務では</th></tr></thead>
+    <tbody>
+          <tr><td style="text-align:left;vertical-align:top"><b>銀行・保険</b></td><td style="text-align:left;vertical-align:top"><b>銀行にも負債はあります</b> ── 資産の大半は<b>預金</b>（保険なら責任準備金）。ただしそれは調達であると同時に<b>運用の元手</b>で、利ざやが本業の利益です。だから事業価値から負債を引く<span class="rb-ref">S16</span>と、事業の中身まで引いてしまう。WACC<span class="rb-ref">S11</span> も、預金金利が<b>調達コストと営業費用の両方</b>なので組めません。</td><td style="text-align:left;vertical-align:top">株主のお金を、株主の要求 r で割る ── 前半の形<span class="rb-ref">前半 S19</span>に戻す</td></tr>
+          <tr><td style="text-align:left;vertical-align:top"><b>赤字が先行する会社</b></td><td style="text-align:left;vertical-align:top">NOPAT がマイナスなら <b>ROIC もマイナス</b>。g ＝ ROIC × 再投資率<span class="rb-ref">S14</span> が計算できず、FCFF もマイナスが続きます。</td><td style="text-align:left;vertical-align:top">黒字化した後の姿を別に描き、そこまでは1年ずつ積む<span class="rb-ref">S18</span></td></tr>
+          <tr><td style="text-align:left;vertical-align:top"><b>景気循環株</b></td><td style="text-align:left;vertical-align:top">今年が<b>ピークかボトムか分からない</b>。この講座が使ってきた「今年の実績を来期の置きに使う」流儀が、ここで最も危険になります。</td><td style="text-align:left;vertical-align:top">好況と不況を<b>一巡した平均</b>の利益を使う</td></tr>
+    </tbody>
+  </table>
+  <div class="conclusion-line">計算が難しいのではありません。<strong>式が前提にしている形をしていない</strong> ── 無理に当てはめると、間違いに気づけません。</div>
+</section>
+<section class="slide" data-ch="9">
+  <div class="eyebrow" style="margin-bottom:8px">限界②　当てはめても残るもの</div>
+  <h2 style="margin-bottom:4px">株主価値を出すのに、株主価値が要る</h2>
+  <p class="sub" style="margin-bottom:4px">求めたいのは <strong>理論株価 ＝ 株主価値 ÷ 1億株</strong><span class="rb-ref">S16</span>。ところが、その株主価値を出すのに ──</p>
+  <div class="loopbox" style="padding:4px 18px 2px">
+    <div class="lp-line"><span class="lp-n">1</span><b style="color:var(--akami)">株主価値</b> を出すには → <b>事業価値</b> が要る　── 事業価値 − 有利子負債 500億<span class="rb-ref">S16</span></div>
+    <div class="lp-line"><span class="lp-n">2</span><b>事業価値</b> を出すには → <b>WACC</b> が要る　── FCFF 35億 ÷(WACC − g)<span class="rb-ref">S15</span></div>
+    <div class="lp-line"><span class="lp-n">3</span><b>WACC</b> を出すには → <b style="color:var(--akami)">株主価値</b> が要る</div>
+      <div class="lp-line">──（株主の要求 9%<span class="rb-ref">S10</span> × <b style="color:var(--akami)">株主価値</b> ＋ 税引後の利息 2%<span class="rb-ref">S12</span> × 有利子負債 500億）÷（<b style="color:var(--akami)">株主価値</b> ＋ 500億）</div>
+    <div class="lp-back">↑ <b>1 に戻りました。</b>抜けるには、<b>外から決めてしまう</b>か、<b>入口と出口がそろう点を探す</b>か。下の表の3つは前者、赤い行は後者の答えでもあります。</div>
+  </div>
+  <table class="tight s30t" style="font-size:14px;margin-top:0">
+    <colgroup><col style="width:270px"><col style="width:300px"><col style="width:133px"><col style="width:94px"><col style="width:106px"><col></colgroup>
+    <thead><tr><th style="text-align:left">元の株主価値<br><span style="font-weight:400;color:var(--muted)">WACC を出すために置く</span></th><th>株主 / 債権者　× それぞれの要求<br><span style="font-weight:400;color:var(--muted)">分母は 株主価値 ＋ 有利子負債 500億</span></th><th>WACC</th><th>算出した<br>株主価値</th><th>元の株主価値<br>との差</th><th>理論株価<br><span style="font-weight:400;color:var(--muted)">（株主価値 ÷ 1億株）</span></th></tr></thead>
+    <tbody>
+          <tr><td style="text-align:left"><b>純資産</b> BPS 1,000円 × 1億株<span class="rb-ref">S7</span><br>＝ <b>1,000億</b><span style="font-size:11.5px;color:var(--muted);margin-left:8px">簿価</span></td><td class="val" style="text-align:left;font-size:13px;">1,000 ÷(1,000＋500)＝ 66.7% × 9.0%<br>500 ÷(1,000＋500)＝ 33.3% × 2.0%</td><td class="val" style=""><span style="font-size:12.5px">6.00% ＋ 0.67%</span><br>＝ 6.67%</td><td class="val" style="">1,600億</td><td class="val" style="">＋600億</td><td class="val" style="font-size:17px">1,600円</td></tr>
+          <tr><td style="text-align:left;background:var(--akami-tint);color:var(--akami-deep);font-weight:700"><b>前半の DDM</b> 1,250円 × 1億株<span class="rb-ref">S11</span><br>＝ <b>1,250億</b><span style="font-size:11.5px;color:var(--muted);margin-left:8px">自分の計算</span></td><td class="val" style="text-align:left;font-size:13px;background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,250 ÷(1,250＋500)＝ 71.4% × 9.0%<br>500 ÷(1,250＋500)＝ 28.6% × 2.0%</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700"><span style="font-size:12.5px">6.43% ＋ 0.57%</span><br>＝ 7.00%</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,250億</td><td class="val" style="background:var(--akami-tint);color:var(--akami-deep);font-weight:700">±0億</td><td class="val" style="font-size:17px;background:var(--akami-tint);color:var(--akami-deep);font-weight:700">1,250円</td></tr>
+          <tr><td style="text-align:left"><b>市場の株価</b> 1,500円 × 1億株<span class="rb-ref">S27</span><br>＝ <b>1,500億</b><span style="font-size:11.5px;color:var(--muted);margin-left:8px">株式時価総額</span></td><td class="val" style="text-align:left;font-size:13px;">1,500 ÷(1,500＋500)＝ 75.0% × 9.0%<br>500 ÷(1,500＋500)＝ 25.0% × 2.0%</td><td class="val" style=""><span style="font-size:12.5px">6.75% ＋ 0.50%</span><br>＝ 7.25%</td><td class="val" style="">1,056億</td><td class="val" style="">−444億</td><td class="val" style="font-size:17px">1,056円</td></tr>
+    </tbody>
+  </table>
+  <div class="note" style="margin-top:6px;font-size:12.5px;line-height:1.5">
+    <b>元の株主価値 ＋ 有利子負債 500億 ＝ 出してもらったお金の合計</b>。株主が何%かが重みで、<b>負債は動かない</b>ので、元の株主価値が大きいほど <b>WACC が上がります</b>。赤い行は、<b>1,250億</b> を重みに入れ → WACC 7.00% → 35億 ÷(7% − 5%) − 500億 と計算して、<b>また 1,250億</b>。<b>入れた数字が戻っただけ</b>で、DDM が正しいと確かめたのではありません。
+  </div>
+  <div class="conclusion-line s31c">3つとも正しい出し方。それでも答えは <strong>1,056円 から 1,600円 まで動きます</strong> ── 選ぶのは計算ではなく、<strong>人</strong>です。</div>
+</section>
+<section class="slide" data-ch="9">
+  <div class="eyebrow">限界②　当てはめても残るもの</div>
+  <h2>動かしていない前提が、まだ3つある</h2>
+  <p class="sub" style="margin-bottom:12px">第8章では WACC と g を振りました<span class="rb-ref">S29</span>。でも、<strong>動かさずに置いたままの前提</strong>が、まだ残っています。</p>
+  <div class="cols" style="gap:34px;align-items:start">
+    <div class="card" style="padding:16px 20px">
+      <h3 style="margin-bottom:10px">動かさなかった前提</h3>
+      <div style="margin-bottom:12px"><div style="font-size:15px;line-height:1.5;font-weight:700;color:var(--ink)">ROIC は 7.33% のまま</div><div style="font-size:13.5px;line-height:1.65;color:var(--ink-2);margin-top:2px">決算書にあるのは今年の実績だけ<span class="rb-ref">S14</span>。来年の ROIC は、どこにも書いていません。</div></div>
+      <div style="margin-bottom:12px"><div style="font-size:15px;line-height:1.5;font-weight:700;color:var(--ink)">g は永久に一定</div><div style="font-size:13.5px;line-height:1.65;color:var(--ink-2);margin-top:2px">5% が何十年も続くと置きました<span class="rb-ref">S15</span>。<b>成長が鈍る日</b>は、式に入っていません。</div></div>
+      <div style="margin-bottom:12px"><div style="font-size:15px;line-height:1.5;font-weight:700;color:var(--ink)">現金 100億 は全額が運転資金</div><div style="font-size:13.5px;line-height:1.65;color:var(--ink-2);margin-top:2px">非事業資産ゼロは、A社で唯一の<b>判断</b><span class="rb-ref">S16</span>でした。</div></div>
+    </div>
+    <div class="card accent" style="padding:16px 20px">
+      <h3 style="margin-bottom:10px">もう1つ動かすと、どうなるか</h3>
+      <div style="margin-bottom:14px"><div style="font-size:13.5px;line-height:1.6;color:var(--ink-2)">ROIC 7.33% に固定して、WACC 6〜8%・g 4〜6% を振った結果<span class="rb-ref">S29</span></div><div style="font-family:var(--mono);font-size:20px;line-height:1.4;font-weight:700;color:var(--ink);margin-top:2px">500 〜 3,000円　（6.0倍）</div></div>
+      <div style="margin-bottom:14px"><div style="font-size:13.5px;line-height:1.6;color:var(--ink-2)"><b>さらに ROIC も、S26 のつまみ 6.0 / 7.33 / 9.0 / 12.0% で振ると</b></div><div style="font-family:var(--mono);font-size:20px;line-height:1.4;font-weight:700;color:var(--akami-deep);margin-top:2px">111 〜 5,917円　（53.2倍）</div></div>
+      <div style="font-size:13px;line-height:1.65;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:9px">どちらも<b>「その範囲で振ってみたら出てきた幅」</b>で、理論上の限界ではありません。上端の 5,917円 は <b>S26 のつまみで実際に出せます</b> ── <b>振る範囲を広げれば、帯はいくらでも広がります。</b></div>
+    </div>
+  </div>
+  <div class="conclusion-line">「A社は 1,250円」<span class="rb-ref">S16</span> ではなく、<strong>「ROIC 7.33%・g 5%・非事業資産ゼロ なら 1,250円」</strong>と言います。</div>
+</section>
+
+
+<section class="slide chapter" data-ch="10">
+  <div class="num">CHAPTER 10</div>
+  <h1>まとめ</h1>
+  <p class="note">
+    割引という考え方を、二つの目線で使いました。前半は<strong>株主</strong>、後半は<strong>株主と債権者</strong>。<br>変えたのは目線だけです ── そして、どちらの目線でも、<strong>割引率は最後に人が置きます</strong>。
+  </p>
+</section>
+
+<section class="slide" data-ch="10">
+  <div class="eyebrow">講座のまとめ</div>
+  <h2>変えたのは目線だけ。割引率は、人が置く</h2>
+  <p class="sub" style="margin-bottom:20px">大きな考え方は<strong>割引</strong>ひとつ。前半と後半で違うのは、<strong>誰の目線でお金を数えるか</strong>だけです。</p>
+  <table class="tight s34t" style="font-size:13px;margin-top:14px">
+    <colgroup><col style="width:130px"><col style="width:360px"><col></colgroup>
+    <thead><tr><th></th><th style="text-align:left">前半 ── 株主の目線</th><th style="text-align:left">後半 ── 株主 ＋ 債権者の目線</th></tr></thead>
+    <tbody>
+      <tr>
+        <td style="text-align:left"><span class="lab">割り引くお金</span></td>
+        <td style="text-align:left">配当 <b>50円</b><span class="rb-ref">前半 S18</span><span class="cap">株主が受け取るお金</span></td>
+        <td style="text-align:left">FCFF <b>35億</b><span class="rb-ref">S6</span><span class="cap">会社全体が生むお金 ── 債権者に払う前</span></td>
+      </tr>
+      <tr>
+        <td style="text-align:left"><span class="lab">割引率の中身</span></td>
+        <td style="text-align:left"><div class="pairgrid" style="grid-template-columns:repeat(7,auto)"><span class="w">無リスク金利</span><span class="w">＋</span><span class="w">β</span><span class="w">×</span><span class="w">リスクプレミアム</span><span class="w res">＝</span><span class="w res">r</span><span class="n">3.0%</span><span class="n">＋</span><span class="n">1.15</span><span class="n">×</span><span class="n">5.2%</span><span class="n res">＝</span><span class="n res">9.0%</span></div></td>
+        <td style="text-align:left"><div class="pairgrid" style="grid-template-columns:repeat(9,auto)"><span class="w">株主の割合</span><span class="w">×</span><span class="w">株主の要求</span><span class="w">＋</span><span class="w">債権者の割合</span><span class="w">×</span><span class="w">税引後の利息</span><span class="w res">＝</span><span class="w res">WACC</span><span class="n">71.4%</span><span class="n">×</span><span class="n">9.0%</span><span class="n">＋</span><span class="n">28.6%</span><span class="n">×</span><span class="n">2.0%</span><span class="n res">＝</span><span class="n res">7.0%</span></div></td>
+      </tr>
+      <tr>
+        <td style="text-align:left"><span class="lab">割引率のうち、<br>自分で置いた仮定</span></td>
+        <td style="text-align:left"><b>β 1.15</b>〈想定値〉・<b>リスクプレミアム 5.2%</b>〈推計値〉<span class="cap">実勢を見られるのは 無リスク金利 3.0%（10年国債）だけ<span class="rb-ref">前半 S15</span></span></td>
+        <td style="text-align:left"><b>株主の要求 9.0%</b>（左の r そのもの）・<b>株主と債権者の割合</b>〈株主価値を置かないと出ない〉<span class="rb-ref">S32</span><span class="cap">決算書から出るのは 税引後の利息 2.0% だけ ── 利息 15億 ÷ 負債 500億 ×(1 − 税率 33.3%)<span class="rb-ref">S7</span></span></td>
+      </tr>
+      <tr>
+        <td style="text-align:left"><span class="lab">出てくるもの</span></td>
+        <td style="text-align:left">株主価値 → ÷ 1億株 ＝ 理論株価</td>
+        <td style="text-align:left">事業価値 − 有利子負債 500億 → ÷ 1億株 ＝ 理論株価<span class="rb-ref">S16</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="conclusion-line">どちらの割引率も、<strong>大半は仮定でできています</strong>。決算書が同じでも、<strong>仮定を置く人が違えば理論株価は違います</strong>。</div>
+</section>
+
+<section class="slide s35" data-ch="10">
+  <div class="eyebrow">講座のまとめ</div>
+  <h2 style="margin-bottom:14px">当たらない計算を、どう使うか</h2>
+  <p class="sub" style="margin-bottom:22px">理論株価は当たりません。それでも、<strong>使い道はあります</strong>。</p>
+  <div class="stack">
+    <div class="card"><div class="rs-step"><span class="rs-n">1</span><p><strong>当たらないことを、数字で知っておく。</strong>ROIC を 7.33% に固定して WACC 6〜8%・g 4〜6% を振っただけで、答えは <strong>500円 から 3,000円</strong><span class="rb-ref">S29</span>。ROIC も動かせば <strong>111円 から 5,917円</strong><span class="rb-ref">S33</span>。どれも間違った計算ではありません ── <strong>仮定が違うだけ</strong>です。</p></div></div>
+    <div class="card"><div class="rs-step"><span class="rs-n">2</span><p><strong>だから、逆から使う。</strong>市場の株価 <strong>1,500円</strong> が正しいとしたら、市場は <strong>g 6.0% ／ WACC 6.75% ／ ROIC 7.86%</strong> のどれか、あるいはその組み合わせを織り込んでいます<span class="rb-ref">S28</span>。<br>「1,500円は高いか、安いか」には答えが出ません。<strong>「年6%の成長は妥当か」「株主と債権者の要求は 6.75% でよいか」「稼ぐ力は 7.86% あるか」</strong>なら、その事業を知っていれば<strong>自分で判断できます</strong>。</p></div></div>
+  </div>
+  <div class="conclusion-line">答えを出す道具ではなく、<strong>問いを立て直す道具</strong>です。</div>
+</section>
+
+<section class="slide" data-ch="10">
+  <div class="eyebrow">受講者のみなさまへ</div>
+  <h2>この資料は、あとから見返せます</h2>
+  <p class="sub" style="margin-bottom:0">スマートフォンで読み取るか、URLを直接開いてください。<strong>PC・タブレット、またはスマホの横画面</strong>を推奨します。</p>
+  <div class="qr-wrap">
+    <div class="qr-box"><svg viewBox="0 0 41 41" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="2" y="2" width="7" height="1"/><rect x="16" y="2" width="2" height="1"/><rect x="20" y="2" width="1" height="1"/><rect x="26" y="2" width="1" height="1"/><rect x="32" y="2" width="7" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="10" y="3" width="3" height="1"/><rect x="17" y="3" width="7" height="1"/><rect x="25" y="3" width="2" height="1"/><rect x="28" y="3" width="1" height="1"/><rect x="30" y="3" width="1" height="1"/><rect x="32" y="3" width="1" height="1"/><rect x="38" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="4" y="4" width="3" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="17" y="4" width="3" height="1"/><rect x="21" y="4" width="4" height="1"/><rect x="27" y="4" width="4" height="1"/><rect x="32" y="4" width="1" height="1"/><rect x="34" y="4" width="3" height="1"/><rect x="38" y="4" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="4" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="12" y="5" width="7" height="1"/><rect x="20" y="5" width="1" height="1"/><rect x="23" y="5" width="1" height="1"/><rect x="27" y="5" width="3" height="1"/><rect x="32" y="5" width="1" height="1"/><rect x="34" y="5" width="3" height="1"/><rect x="38" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="4" y="6" width="3" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="2" height="1"/><rect x="14" y="6" width="2" height="1"/><rect x="18" y="6" width="1" height="1"/><rect x="23" y="6" width="1" height="1"/><rect x="25" y="6" width="1" height="1"/><rect x="27" y="6" width="1" height="1"/><rect x="30" y="6" width="1" height="1"/><rect x="32" y="6" width="1" height="1"/><rect x="34" y="6" width="3" height="1"/><rect x="38" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="13" y="7" width="3" height="1"/><rect x="18" y="7" width="1" height="1"/><rect x="21" y="7" width="2" height="1"/><rect x="25" y="7" width="1" height="1"/><rect x="28" y="7" width="1" height="1"/><rect x="30" y="7" width="1" height="1"/><rect x="32" y="7" width="1" height="1"/><rect x="38" y="7" width="1" height="1"/><rect x="2" y="8" width="7" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="16" y="8" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="20" y="8" width="1" height="1"/><rect x="22" y="8" width="1" height="1"/><rect x="24" y="8" width="1" height="1"/><rect x="26" y="8" width="1" height="1"/><rect x="28" y="8" width="1" height="1"/><rect x="30" y="8" width="1" height="1"/><rect x="32" y="8" width="7" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="16" y="9" width="1" height="1"/><rect x="18" y="9" width="1" height="1"/><rect x="21" y="9" width="3" height="1"/><rect x="26" y="9" width="1" height="1"/><rect x="28" y="9" width="3" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="7" y="10" width="4" height="1"/><rect x="13" y="10" width="1" height="1"/><rect x="15" y="10" width="2" height="1"/><rect x="18" y="10" width="2" height="1"/><rect x="22" y="10" width="1" height="1"/><rect x="24" y="10" width="1" height="1"/><rect x="31" y="10" width="1" height="1"/><rect x="33" y="10" width="5" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="7" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="18" y="11" width="4" height="1"/><rect x="24" y="11" width="7" height="1"/><rect x="32" y="11" width="2" height="1"/><rect x="35" y="11" width="2" height="1"/><rect x="38" y="11" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="6" y="12" width="5" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="16" y="12" width="2" height="1"/><rect x="19" y="12" width="2" height="1"/><rect x="23" y="12" width="1" height="1"/><rect x="25" y="12" width="2" height="1"/><rect x="29" y="12" width="6" height="1"/><rect x="37" y="12" width="2" height="1"/><rect x="5" y="13" width="2" height="1"/><rect x="10" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="2" height="1"/><rect x="20" y="13" width="3" height="1"/><rect x="28" y="13" width="1" height="1"/><rect x="30" y="13" width="1" height="1"/><rect x="33" y="13" width="3" height="1"/><rect x="38" y="13" width="1" height="1"/><rect x="3" y="14" width="2" height="1"/><rect x="6" y="14" width="3" height="1"/><rect x="11" y="14" width="5" height="1"/><rect x="18" y="14" width="3" height="1"/><rect x="24" y="14" width="1" height="1"/><rect x="26" y="14" width="1" height="1"/><rect x="29" y="14" width="2" height="1"/><rect x="32" y="14" width="2" height="1"/><rect x="35" y="14" width="1" height="1"/><rect x="37" y="14" width="2" height="1"/><rect x="4" y="15" width="1" height="1"/><rect x="6" y="15" width="1" height="1"/><rect x="9" y="15" width="1" height="1"/><rect x="11" y="15" width="1" height="1"/><rect x="15" y="15" width="1" height="1"/><rect x="17" y="15" width="2" height="1"/><rect x="21" y="15" width="1" height="1"/><rect x="24" y="15" width="1" height="1"/><rect x="26" y="15" width="1" height="1"/><rect x="29" y="15" width="4" height="1"/><rect x="36" y="15" width="1" height="1"/><rect x="38" y="15" width="1" height="1"/><rect x="3" y="16" width="2" height="1"/><rect x="6" y="16" width="3" height="1"/><rect x="13" y="16" width="1" height="1"/><rect x="16" y="16" width="1" height="1"/><rect x="18" y="16" width="2" height="1"/><rect x="21" y="16" width="1" height="1"/><rect x="23" y="16" width="2" height="1"/><rect x="27" y="16" width="1" height="1"/><rect x="29" y="16" width="1" height="1"/><rect x="31" y="16" width="2" height="1"/><rect x="35" y="16" width="2" height="1"/><rect x="38" y="16" width="1" height="1"/><rect x="3" y="17" width="1" height="1"/><rect x="5" y="17" width="1" height="1"/><rect x="7" y="17" width="1" height="1"/><rect x="9" y="17" width="2" height="1"/><rect x="12" y="17" width="1" height="1"/><rect x="15" y="17" width="1" height="1"/><rect x="20" y="17" width="1" height="1"/><rect x="26" y="17" width="1" height="1"/><rect x="31" y="17" width="5" height="1"/><rect x="37" y="17" width="1" height="1"/><rect x="2" y="18" width="1" height="1"/><rect x="4" y="18" width="1" height="1"/><rect x="6" y="18" width="1" height="1"/><rect x="8" y="18" width="1" height="1"/><rect x="10" y="18" width="1" height="1"/><rect x="12" y="18" width="1" height="1"/><rect x="14" y="18" width="1" height="1"/><rect x="16" y="18" width="3" height="1"/><rect x="21" y="18" width="1" height="1"/><rect x="25" y="18" width="1" height="1"/><rect x="29" y="18" width="4" height="1"/><rect x="37" y="18" width="2" height="1"/><rect x="2" y="19" width="1" height="1"/><rect x="4" y="19" width="1" height="1"/><rect x="10" y="19" width="4" height="1"/><rect x="15" y="19" width="11" height="1"/><rect x="29" y="19" width="2" height="1"/><rect x="32" y="19" width="2" height="1"/><rect x="35" y="19" width="2" height="1"/><rect x="38" y="19" width="1" height="1"/><rect x="3" y="20" width="1" height="1"/><rect x="5" y="20" width="1" height="1"/><rect x="7" y="20" width="3" height="1"/><rect x="12" y="20" width="1" height="1"/><rect x="14" y="20" width="1" height="1"/><rect x="21" y="20" width="7" height="1"/><rect x="29" y="20" width="1" height="1"/><rect x="34" y="20" width="1" height="1"/><rect x="36" y="20" width="1" height="1"/><rect x="38" y="20" width="1" height="1"/><rect x="2" y="21" width="1" height="1"/><rect x="4" y="21" width="4" height="1"/><rect x="10" y="21" width="2" height="1"/><rect x="14" y="21" width="1" height="1"/><rect x="16" y="21" width="1" height="1"/><rect x="20" y="21" width="3" height="1"/><rect x="24" y="21" width="1" height="1"/><rect x="28" y="21" width="8" height="1"/><rect x="3" y="22" width="3" height="1"/><rect x="7" y="22" width="2" height="1"/><rect x="10" y="22" width="1" height="1"/><rect x="12" y="22" width="1" height="1"/><rect x="18" y="22" width="2" height="1"/><rect x="21" y="22" width="1" height="1"/><rect x="23" y="22" width="1" height="1"/><rect x="25" y="22" width="2" height="1"/><rect x="29" y="22" width="2" height="1"/><rect x="32" y="22" width="1" height="1"/><rect x="35" y="22" width="1" height="1"/><rect x="3" y="23" width="1" height="1"/><rect x="5" y="23" width="3" height="1"/><rect x="10" y="23" width="1" height="1"/><rect x="21" y="23" width="1" height="1"/><rect x="24" y="23" width="1" height="1"/><rect x="29" y="23" width="1" height="1"/><rect x="31" y="23" width="3" height="1"/><rect x="35" y="23" width="2" height="1"/><rect x="38" y="23" width="1" height="1"/><rect x="2" y="24" width="3" height="1"/><rect x="7" y="24" width="2" height="1"/><rect x="10" y="24" width="1" height="1"/><rect x="13" y="24" width="5" height="1"/><rect x="22" y="24" width="1" height="1"/><rect x="25" y="24" width="1" height="1"/><rect x="28" y="24" width="3" height="1"/><rect x="32" y="24" width="4" height="1"/><rect x="38" y="24" width="1" height="1"/><rect x="3" y="25" width="4" height="1"/><rect x="10" y="25" width="2" height="1"/><rect x="13" y="25" width="1" height="1"/><rect x="15" y="25" width="1" height="1"/><rect x="18" y="25" width="1" height="1"/><rect x="20" y="25" width="1" height="1"/><rect x="22" y="25" width="1" height="1"/><rect x="24" y="25" width="2" height="1"/><rect x="29" y="25" width="1" height="1"/><rect x="31" y="25" width="1" height="1"/><rect x="33" y="25" width="1" height="1"/><rect x="35" y="25" width="1" height="1"/><rect x="37" y="25" width="1" height="1"/><rect x="3" y="26" width="2" height="1"/><rect x="8" y="26" width="2" height="1"/><rect x="11" y="26" width="2" height="1"/><rect x="16" y="26" width="1" height="1"/><rect x="18" y="26" width="2" height="1"/><rect x="21" y="26" width="2" height="1"/><rect x="26" y="26" width="1" height="1"/><rect x="32" y="26" width="2" height="1"/><rect x="35" y="26" width="1" height="1"/><rect x="37" y="26" width="1" height="1"/><rect x="3" y="27" width="2" height="1"/><rect x="7" y="27" width="1" height="1"/><rect x="10" y="27" width="1" height="1"/><rect x="12" y="27" width="5" height="1"/><rect x="19" y="27" width="2" height="1"/><rect x="22" y="27" width="2" height="1"/><rect x="29" y="27" width="2" height="1"/><rect x="32" y="27" width="2" height="1"/><rect x="35" y="27" width="2" height="1"/><rect x="38" y="27" width="1" height="1"/><rect x="2" y="28" width="2" height="1"/><rect x="8" y="28" width="3" height="1"/><rect x="14" y="28" width="1" height="1"/><rect x="16" y="28" width="1" height="1"/><rect x="18" y="28" width="5" height="1"/><rect x="25" y="28" width="1" height="1"/><rect x="27" y="28" width="3" height="1"/><rect x="31" y="28" width="2" height="1"/><rect x="34" y="28" width="2" height="1"/><rect x="38" y="28" width="1" height="1"/><rect x="4" y="29" width="1" height="1"/><rect x="6" y="29" width="2" height="1"/><rect x="11" y="29" width="1" height="1"/><rect x="18" y="29" width="1" height="1"/><rect x="20" y="29" width="3" height="1"/><rect x="25" y="29" width="2" height="1"/><rect x="28" y="29" width="2" height="1"/><rect x="31" y="29" width="4" height="1"/><rect x="37" y="29" width="1" height="1"/><rect x="2" y="30" width="2" height="1"/><rect x="5" y="30" width="1" height="1"/><rect x="8" y="30" width="1" height="1"/><rect x="11" y="30" width="2" height="1"/><rect x="14" y="30" width="1" height="1"/><rect x="16" y="30" width="2" height="1"/><rect x="22" y="30" width="1" height="1"/><rect x="24" y="30" width="1" height="1"/><rect x="26" y="30" width="1" height="1"/><rect x="29" y="30" width="7" height="1"/><rect x="38" y="30" width="1" height="1"/><rect x="10" y="31" width="4" height="1"/><rect x="16" y="31" width="2" height="1"/><rect x="19" y="31" width="2" height="1"/><rect x="25" y="31" width="3" height="1"/><rect x="30" y="31" width="1" height="1"/><rect x="34" y="31" width="2" height="1"/><rect x="38" y="31" width="1" height="1"/><rect x="2" y="32" width="7" height="1"/><rect x="10" y="32" width="1" height="1"/><rect x="13" y="32" width="1" height="1"/><rect x="18" y="32" width="2" height="1"/><rect x="25" y="32" width="4" height="1"/><rect x="30" y="32" width="1" height="1"/><rect x="32" y="32" width="1" height="1"/><rect x="34" y="32" width="3" height="1"/><rect x="38" y="32" width="1" height="1"/><rect x="2" y="33" width="1" height="1"/><rect x="8" y="33" width="1" height="1"/><rect x="10" y="33" width="1" height="1"/><rect x="12" y="33" width="1" height="1"/><rect x="15" y="33" width="1" height="1"/><rect x="17" y="33" width="2" height="1"/><rect x="20" y="33" width="2" height="1"/><rect x="24" y="33" width="1" height="1"/><rect x="26" y="33" width="1" height="1"/><rect x="29" y="33" width="2" height="1"/><rect x="34" y="33" width="2" height="1"/><rect x="37" y="33" width="2" height="1"/><rect x="2" y="34" width="1" height="1"/><rect x="4" y="34" width="3" height="1"/><rect x="8" y="34" width="1" height="1"/><rect x="11" y="34" width="3" height="1"/><rect x="15" y="34" width="1" height="1"/><rect x="17" y="34" width="1" height="1"/><rect x="21" y="34" width="1" height="1"/><rect x="23" y="34" width="4" height="1"/><rect x="29" y="34" width="6" height="1"/><rect x="37" y="34" width="1" height="1"/><rect x="2" y="35" width="1" height="1"/><rect x="4" y="35" width="3" height="1"/><rect x="8" y="35" width="1" height="1"/><rect x="12" y="35" width="2" height="1"/><rect x="15" y="35" width="1" height="1"/><rect x="17" y="35" width="1" height="1"/><rect x="21" y="35" width="1" height="1"/><rect x="23" y="35" width="3" height="1"/><rect x="28" y="35" width="1" height="1"/><rect x="30" y="35" width="1" height="1"/><rect x="34" y="35" width="1" height="1"/><rect x="36" y="35" width="1" height="1"/><rect x="38" y="35" width="1" height="1"/><rect x="2" y="36" width="1" height="1"/><rect x="4" y="36" width="3" height="1"/><rect x="8" y="36" width="1" height="1"/><rect x="10" y="36" width="1" height="1"/><rect x="12" y="36" width="1" height="1"/><rect x="16" y="36" width="2" height="1"/><rect x="19" y="36" width="4" height="1"/><rect x="25" y="36" width="1" height="1"/><rect x="27" y="36" width="2" height="1"/><rect x="30" y="36" width="1" height="1"/><rect x="34" y="36" width="1" height="1"/><rect x="36" y="36" width="3" height="1"/><rect x="2" y="37" width="1" height="1"/><rect x="8" y="37" width="1" height="1"/><rect x="15" y="37" width="1" height="1"/><rect x="18" y="37" width="3" height="1"/><rect x="23" y="37" width="1" height="1"/><rect x="26" y="37" width="1" height="1"/><rect x="28" y="37" width="1" height="1"/><rect x="30" y="37" width="4" height="1"/><rect x="2" y="38" width="7" height="1"/><rect x="12" y="38" width="1" height="1"/><rect x="14" y="38" width="3" height="1"/><rect x="18" y="38" width="2" height="1"/><rect x="22" y="38" width="2" height="1"/><rect x="25" y="38" width="1" height="1"/><rect x="30" y="38" width="2" height="1"/><rect x="33" y="38" width="1" height="1"/><rect x="35" y="38" width="1" height="1"/><rect x="38" y="38" width="1" height="1"/></svg></div>
+    <div class="qr-side">
+      <div class="qr-label">URL</div>
+      <div class="qr-url">akami-s.github.io<br>/valuation-lecture/</div>
+      <div class="qr-note">
+        <b>操作方法</b><br>
+        ← → キー ／ 画面下の ‹ › ボタンで移動<br>
+        <b>F</b> キーで全画面
+      </div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:auto;font-size:13px">
+    このURLは<b>前半・後半の入口</b>です ── どちらにも行けます。つまみのあるスライド（S26「前提を選ぶと、理論株価が決まる」）は、ご自身で ROIC・WACC・g を動かして、答えがどこまで動くか確かめてください。
+  </div>
+</section>
+
+<div id="rail"></div>
+<div id="nav">
+  <button id="prev" aria-label="前のスライド">‹</button>
+  <button id="next" aria-label="次のスライド">›</button>
+</div>
+<div id="hud"><span class="ch" id="hudCh"></span><span id="hudNum"></span></div>
+
+</div></div>
+<div id="help">← → スライド移動　　F 全画面</div>
+<script>
+(function(){
+"use strict";
+
+/* ── A社の設定（単位:億円）── ここだけ変えれば連動箇所すべてに反映 ── */
+var A = {
+  shares:1, NI:100, BV:1000,          /* 1億株 / 純利益100億 / 純資産1,000億 */
+  EBIT:165, interest:15, tax:50,      /* 実効税率 = 50 ÷ 150 = 33.3% */
+  debt:500, dep:50, capex:105, dwc:20,
+  re:0.09                             /* 株主資本コスト = 前半の r */
+};
+
+/* 章名 ─ data-ch の番号で引く */
+var CH = {
+  "5":"会社全体を見る",
+  "6":"WACC ─ 誰の要求に応えるのか",
+  "7":"A社を、DCFで通す",
+  "8":"この計算は当たらない",
+  "9":"この計算の、二つの限界",
+  "10":"まとめ"
+};
+
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var i = 0;
+
+/* レール */
+var rail = document.getElementById('rail');
+slides.forEach(function(){
+  var d = document.createElement('div');
+  d.className = 'rail-seg';
+  d.style.flex = '1';
+  rail.appendChild(d);
+});
+var segs = Array.prototype.slice.call(rail.children);
+
+function show(n){
+  i = Math.max(0, Math.min(slides.length-1, n));
+  slides.forEach(function(s,k){ s.classList.toggle('on', k===i); });
+  segs.forEach(function(s,k){ s.classList.toggle('act', k<=i); });
+  document.getElementById('hudNum').textContent = (i+1)+' / '+slides.length;
+  var c = slides[i].getAttribute('data-ch');
+  document.getElementById('hudCh').textContent = CH[c] || '';
+  /* インタラクティブ面は、表示のたびに初期状態へ戻す
+     ─ 講義を繰り返し行うため、前回触った状態を持ち越さない */
+  ivReset();
+}
+
+/* ── S26 前提スライダー ─────────────────────────────
+   ROIC は 4択（A社は 110÷1,500 の厳密値を使い、初期表示で 1,250円 に一致させる）
+   WACC・g はスライダー（値は 0.1% 単位の整数で保持）                        */
+var IV_ROIC = [0.06, 110/1500, 0.09, 0.12];
+var IV_LBL  = ['6.0%','7.33%','9.0%','12.0%'];
+var iv = { k:1, w:0.07, lock:false };   /* w ＝ WACC（小数）。lock 中は WACC ＝ ROIC に追随 */
+function ivEl(id){ return document.getElementById(id); }
+function ivFmt(n){ return Math.round(n).toLocaleString('ja-JP'); }
+/* 0.1% 刻みで表せる値は小数1桁、7.33% のような値だけ2桁で出す */
+function ivPct(x){
+  var v = x*100;
+  return (Math.abs(v*10 - Math.round(v*10)) < 1e-9 ? v.toFixed(1) : v.toFixed(2)) + '%';
+}
+
+function ivUpdate(){
+  var roic = IV_ROIC[iv.k];
+  if(iv.lock) iv.w = roic;                 /* 「ROIC に合わせる」中は追随させる */
+  var wacc = iv.w;
+  var g    = (+ivEl('ivG').value)/10000;   /* 値は 0.01% 単位（500 → 5.00%） */
+  ivEl('ivRv').textContent = IV_LBL[iv.k];
+  ivEl('ivWv').textContent = ivPct(wacc);
+  ivEl('ivLock').classList.toggle('on', iv.lock);
+  ivEl('ivGv').textContent = (g*100).toFixed(1)+'%';
+
+  var warn = ivEl('ivWarn'), ok = true, msg = '';
+  if(g >= roic){
+    ok = false;
+    msg = '再投資率が 100% に届きます ── 稼いだお金を全部積んでも、稼ぐ力 '+IV_LBL[iv.k]+' より速くは育ちません。';
+  } else if(g >= wacc){
+    ok = false;
+    msg = '計算不能 ── g ≧ WACC では、この式は壊れます（前半 S12）。';
+  }
+
+  if(!ok){
+    ivEl('ivPrice').innerHTML = '─';
+    ivEl('ivRR').textContent = '─'; ivEl('ivF').textContent = '─';
+    ivEl('ivEV').textContent = '─'; ivEl('ivEQ').textContent = '─';
+    ivEl('ivPS').textContent = '─';
+    ivEl('ivPtr').style.visibility = 'hidden';
+    ivEl('ivPlab').style.visibility = 'hidden';
+    warn.style.visibility = 'visible'; warn.textContent = msg;
+    return;
+  }
+
+  var rr   = g/roic;                 /* 再投資率 */
+  var fcff = 110*(1-rr);             /* 億円 */
+  var ev   = fcff/(wacc-g);          /* 事業価値・億円 */
+  var eq   = ev-500;                 /* 株主価値・億円 */
+  var px   = eq;                     /* 1億株なので、億円 → 円 は同値 */
+
+  ivEl('ivRR').textContent = (rr*100).toFixed(1)+'%';
+  ivEl('ivF').textContent  = fcff.toFixed(1)+'億';
+  ivEl('ivEV').textContent = ivFmt(ev)+'億';
+  ivEl('ivEQ').textContent = ivFmt(eq)+'億';
+  ivEl('ivPS').textContent = ivFmt(px)+'円';
+  ivEl('ivPrice').innerHTML = ivFmt(px)+'<span class="u">円</span>';
+  warn.style.visibility = 'hidden'; warn.innerHTML = '&nbsp;';
+
+  var pct = Math.max(0, Math.min(100, px/4000*100)).toFixed(2);
+  ivEl('ivPtr').style.left = pct+'%';
+  ivEl('ivPtr').style.visibility = 'visible';
+  ivEl('ivPlab').style.left = pct+'%';
+  ivEl('ivPlab').style.transform =
+    (pct >= 88 ? 'translateX(-100%)' : (pct <= 12 ? 'translateX(0)' : 'translateX(-50%)'));
+  ivEl('ivPlab').style.visibility = 'visible';
+  ivEl('ivPlab').textContent = (px>4000 ? '4,000円超（'+ivFmt(px)+'円）' : ivFmt(px)+'円');
+}
+
+function ivReset(){
+  if(!ivEl('ivW')) return;
+  iv.k = 1; iv.w = 0.07; iv.lock = false;
+  Array.prototype.forEach.call(ivEl('ivRoic').children, function(b,n){
+    b.classList.toggle('sel', n===1);
+  });
+  ivEl('ivW').value = 700; ivEl('ivG').value = 500;   /* 7.00% ／ 5.00% */
+  ivUpdate();
+}
+
+if(ivEl('ivW')){
+  ivEl('ivW').addEventListener('input', function(){
+    iv.lock = false;                       /* スライダーを触ったら追随を解除 */
+    iv.w = (+ivEl('ivW').value)/10000;
+    ivUpdate();
+  });
+  ivEl('ivLock').addEventListener('click', function(){
+    iv.lock = !iv.lock;
+    if(iv.lock){
+      iv.w = IV_ROIC[iv.k];
+      ivEl('ivW').value = Math.round(iv.w*10000/10)*10;   /* つまみを近い刻みへ寄せる */
+    } else {
+      iv.w = 0.07; ivEl('ivW').value = 700;
+    }
+    ivUpdate();
+  });
+  ivEl('ivG').addEventListener('input', ivUpdate);
+  Array.prototype.forEach.call(ivEl('ivRoic').children, function(b,n){
+    b.addEventListener('click', function(){
+      iv.k = n;
+      Array.prototype.forEach.call(ivEl('ivRoic').children, function(x,m){
+        x.classList.toggle('sel', m===n);
+      });
+      ivUpdate();
+    });
+  });
+}
+
+document.getElementById('next').onclick = function(){ show(i+1); };
+document.getElementById('prev').onclick = function(){ show(i-1); };
+
+document.addEventListener('keydown', function(e){
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); show(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(i-1); }
+  else if(e.key==='Home'){ show(0); }
+  else if(e.key==='End'){ show(slides.length-1); }
+  else if(e.key==='f'||e.key==='F'){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+});
+
+/* 拡大縮小 */
+function fit(){
+  var d = document.getElementById('deck');
+  var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.96;
+  d.style.transform = 'scale('+s+')';
+}
+window.addEventListener('resize', fit);
+fit();
+
+show(0);
+})();
+</script>
+</body>
+</html>
