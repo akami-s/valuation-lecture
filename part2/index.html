@@ -628,6 +628,21 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--sage-tint)}
 .way b{display:block; font-size:14.5px; color:var(--ink); line-height:1.5}
 .way span{display:block; font-size:13px; color:var(--muted); line-height:1.55}
 
+/* 2つの理由 */
+.reasons{display:flex; gap:0; margin-top:8px}
+.rsn{flex:1; display:flex; gap:10px; align-items:flex-start; padding:0 20px}
+.rsn:first-child{padding-left:0}
+.rsn:last-child{padding-right:0; border-left:1px solid var(--rule)}
+.rsn-n{
+  flex:none; width:20px; height:20px; border-radius:50%;
+  background:var(--akami); color:#fff; font-size:11.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; margin-top:2px;
+}
+.rsn-n.sage{background:var(--sage)}
+.rsn b{display:block; font-size:13.5px; color:var(--ink); line-height:1.5; margin-bottom:3px}
+.rsn > div > span{display:block; font-size:12.5px; color:var(--ink-2); line-height:1.6}
+.rsn .rb-ref{display:inline; font-size:10px; padding:1px 4px; margin-left:4px}
+
 /* 注記 */
 .note{
   font-size:13.5px; color:var(--muted); line-height:1.8;
@@ -1353,11 +1368,13 @@ table th, table td{ line-height:1.35; }
 
 <section class="slide" data-ch="7">
   <div class="eyebrow">答え合わせ</div>
-  <h2 style="margin-bottom:4px">道が違っても、理論株価は同じ</h2>
-  <p class="sub" style="margin-bottom:4px">偶然ではありません。<strong>誰のお金かと、誰の要求で割るかを、揃える</strong><span class="rb-ref">S6</span> ── 原則を守るかぎり同じ<strong>理論株価</strong>に着き、破ると外れます。</p>
+  <h2 style="margin-bottom:4px">なぜ、同じ 1,250円 に着いたのか</h2>
+  <p class="sub" style="margin-bottom:4px">理由は<strong>2つ</strong>あります。ひとつは<strong>どの会社にも当てはまる原則</strong>、もうひとつは<strong>A社だけの事情</strong>です。</p>
   <div class="setup-bar co-bar" style="margin-bottom:4px">
     <span class="sb-tag">使う数字はすべて既出</span>
     <span>FCFF <b>35億円</b><span class="rb-ref">S6</span></span>
+    <span class="sb-sep">／</span>
+    <span>配当 <b>50億円</b><span class="rb-ref">前半 S18</span></span>
     <span class="sb-sep">／</span>
     <span>簡便法 <b>25億円</b><span class="rb-ref">S6</span></span>
     <span class="sb-sep">／</span>
@@ -1382,11 +1399,11 @@ table th, table td{ line-height:1.35; }
     </div>
     <div class="card sage" style="padding:10px 18px">
       <div class="kicker" style="color:var(--sage)">道 2 ── 株主の取り分から</div>
-      <p class="jcalc" style="margin-bottom:5px">FCFE 50億円 ÷(r 9% − g 5%)</p>
+      <p class="jcalc" style="margin-bottom:5px">配当 50億円 ÷(r 9% − g 5%)</p>
       <p class="jcalc" style="margin-bottom:5px">＝ 株主価値 1,250億円</p>
       <p class="jcalc" style="margin-bottom:5px">　　　　　── 負債は引かない</p>
       <p class="jcalc" style="margin-bottom:8px">÷ 1億株 ＝ 1株 <b>1,250円</b> ✓</p>
-      <p style="font-size:13px">株主のお金を、株主の要求（r）で。<strong>前半の DDM がこれ</strong><span class="rb-ref">前半 S19</span>。</p>
+      <p style="font-size:13px">株主のお金を、株主の要求（r）で。<strong>前半の DDM がこれ</strong><span class="rb-ref">前半 S19</span>。DPS 50円 × 1億株。</p>
     </div>
     <div class="card accent" style="padding:10px 18px">
       <div class="kicker">揃え損なった道</div>
@@ -1397,10 +1414,25 @@ table th, table td{ line-height:1.35; }
       <p style="font-size:13px">利息を払った後のお金を WACC で割ると、<strong>4割も低く出ます</strong><span class="rb-ref">S6</span>。</p>
     </div>
   </div>
-  <div class="note" style="margin-top:8px;font-size:13px;border-left-color:var(--sage);line-height:1.65">
-    <strong>FCFE</strong>（Free Cash Flow to Equity ── 株主に帰属する FCF）＝ 純利益 100 ＋ 減価償却 50 − 設備投資 105 − 運転資本増 20 ＋ <strong>借入の増加 25</strong> ＝ <strong>50億円</strong> ＝ 配当<span class="rb-ref">前半 S18</span><br>
-    ＋25 は今年<strong>新たに借りた元本</strong>（500億円 × g 5%）。5% 成長する会社は資産が 5% 増える ── 資本構成を保つなら、借入も同じ 5% 増えます。<br>
-    「＝ 配当」は偶然ではありません。FCFE は<strong>配れる</strong>お金、配当は<strong>配った</strong>お金 ── A社は配れる分を全額配る設定（自社株買い・現金の積み増しなし）なので一致します。
+  <div class="reasons">
+    <div class="rsn">
+      <span class="rsn-n sage">1</span>
+      <div>
+        <b>レベルを揃えた ── どの会社にも当てはまる原則</b>
+        <span>誰のお金かと、誰の要求で割るかが一致していれば、道1と道2は<strong>近い答え</strong>に向かう。揃え損なうと大きく外れます。</span>
+      </div>
+    </div>
+    <div class="rsn">
+      <span class="rsn-n">2</span>
+      <div>
+        <b>WACC に、DDM の答えを入れた ── A社だけの事情</b>
+        <span>WACC を組むとき、株主の割合に<strong>DDM の答え 1,250億円</strong>を使いました<span class="rb-ref">S11</span>。戻ってくるのは当然 ── <strong>他社で必ず一致するわけではありません。</strong></span>
+      </div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:6px;font-size:12.5px;border-left-color:var(--sage);line-height:1.6">
+    <strong>FCFE</strong>（株主に帰属する FCF）＝ 純利益 100 ＋ 減価償却 50 − 設備投資 105 − 運転資本増 20 ＋ <strong>借入の増加 25</strong> ＝ <strong>50億円</strong>。これが<strong>配当 50億円</strong>と一致するのは、A社を<strong>FCFE の全額を配当に回す</strong>設定にしているから ── <strong>前半の DDM は、この前提の上に立っています。</strong><br>
+    <strong>＋25 の理由</strong>｜利益が 5% 増えるなら、それを生む<strong>資産も 5% 増えているはず</strong>。資本構成を保つなら<strong>借入も 5% 増えるはず</strong> ── 500億 × 5% ＝ <strong>25億円</strong>。実際に借りたのではなく、<strong>成長を仮定したことから出てくる帰結</strong>です。
   </div>
 </section>
 
